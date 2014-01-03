@@ -1,5 +1,6 @@
-package proj.thw.app;
+package proj.thw.app.activitys;
 
+import proj.thw.app.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
@@ -9,7 +10,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_tree_view_list);
 	}
 
 	@Override
