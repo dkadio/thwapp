@@ -15,11 +15,13 @@ import proj.thw.app.treeview.TreeBuilder;
 import proj.thw.app.treeview.TreeStateManager;
 import proj.thw.app.treeview.TreeViewList;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 /**
  * Demo activity showing how the tree view can be used.
@@ -107,6 +109,22 @@ public class EquipmentTreeViewListActivity extends Activity {
         final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()){
+		case R.id.action_settings:
+	    	Intent intent = new Intent(this, DetailListActivity.class);
+	    	startActivity(intent);
+			break;
+
+		default:
+			break;
+		}
+    	
+
+return super.onOptionsItemSelected(item);
     }
 
     /*

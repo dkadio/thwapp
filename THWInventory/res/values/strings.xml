@@ -20,5 +20,9 @@
     <string name="expand_menu_condensed">Expand</string>
     <string name="delete_menu">Delete</string>
     <string name="delete_menu_condensed">Delete</string>
+    <string name="title_activity_detail_list">DetailListActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="setEmptyLabel"></string>
+    <string name="title_activity_detail">DetailActivity</string>
 
 </resources>

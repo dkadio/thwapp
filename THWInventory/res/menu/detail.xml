@@ -3,18 +3,17 @@
     <item
         android:id="@+id/menu_overflow"
         android:icon="@drawable/icon"
-        android:showAsAction="always"
-        android:title="">
+        android:title=""
+        android:showAsAction="always">
         <menu>
             <item
                 android:id="@+id/item1"
                 android:title="item1"/>
             <item
-                android:id="@+id/action_settings"
-                android:orderInCategory="100"
-                android:showAsAction="never"
-                android:title="@string/action_settings"/>
+                android:id="@+id/item2"
+                android:title="item2"/>
         </menu>
     </item>
+
 
 </menu>
