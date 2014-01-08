@@ -60,6 +60,7 @@ public class CSV extends FileHandler implements IThwCSV{
 			fileReader.readLine();
 			while(( line = fileReader.readLine()) != null)
 			{
+				/*
 				Equipment insertEquip = new Equipment();
 				
 				String[] splitArray1 = line.split(";");
@@ -76,6 +77,7 @@ public class CSV extends FileHandler implements IThwCSV{
 				insertEquip.setStatus(splitArray1[COLUMN_STATUS]);
 				
 				equipList.add(insertEquip);
+				*/
 			}
 			
 			
