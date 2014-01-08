@@ -1,27 +1,18 @@
 package proj.thw.app.activitys;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.Locale;
 
 import proj.thw.app.R;
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.app.Activity;
-import android.content.ContextWrapper;
-import android.content.Intent;
 
 public class SplashScreenActivity extends Activity {
 
