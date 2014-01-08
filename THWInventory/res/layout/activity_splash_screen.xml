@@ -2,50 +2,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/thw_inventory_background"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".SplashScreenActivity"
-    android:background="@drawable/thw_inventory_background" >
-
-    <ProgressBar
-        android:id="@+id/pbload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/sploadfile"
-        android:layout_alignParentBottom="true" />
+    tools:context=".SplashScreenActivity" >
 
     <TextView
         android:id="@+id/tvstatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/pbload"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/pbload"
-        android:layout_toRightOf="@+id/pbload"
-        android:gravity="center|left"
+        android:layout_alignParentBottom="true"
         android:text="@string/status"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/white" />
 
-    <Spinner
-        android:id="@+id/sploadfile"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/pbload"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="18dp"
-        android:layout_toLeftOf="@+id/btngo" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_above="@+id/tvstatus"
+        android:layout_alignLeft="@+id/tvstatus" >
 
-    <Button
-        android:id="@+id/btngo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/sploadfile"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="16dp"
-        android:text="@string/go" 
-        android:background="@color/LightGrey"/>
+        <Spinner
+            android:id="@+id/sploadfile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/LightGrey"
+            android:gravity="top|left" />
+
+        <Button
+            android:id="@+id/btngo"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/Azure"
+            android:textColor="@color/Blue"
+            android:onClick="onClick"
+            android:text="@string/go" />
+    </LinearLayout>
 
 </RelativeLayout>

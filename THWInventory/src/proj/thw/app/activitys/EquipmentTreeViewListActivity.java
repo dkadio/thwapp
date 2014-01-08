@@ -1,6 +1,5 @@
 package proj.thw.app.activitys;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,14 +7,12 @@ import java.util.Set;
 import proj.thw.app.R;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.classes.ThwTreeViewAdapter;
-import proj.thw.app.ie.CSV;
 import proj.thw.app.treeview.InMemoryTreeStateManager;
 import proj.thw.app.treeview.TreeBuilder;
 import proj.thw.app.treeview.TreeStateManager;
 import proj.thw.app.treeview.TreeViewList;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;

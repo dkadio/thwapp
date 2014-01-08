@@ -20,18 +20,15 @@ import android.widget.TextView;
 
 public class THWCSVLoader extends AsyncTask<File, String, ArrayList<Equipment>> implements IThwCSV{
 
-	private Spinner spLoadFile;
 	private TextView tvStatus;
-	private ProgressBar pbLoad;
 	private Context callContext;
 	
 	private String[][] table;
 	
-	public THWCSVLoader(Spinner spLoadFile, TextView tvStatus, ProgressBar pbLoad, Context callContext)
+	public THWCSVLoader(TextView tvStatus, Context callContext)
 	{
-		this.spLoadFile = spLoadFile;
+		
 		this.tvStatus = tvStatus;
-		this.pbLoad = pbLoad;
 		this.callContext = callContext;
 	}
 	
@@ -107,10 +104,8 @@ public class THWCSVLoader extends AsyncTask<File, String, ArrayList<Equipment>> 
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		
-		pbLoad.setVisibility(View.VISIBLE);
+
 		tvStatus.setVisibility(View.VISIBLE);
-		spLoadFile.setVisibility(View.INVISIBLE);
 	}
 	
 	@Override

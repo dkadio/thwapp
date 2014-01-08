@@ -7,17 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import proj.thw.app.R;
+import proj.thw.app.ie.ImportFile;
 import proj.thw.app.ie.THWCSVLoader;
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,42 +26,23 @@ public class SplashScreenActivity extends Activity {
 	private static final String FILE_EXTENTION 				= ".csv";
 	
 	private Spinner spLoadFile;
-	private ArrayAdapter<File> adpLoadFile;
+	private ArrayAdapter<ImportFile> adpLoadFile; //String, weil toString() von FileObject den ganzen Pfad anzeigt
 	
-	private ProgressBar pbLoad;
 	private TextView tvStatus;
-	private Button btnGo;
-	
-	private Context context;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);
-		context = this;
+		
 		//init Views
 		spLoadFile = (Spinner) findViewById(R.id.sploadfile);
-		
+	
 		tvStatus = (TextView) findViewById(R.id.tvstatus);
 		tvStatus.setVisibility(View.INVISIBLE);
 		
-		pbLoad = (ProgressBar) findViewById(R.id.pbload);
-		pbLoad.setVisibility(View.INVISIBLE);
-		
-		btnGo = (Button) findViewById(R.id.btngo);
-		btnGo.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				v.setVisibility(View.INVISIBLE);
-				THWCSVLoader csvLoader = new THWCSVLoader(spLoadFile, tvStatus, pbLoad, context);
-				csvLoader.execute((File)spLoadFile.getSelectedItem());
-			}
-		});
-		
 		//init Objects
-		adpLoadFile = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1);
+		adpLoadFile = new ArrayAdapter<ImportFile>(this, android.R.layout.simple_spinner_dropdown_item);
 		init();
 	}
 	
@@ -106,7 +84,11 @@ public class SplashScreenActivity extends Activity {
 		
 		
 		//add all Files to Adapter and set Adapter to Spinner
-		adpLoadFile.addAll(getFileList(ieFolder,FILE_EXTENTION));
+		for(File file : getFileList(ieFolder,FILE_EXTENTION))
+		{
+			adpLoadFile.add(new ImportFile(file.getAbsolutePath()));
+		}
+		
 		spLoadFile.setAdapter(adpLoadFile);
 		adpLoadFile.setNotifyOnChange(true);
 	}
@@ -126,6 +108,15 @@ public class SplashScreenActivity extends Activity {
 				}
 			}
 		});
+	}
+	
+	public void onClick(View v)
+	{
+		v.setVisibility(View.INVISIBLE);
+		spLoadFile.setVisibility(View.INVISIBLE);
+		tvStatus.setVisibility(View.VISIBLE);
+		THWCSVLoader csvLoader = new THWCSVLoader(tvStatus, this);
+		csvLoader.execute((File)spLoadFile.getSelectedItem());
 	}
 
 }
