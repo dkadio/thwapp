@@ -1,16 +1,23 @@
 package proj.thw.app.activitys;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import proj.thw.app.R;
+import proj.thw.app.classes.Equipment;
 import proj.thw.app.classes.ThwTreeViewAdapter;
+import proj.thw.app.ie.CSV;
 import proj.thw.app.treeview.InMemoryTreeStateManager;
 import proj.thw.app.treeview.TreeBuilder;
 import proj.thw.app.treeview.TreeStateManager;
 import proj.thw.app.treeview.TreeViewList;
 import android.app.Activity;
+import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -23,34 +30,49 @@ public class EquipmentTreeViewListActivity extends Activity {
 	 private static final int[] DEMO_NODES = new int[] { 0, 0, 1, 1, 1, 2, 2, 1,
          1, 2, 1, 0, 0, 0, 1, 2, 3, 2, 0, 0, 1, 2, 0, 1, 2, 0, 1 };
 	
-    private final Set<Long> selected = new HashSet<Long>();
+    private final Set<Equipment> selected = new HashSet<Equipment>();
     private TreeViewList tvlEquipment;
 
    
-    private static final int LEVEL_NUMBER = 4;
-    private TreeStateManager<Long> manager = null;
+    private static final int LEVEL_NUMBER = 6;
+    private TreeStateManager<Equipment> manager = null;
     private ThwTreeViewAdapter simpleAdapter;
     private boolean collapsible;
+    
+    private ArrayList<Equipment> equipmentList;
 
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
       
+        
+       try {
+		CSV csvHandler = new CSV(this.getResources().openRawResource(R.raw.test));
+		equipmentList = csvHandler.CSVToEquipmentList();
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (NotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+        
         boolean newCollapsible;
         if (savedInstanceState == null) {
-            manager = new InMemoryTreeStateManager<Long>();
-            final TreeBuilder<Long> treeBuilder = new TreeBuilder<Long>(manager);
-            for (int i = 0; i < DEMO_NODES.length; i++) {
-                treeBuilder.sequentiallyAddNextNode((long) i, DEMO_NODES[i]);
+            manager = new InMemoryTreeStateManager<Equipment>();
+            final TreeBuilder<Equipment> treeBuilder = new TreeBuilder<Equipment>(manager);
+            for (int i = 0; i < equipmentList.size(); i++) {
+                treeBuilder.sequentiallyAddNextNode(equipmentList.get(i),equipmentList.get(i).getLayer() -1);
+                Log.i("", "add: " + i);
             }
             newCollapsible = true;
             
         } else {
-            manager = (TreeStateManager<Long>) savedInstanceState
+            manager = (TreeStateManager<Equipment>) savedInstanceState
                     .getSerializable("treeManager");
             if (manager == null) {
-                manager = new InMemoryTreeStateManager<Long>();
+                manager = new InMemoryTreeStateManager<Equipment>();
             }
             newCollapsible = savedInstanceState.getBoolean("collapsible");
         }

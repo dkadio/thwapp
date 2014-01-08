@@ -16,21 +16,21 @@ import proj.thw.app.treeview.AbstractTreeViewAdapter;
 import proj.thw.app.treeview.TreeNodeInfo;
 import proj.thw.app.treeview.TreeStateManager;
 
-public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Long>{
+public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Equipment>{
 	
-	 private final Set<Long> selected;
+	 private final Set<Equipment> selected;
 
 	    private final OnCheckedChangeListener onCheckedChange = new OnCheckedChangeListener() {
 	        @Override
 	        public void onCheckedChanged(final CompoundButton buttonView,
 	                final boolean isChecked) {
-	            final Long id = (Long) buttonView.getTag();
+	            final Equipment id = (Equipment) buttonView.getTag();
 	            changeSelected(isChecked, id);
 	        }
 
 	    };
 
-	    private void changeSelected(final boolean isChecked, final Long id) {
+	    private void changeSelected(final boolean isChecked, final Equipment id) {
 	        if (isChecked) {
 	            selected.add(id);
 	        } else {
@@ -39,20 +39,20 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Long>{
 	    }
 
 	    public ThwTreeViewAdapter(final EquipmentTreeViewListActivity treeViewList,
-	            final Set<Long> selected,
-	            final TreeStateManager<Long> treeStateManager,
+	            final Set<Equipment> selected,
+	            final TreeStateManager<Equipment> treeStateManager,
 	            final int numberOfLevels) {
 	        super(treeViewList, treeStateManager, numberOfLevels);
 	        this.selected = selected;
 	    }
 
-	    private String getDescription(final long id) {
+	    private String getDescription(final Equipment id) {
 	        final Integer[] hierarchy = getManager().getHierarchyDescription(id);
-	        return "Node " + id + Arrays.asList(hierarchy);
+	        return id.toString() + Arrays.asList(hierarchy);
 	    }
 
 	    @Override
-	    public View getNewChildView(final TreeNodeInfo<Long> treeNodeInfo) {
+	    public View getNewChildView(final TreeNodeInfo<Equipment> treeNodeInfo) {
 	        final LinearLayout viewLayout = (LinearLayout) getActivity()
 	                .getLayoutInflater().inflate(R.layout.tree_list_item, null);
 	        return updateView(viewLayout, treeNodeInfo);
@@ -60,7 +60,7 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Long>{
 
 	    @Override
 	    public LinearLayout updateView(final View view,
-	            final TreeNodeInfo<Long> treeNodeInfo) {
+	            final TreeNodeInfo<Equipment> treeNodeInfo) {
 	        final LinearLayout viewLayout = (LinearLayout) view;
 	        final TextView descriptionView = (TextView) viewLayout
 	                .findViewById(R.id.tree_list_item_description);
@@ -83,8 +83,8 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Long>{
 
 	    @Override
 	    public void handleItemClick(final View view, final Object id) {
-	        final Long longId = (Long) id;
-	        final TreeNodeInfo<Long> info = getManager().getNodeInfo(longId);
+	        final Equipment longId = (Equipment) id;
+	        final TreeNodeInfo<Equipment> info = getManager().getNodeInfo(longId);
 	        if (info.isWithChildren()) {
 	            super.handleItemClick(view, id);
 	        } else {
@@ -95,9 +95,12 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Long>{
 	        }
 	    }
 
-	    @Override
-	    public long getItemId(final int position) {
-	        return getTreeId(position);
-	    }
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+
 
 }

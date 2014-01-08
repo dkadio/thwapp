@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
-public abstract class FileParser {
+public abstract class FileHandler {
 
 	//Objektattribute
 	protected String 			filePath; 
@@ -18,7 +21,7 @@ public abstract class FileParser {
 	 * @param filePath Absolute Path to File
 	 * @throws FileNotFoundException 
 	 */
-	public FileParser(String filePath) throws FileNotFoundException
+	public FileHandler(String filePath) throws FileNotFoundException
 	{
 		this.filePath = filePath;
 		this.fileToParse = new File(filePath);
@@ -30,11 +33,16 @@ public abstract class FileParser {
 	 * @param fileToParse Fileobject
 	 * @throws FileNotFoundException 
 	 */
-	public FileParser(File fileToParse) throws FileNotFoundException
+	public FileHandler(File fileToParse) throws FileNotFoundException
 	{
 		this.fileToParse = fileToParse;
 		this.filePath = fileToParse.getAbsolutePath();
 		this.fileReader = new BufferedReader(new FileReader(fileToParse));
+	}
+	
+	public FileHandler(InputStream is)
+	{
+		this.fileReader = new BufferedReader(new InputStreamReader(is));
 	}
 
 	// Getter/Setter
