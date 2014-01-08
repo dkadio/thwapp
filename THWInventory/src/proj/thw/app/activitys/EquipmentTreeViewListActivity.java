@@ -49,7 +49,7 @@ public class EquipmentTreeViewListActivity extends Activity {
       
         
        try {
-		CSV csvHandler = new CSV(this.getResources().openRawResource(R.raw.test));
+		CSV csvHandler = new CSV(this.getResources().openRawResource(R.raw.thwdefault));
 		equipmentList = csvHandler.CSVToEquipmentList();
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block

@@ -73,7 +73,7 @@ public class SplashScreenActivity extends Activity {
 		{
 			int size;
 			try {
-				InputStream is = getResources().openRawResource(R.raw.test);
+				InputStream is = getResources().openRawResource(R.raw.thwdefault);
 				size = is.available();
 				byte[] buffer = new byte[size];
 				is.read(buffer);
