@@ -1,6 +1,5 @@
 package proj.thw.app.activitys;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;

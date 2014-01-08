@@ -24,5 +24,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="setEmptyLabel"></string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="status">Status</string>
 
 </resources>

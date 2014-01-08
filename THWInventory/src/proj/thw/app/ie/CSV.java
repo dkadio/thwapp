@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import android.util.Log;
 import proj.thw.app.classes.Equipment;
+import android.util.Log;
 
 public class CSV extends FileHandler implements IThwCSV{
 
