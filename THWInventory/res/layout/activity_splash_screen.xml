@@ -9,4 +9,30 @@
     tools:context=".SplashScreenActivity"
     android:background="@drawable/thw_inventory_background" >
 
+    <Spinner
+        android:id="@+id/sploadfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="58dp" />
+
+    <ProgressBar
+        android:id="@+id/pbload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/sploadfile"
+        android:layout_alignParentBottom="true" />
+
+    <TextView
+        android:id="@+id/tvstatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/pbload"
+        android:layout_alignRight="@+id/sploadfile"
+        android:layout_alignTop="@+id/pbload"
+        android:layout_toRightOf="@+id/pbload"
+        android:text="@string/status"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
 </RelativeLayout>
