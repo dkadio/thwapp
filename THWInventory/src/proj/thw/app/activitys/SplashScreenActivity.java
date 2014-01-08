@@ -7,57 +7,71 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import proj.thw.app.R;
+import proj.thw.app.ie.THWCSVLoader;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class SplashScreenActivity extends Activity {
 
-	
 	//private static final String appFolder = "//storage//"
 	private static final String IMPORT_EXPORT_FILE_FOLDER 	= "IE";
 	private static final String DEFAULT_FILE_NAME 			= "default";
 	private static final String FILE_EXTENTION 				= ".csv";
 	
-	
-	
 	private Spinner spLoadFile;
 	private ArrayAdapter<File> adpLoadFile;
 	
-	//private static final int SPLASH_TIME_OUT = 3000;
+	private ProgressBar pbLoad;
+	private TextView tvStatus;
+	private Button btnGo;
+	
+	private Context context;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);
-	
+		context = this;
 		//init Views
 		spLoadFile = (Spinner) findViewById(R.id.sploadfile);
 		
+		tvStatus = (TextView) findViewById(R.id.tvstatus);
+		tvStatus.setVisibility(View.INVISIBLE);
+		
+		pbLoad = (ProgressBar) findViewById(R.id.pbload);
+		pbLoad.setVisibility(View.INVISIBLE);
+		
+		btnGo = (Button) findViewById(R.id.btngo);
+		btnGo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				v.setVisibility(View.INVISIBLE);
+				THWCSVLoader csvLoader = new THWCSVLoader(spLoadFile, tvStatus, pbLoad, context);
+				csvLoader.execute((File)spLoadFile.getSelectedItem());
+			}
+		});
+		
 		//init Objects
 		adpLoadFile = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1);
-		
 		init();
-		/*
-		 	new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(SplashScreenActivity.this, EquipmentTreeViewListActivity.class);
-                startActivity(i);
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
-		 */
-	
 	}
+	
 	
 	private void init()
 	{
 		//pruefe, ob App-Folder existieren fuer die import/exportdateien, sonst leg ihn an
-		
 		File sysFolderOnExternalStorage = new File(Environment.getExternalStorageDirectory(),
 													getResources().getString(R.string.app_name));
 		
@@ -104,13 +118,10 @@ public class SplashScreenActivity extends Activity {
 			
 			@Override
 			public boolean accept(File dir, String filename) {
-				
-				if(filename.toLowerCase().endsWith(ext))
-				{
+				if(filename.toLowerCase().endsWith(ext)){
 					return true;
 				}
-				else
-				{
+				else{
 					return false;
 				}
 			}

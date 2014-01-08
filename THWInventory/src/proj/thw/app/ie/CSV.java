@@ -12,20 +12,6 @@ import android.util.Log;
 public class CSV extends FileHandler implements IThwCSV{
 
 	
-	private static final int COLUMN_LAYER 			= 0;
-	private static final int COLUMN_OE				= 1;
-	private static final int COLUMN_TYPE			= 2;
-	private static final int COLUMN_FB				= 3;
-	private static final int COLUMN_QUANTITY		= 4;
-	private static final int COLUMN_STOCK			= 5;
-	private static final int COLUMN_ACTUALQUANTITY	= 6;
-	private static final int COLUMN_DESCRIPTION		= 7;
-	private static final int COLUMN_EQUIP_NO		= 8;
-	private static final int COLUMN_INV_NO			= 9;
-	private static final int COLUMN_DEVICE_NO		= 10;
-	private static final int COLUMN_STATUS			= 11;
-	
-	
 	public CSV(String filePath) throws FileNotFoundException {
 		super(filePath);
 		
@@ -38,7 +24,7 @@ public class CSV extends FileHandler implements IThwCSV{
 	public CSV(InputStream is) throws FileNotFoundException {
 		super(is);
 	}
-
+/*
 	@Override
 	public ArrayList<Equipment> CSVToEquipmentList() {
 		
@@ -50,7 +36,7 @@ public class CSV extends FileHandler implements IThwCSV{
 		
 		return null;
 	}
-	
+	*/
 	private ArrayList<Equipment> read()
 	{
 		ArrayList<Equipment> equipList = new ArrayList<Equipment>();

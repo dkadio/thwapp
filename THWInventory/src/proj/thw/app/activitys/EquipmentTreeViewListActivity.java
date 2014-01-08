@@ -47,18 +47,7 @@ public class EquipmentTreeViewListActivity extends Activity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
       
-        
-       try {
-		CSV csvHandler = new CSV(this.getResources().openRawResource(R.raw.thwdefault));
-		equipmentList = csvHandler.CSVToEquipmentList();
-	} catch (FileNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (NotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-        
+
         boolean newCollapsible;
         if (savedInstanceState == null) {
             manager = new InMemoryTreeStateManager<Equipment>();
