@@ -24,13 +24,11 @@ import android.view.MenuItem;
  * 
  */
 public class EquipmentTreeViewListActivity extends Activity {
-
-	 private static final int[] DEMO_NODES = new int[] { 0, 0, 1, 1, 1, 2, 2, 1,
-         1, 2, 1, 0, 0, 0, 1, 2, 3, 2, 0, 0, 1, 2, 0, 1, 2, 0, 1 };
+	
+	static final String KEY_EQUIPMENTLIST	= "equip.list";
 	
     private final Set<Equipment> selected = new HashSet<Equipment>();
     private TreeViewList tvlEquipment;
-
    
     private static final int LEVEL_NUMBER = 6;
     private TreeStateManager<Equipment> manager = null;
@@ -44,6 +42,10 @@ public class EquipmentTreeViewListActivity extends Activity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
       
+        if(getIntent().getExtras().containsKey(KEY_EQUIPMENTLIST))
+        {
+        	equipmentList = (ArrayList<Equipment>) getIntent().getExtras().getParcelable(KEY_EQUIPMENTLIST);
+        }
 
         boolean newCollapsible;
         if (savedInstanceState == null) {

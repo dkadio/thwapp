@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import proj.thw.app.activitys.EquipmentTreeViewListActivity;
 import proj.thw.app.classes.Equipment;
@@ -14,20 +15,32 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 public class THWCSVLoader extends AsyncTask<File, String, ArrayList<Equipment>> implements IThwCSV{
 
+	static final String KEY_EQUIPMENTLIST	= "equip.list";
+	
+	static final String KEY_LAYER 			= "Ebene";
+	static final String KEY_OE				= "OE";
+	static final String KEY_TYPE			= "Art";
+	static final String KEY_FB				= "FB";
+	static final String KEY_QUANTITY		= "Menge";
+	static final String KEY_STOCK			= "Verfügbar";
+	static final String KEY_ACTUALQUANTITY	= "Menge Ist";
+	static final String KEY_DESCRIPTION		= "Ausstattung | Hersteller | Typ";
+	static final String KEY_EQUIP_NO		= "Sachnummer";
+	static final String KEY_INV_NO			= "Inventar Nr";
+	static final String KEY_DEVICE_NO		= "Gerätenr.";
+	static final String KEY_STATUS			= "Status";
+	
+	private static final String SEPERATOR 			= ";";
+	private static final String SEPERATOR_STATUS 	= ",";
 	private TextView tvStatus;
 	private Context callContext;
 	
-	private String[][] table;
-	
 	public THWCSVLoader(TextView tvStatus, Context callContext)
 	{
-		
 		this.tvStatus = tvStatus;
 		this.callContext = callContext;
 	}
@@ -46,38 +59,76 @@ public class THWCSVLoader extends AsyncTask<File, String, ArrayList<Equipment>> 
 		
 		ArrayList<Equipment> equipList = new ArrayList<Equipment>();
 		String line = "";
+		int rowCount = 0;
 		try {
-			fileReader.readLine();
-			fileReader.readLine();
-			int currentLine = 0;
-			while(( line = fileReader.readLine()) != null)
+			
+			if((line = fileReader.readLine()) != null)
 			{
-				publishProgress("Load: " + currentLine++);
-				try {
-					Thread.currentThread().sleep(10);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				//Rowsno init
+				HashMap<String,Integer> columnNo = new HashMap<String, Integer>();
+			
+				String[] sp1 = line.split(SEPERATOR);
+				for(int i = 0; i <  sp1.length; i++){
+					columnNo.put(sp1[i], i);
 				}
 				
-				/*
-				Equipment insertEquip = new Equipment();
-				
-				String[] splitArray1 = line.split(";");
-				
-				insertEquip.setLayer(Integer.parseInt(splitArray1[COLUMN_LAYER]));
-				insertEquip.setType(splitArray1[COLUMN_TYPE]);
-				insertEquip.setActualQuantity(0);
-				insertEquip.setStock(0);
-				insertEquip.setTargetQuantity(0);
-				insertEquip.setDescription(splitArray1[COLUMN_DESCRIPTION]);
-				insertEquip.setEquipNo(splitArray1[COLUMN_EQUIP_NO]);
-				insertEquip.setInvNo(splitArray1[COLUMN_INV_NO]);
-				insertEquip.setDeviceNo(splitArray1[COLUMN_DEVICE_NO]);
-				insertEquip.setStatus(splitArray1[COLUMN_STATUS]);
-				
-				equipList.add(insertEquip);
-				*/
+				fileReader.readLine();
+				while(( line = fileReader.readLine()) != null)
+				{
+					publishProgress("Load RowNo: " + rowCount++);
+					
+					Equipment insertEquip = new Equipment();
+					
+					String[] splitArray1 = line.split(SEPERATOR);
+					
+					int no = columnNo.get(KEY_LAYER);
+					String s = splitArray1[no];
+					int l = Integer.parseInt(s);
+					insertEquip.setLayer(l);
+					insertEquip.setActualQuantity(Integer.parseInt(splitArray1[columnNo.get(KEY_QUANTITY)]));
+					insertEquip.setStock(Integer.parseInt(splitArray1[columnNo.get(KEY_STOCK)]));
+					insertEquip.setTargetQuantity(Integer.parseInt(splitArray1[columnNo.get(KEY_ACTUALQUANTITY)]));
+					insertEquip.setDescription(splitArray1[columnNo.get(KEY_DESCRIPTION)]);
+					insertEquip.setEquipNo(splitArray1[columnNo.get(KEY_EQUIP_NO)]);
+					insertEquip.setInvNo(splitArray1[columnNo.get(KEY_INV_NO)]);
+					insertEquip.setDeviceNo(splitArray1[columnNo.get(KEY_DEVICE_NO)]);
+					
+					//Status split again..
+					String[] spStatus = splitArray1[columnNo.get(KEY_STATUS)].split(SEPERATOR_STATUS);
+					for(String status : spStatus)
+					{
+						if(Equipment.Status.V.toString().equals(status))
+						{
+							insertEquip.getStatus().add(Equipment.Status.V);
+						}else if(Equipment.Status.F.toString().equals(status))
+						{
+							insertEquip.getStatus().add(Equipment.Status.F);
+						}else if(Equipment.Status.BA.toString().equals(status))
+						{
+							insertEquip.getStatus().add(Equipment.Status.BA);
+						}else
+							insertEquip.getStatus().add(Equipment.Status.NOSTATUS);
+						{
+					}
+						
+					if(Equipment.Type.POS.toString().equals(splitArray1[columnNo.get(KEY_TYPE)]))
+					{
+						insertEquip.setType(Equipment.Type.POS);
+					}else if(Equipment.Type.GWM.toString().equals(splitArray1[columnNo.get(KEY_TYPE)]))
+					{
+						insertEquip.setType(Equipment.Type.GWM);
+					}else if(Equipment.Type.SATZ.toString().equals(splitArray1[columnNo.get(KEY_TYPE)]))
+					{
+						insertEquip.setType(Equipment.Type.SATZ);
+					}else if(Equipment.Type.TEIL.toString().equals(splitArray1[columnNo.get(KEY_TYPE)]))
+					{
+						insertEquip.setType(Equipment.Type.TEIL);
+					}else
+						insertEquip.setType(Equipment.Type.NOTYPE);
+					}
+					
+					equipList.add(insertEquip);
+				}
 			}
 			
 			
@@ -115,9 +166,9 @@ public class THWCSVLoader extends AsyncTask<File, String, ArrayList<Equipment>> 
 		if(result != null)
 		{
 			Intent i = new Intent(callContext, EquipmentTreeViewListActivity.class);
+			i.putExtra(KEY_EQUIPMENTLIST, result);
 	        callContext.startActivity(i);
 		}
-		
 	}
 	
 	@Override
@@ -125,7 +176,4 @@ public class THWCSVLoader extends AsyncTask<File, String, ArrayList<Equipment>> 
 		super.onProgressUpdate(values);
 		tvStatus.setText(values[0].toString());
 	}
-	
-	
-
 }

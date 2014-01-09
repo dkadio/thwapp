@@ -14,5 +14,7 @@ public interface IThwCSV{
 	static final String COLUMN_INV_NO			= "Inventar Nr";
 	static final String COLUMN_DEVICE_NO		= "Gerätenr.";
 	static final String COLUMN_STATUS			= "Status";
+	
+	
 
 }

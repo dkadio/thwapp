@@ -7,8 +7,8 @@ public class Equipment implements Serializable {
 	
 	
 	
-	public enum Type{POS,SATZ,GWM,TEIL};
-	public enum Status {V,F,BA};
+	public enum Type{POS,SATZ,GWM,TEIL,NOTYPE};
+	public enum Status {V,F,BA,NOSTATUS};
 	
 	private static final long serialVersionUID = 1L;
 	
