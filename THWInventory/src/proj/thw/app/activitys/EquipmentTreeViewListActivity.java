@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import proj.thw.app.R;
+import proj.thw.app.adapters.ThwTreeViewAdapter;
 import proj.thw.app.classes.Equipment;
-import proj.thw.app.classes.ThwTreeViewAdapter;
 import proj.thw.app.treeview.InMemoryTreeStateManager;
 import proj.thw.app.treeview.TreeBuilder;
 import proj.thw.app.treeview.TreeStateManager;

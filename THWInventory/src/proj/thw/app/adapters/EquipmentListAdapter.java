@@ -1,4 +1,4 @@
-package adapters;
+package proj.thw.app.adapters;
 
 import java.util.ArrayList;
 

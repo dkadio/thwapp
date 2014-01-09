@@ -1,10 +1,11 @@
-package proj.thw.app.classes;
+package proj.thw.app.adapters;
 
 import java.util.Arrays;
 import java.util.Set;
 
 import proj.thw.app.R;
 import proj.thw.app.activitys.EquipmentTreeViewListActivity;
+import proj.thw.app.classes.Equipment;
 import proj.thw.app.treeview.AbstractTreeViewAdapter;
 import proj.thw.app.treeview.TreeNodeInfo;
 import proj.thw.app.treeview.TreeStateManager;
