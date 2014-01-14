@@ -3,11 +3,9 @@ package proj.thw.app.activitys;
 import java.util.ArrayList;
 
 import proj.thw.app.R;
-import proj.thw.app.R.layout;
-import proj.thw.app.R.menu;
 import proj.thw.app.classes.Equipment;
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
 
 public class DetailActivity extends Activity {

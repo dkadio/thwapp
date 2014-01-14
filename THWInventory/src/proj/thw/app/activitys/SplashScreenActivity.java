@@ -1,6 +1,7 @@
 package proj.thw.app.activitys;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -8,7 +9,9 @@ import java.io.InputStream;
 
 import proj.thw.app.R;
 import proj.thw.app.database.OrmDBHelper;
-import proj.thw.app.ie.ImportFile;
+import proj.thw.app.ie.CSVFile;
+import proj.thw.app.ie.FileIE;
+import proj.thw.app.ie.ThwCsvImporter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,7 +29,7 @@ public class SplashScreenActivity extends Activity {
 	private static final String FILE_EXTENTION 				= ".csv";
 	
 	private Spinner spLoadFile;
-	private ArrayAdapter<ImportFile> adpLoadFile; //String, weil toString() von FileObject den ganzen Pfad anzeigt
+	private ArrayAdapter<FileIE> adpLoadFile; //String, weil toString() von FileObject den ganzen Pfad anzeigt
 	
 	private TextView tvStatus;
 	
@@ -44,7 +47,7 @@ public class SplashScreenActivity extends Activity {
 		tvStatus.setVisibility(View.INVISIBLE);
 		
 		//init Objects
-		adpLoadFile = new ArrayAdapter<ImportFile>(this, android.R.layout.simple_spinner_dropdown_item);
+		adpLoadFile = new ArrayAdapter<FileIE>(this, android.R.layout.simple_spinner_dropdown_item);
 		
 		dbHelper = new OrmDBHelper(this);
 		init();
@@ -53,10 +56,12 @@ public class SplashScreenActivity extends Activity {
 	
 	private void init()
 	{
+		tvStatus.setText("Init...");
 		//pruefe, ob App-Folder existieren fuer die import/exportdateien, sonst leg ihn an
 		File sysFolderOnExternalStorage = new File(Environment.getExternalStorageDirectory(),
 													getResources().getString(R.string.app_name));
 		
+		tvStatus.setText("Prüfe Ordnerstruktur...");
 		if(!sysFolderOnExternalStorage.exists())
 			sysFolderOnExternalStorage.mkdir();
 		
@@ -90,7 +95,11 @@ public class SplashScreenActivity extends Activity {
 		//add all Files to Adapter and set Adapter to Spinner
 		for(File file : getFileList(ieFolder,FILE_EXTENTION))
 		{
-			adpLoadFile.add(new ImportFile(file.getAbsolutePath()));
+			try {
+				adpLoadFile.add(new CSVFile(file.getAbsolutePath(),";"));
+			} catch (FileNotFoundException e) {
+				Log.e(this.getClass().getName(), e.getMessage());
+			}
 		}
 		
 		spLoadFile.setAdapter(adpLoadFile);
@@ -119,8 +128,9 @@ public class SplashScreenActivity extends Activity {
 		v.setVisibility(View.INVISIBLE);
 		spLoadFile.setVisibility(View.INVISIBLE);
 		tvStatus.setVisibility(View.VISIBLE);
-		//CSVLoader csvLoader = new CSVLoader(tvStatus, this);
-		//csvLoader.execute((File)spLoadFile.getSelectedItem());
+		
+		ThwCsvImporter importer = new ThwCsvImporter(dbHelper, this, tvStatus);
+		importer.execute((CSVFile)spLoadFile.getSelectedItem());
 	}
 
 }

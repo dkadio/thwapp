@@ -2,6 +2,7 @@ package proj.thw.app.classes;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -17,7 +18,7 @@ public class EquipmentImage implements Serializable{
 	@DatabaseField(generatedId=true)
 	private int id;
 
-	@DatabaseField
+	@DatabaseField(dataType=DataType.BYTE_ARRAY)
 	private byte[] imgBytes;
 	
 	private Bitmap img;

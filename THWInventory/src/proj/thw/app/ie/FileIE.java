@@ -4,12 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
-public abstract class FileHandler {
+public abstract class FileIE {
 
 	//Objektattribute
+	protected String			fileName;
 	protected String 			filePath; 
 	protected File				fileToParse; 	
 	protected BufferedReader	fileReader;
@@ -20,11 +19,12 @@ public abstract class FileHandler {
 	 * @param filePath Absolute Path to File
 	 * @throws FileNotFoundException 
 	 */
-	public FileHandler(String filePath) throws FileNotFoundException
+	public FileIE(String filePath) throws FileNotFoundException
 	{
 		this.filePath = filePath;
 		this.fileToParse = new File(filePath);
 		this.fileReader = new BufferedReader(new FileReader(fileToParse));
+		this.fileName = fileToParse.getName();
 	}
 	
 	/**
@@ -32,17 +32,25 @@ public abstract class FileHandler {
 	 * @param fileToParse Fileobject
 	 * @throws FileNotFoundException 
 	 */
-	public FileHandler(File fileToParse) throws FileNotFoundException
+	public FileIE(File fileToParse) throws FileNotFoundException
 	{
 		this.fileToParse = fileToParse;
 		this.filePath = fileToParse.getAbsolutePath();
 		this.fileReader = new BufferedReader(new FileReader(fileToParse));
+		this.fileName = fileToParse.getName();
 	}
 	
-	public FileHandler(InputStream is)
+	/*
+	public FileIE(InputStream is, String path)
 	{
 		this.fileReader = new BufferedReader(new InputStreamReader(is));
-	}
+		this.fileName = fileToParse.getName();
+		
+		fileToParse = new File();
+		OutputStream outputStream = new FileOutputStream(fileToParse);
+		IOUtils.copy(inputStream, outputStream);
+		outputStream.close();
+	}*/
 
 	// Getter/Setter
 	/**
@@ -80,4 +88,10 @@ public abstract class FileHandler {
 	public BufferedReader getFileReader() {
 		return fileReader;
 	}
+	
+	public String toString()
+	{
+		return fileName;
+	}
+	
 }

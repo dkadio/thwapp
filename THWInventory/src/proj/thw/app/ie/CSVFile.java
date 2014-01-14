@@ -2,9 +2,8 @@ package proj.thw.app.ie;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
-public class CSVFile extends FileHandler{
+public class CSVFile extends FileIE{
 
 	//evtl ein TableObject um CSVFile als Table im Speicher zu halten... JAVA besitzt kein TableObjekt!! ToDo
 	private String separator; 
@@ -18,10 +17,12 @@ public class CSVFile extends FileHandler{
 		super(fileToParse);
 		this.separator = separator;
 	}
+	
+	/*
 	public CSVFile(InputStream is, String separator) throws FileNotFoundException {
 		super(is);
 		this.separator = separator;
-	}
+	}*/
 	
 	public String getSeparator() {
 		return separator;
