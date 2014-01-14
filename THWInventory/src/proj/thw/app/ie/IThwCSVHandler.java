@@ -1,6 +1,11 @@
 package proj.thw.app.ie;
 
-public interface IThwCSV{
+import java.util.ArrayList;
+
+import proj.thw.app.classes.Equipment;
+import proj.thw.app.database.OrmDBHelper;
+
+public interface IThwCSVHandler{
 
 	static final String COLUMN_LAYER 			= "Ebene";
 	static final String COLUMN_OE				= "OE";
@@ -14,7 +19,8 @@ public interface IThwCSV{
 	static final String COLUMN_INV_NO			= "Inventar Nr";
 	static final String COLUMN_DEVICE_NO		= "Gerätenr.";
 	static final String COLUMN_STATUS			= "Status";
+	static final String COLUMN_IMAGE			= "Image";
 	
+	public void csvFileToDatabase();
 	
-
 }

@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
 encoding//src/proj/thw/app/activitys/SplashScreenActivity.java=UTF-8
-encoding//src/proj/thw/app/ie/IThwCSV.java=UTF-8
-encoding//src/proj/thw/app/ie/THWCSVLoader.java=UTF-8
+encoding//src/proj/thw/app/ie/CSVHandler.java=UTF-8
+encoding//src/proj/thw/app/ie/IThwCSVHandler.java=UTF-8

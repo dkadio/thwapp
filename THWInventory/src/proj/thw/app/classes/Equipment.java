@@ -3,29 +3,58 @@ package proj.thw.app.classes;
 import java.io.Serializable;
 import java.util.Vector;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "equipment")
 public class Equipment implements Serializable {
-	
-	
 	
 	public enum Type{POS,SATZ,GWM,TEIL,NOTYPE};
 	public enum Status {V,F,BA,NOSTATUS};
 	
 	private static final long serialVersionUID = 1L;
 	
-	//TODO Id?
+	@DatabaseField(generatedId=true)
+	private int 			id;
 	
+	@DatabaseField
 	private int 			layer;
+	
+	@DatabaseField
 	private String 			location;
+	
+	@DatabaseField
 	private String 			invNo;
+	
+	@DatabaseField
 	private String 			equipNo;
+	
+	@DatabaseField
 	private String 			deviceNo;
+	
+	@DatabaseField
 	private String 			description;
+	
+	@DatabaseField
 	private int 			targetQuantity;
+	
+	@DatabaseField
 	private int 			actualQuantity;
+	
+	@DatabaseField
 	private int 			stock;
+	
+	@DatabaseField
 	private boolean 		foreignPart;
+	
+	@DatabaseField
 	private Type 			type;
+	
+	@DatabaseField
 	private Vector<Status> 	status;
+	
+	@DatabaseField(foreign=true)
+	EquipmentImage 			equipImg; 
 	
 	public Equipment()
 	{
@@ -124,6 +153,20 @@ public class Equipment implements Serializable {
 		this.status = status;
 	}
 	
-	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public EquipmentImage getEquipImg() {
+		return equipImg;
+	}
+
+	public void setEquipImg(EquipmentImage equipImg) {
+		this.equipImg = equipImg;
+	}
 
 }

@@ -23,6 +23,7 @@ public class ImportFile extends File {
 		super(dir, name);
 	}
 	
+	@Override
 	public String toString()
 	{
 		return getName();

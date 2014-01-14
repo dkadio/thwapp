@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import proj.thw.app.R;
+import proj.thw.app.database.OrmDBHelper;
 import proj.thw.app.ie.ImportFile;
-import proj.thw.app.ie.THWCSVLoader;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +30,8 @@ public class SplashScreenActivity extends Activity {
 	
 	private TextView tvStatus;
 	
+	private OrmDBHelper dbHelper;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,6 +45,8 @@ public class SplashScreenActivity extends Activity {
 		
 		//init Objects
 		adpLoadFile = new ArrayAdapter<ImportFile>(this, android.R.layout.simple_spinner_dropdown_item);
+		
+		dbHelper = new OrmDBHelper(this);
 		init();
 	}
 	
@@ -115,8 +119,8 @@ public class SplashScreenActivity extends Activity {
 		v.setVisibility(View.INVISIBLE);
 		spLoadFile.setVisibility(View.INVISIBLE);
 		tvStatus.setVisibility(View.VISIBLE);
-		THWCSVLoader csvLoader = new THWCSVLoader(tvStatus, this);
-		csvLoader.execute((File)spLoadFile.getSelectedItem());
+		//CSVLoader csvLoader = new CSVLoader(tvStatus, this);
+		//csvLoader.execute((File)spLoadFile.getSelectedItem());
 	}
 
 }

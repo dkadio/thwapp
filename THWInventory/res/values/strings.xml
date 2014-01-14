@@ -25,6 +25,7 @@
     <string name="setEmptyLabel"></string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="status">Status</string>
-     <string name="go">Go</string>
+    <string name="go">Go</string>
+    <string name="search">Search</string>
 
 </resources>
