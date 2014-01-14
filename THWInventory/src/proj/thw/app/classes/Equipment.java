@@ -3,14 +3,17 @@ package proj.thw.app.classes;
 import java.io.Serializable;
 import java.util.Vector;
 
+import android.graphics.BitmapFactory;
+
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "equipment")
 public class Equipment implements Serializable {
 	
-	public enum Type{POS,SATZ,GWM,TEIL,NOTYPE};
-	public enum Status {V,F,BA,NOSTATUS};
+	public static enum Type{POS,SATZ,GWM,TEIL,NOTYPE};
+	public static enum Status {V,F,BA,NOSTATUS};
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -50,7 +53,7 @@ public class Equipment implements Serializable {
 	@DatabaseField
 	private Type 			type;
 	
-	@DatabaseField
+	@DatabaseField(dataType=DataType.SERIALIZABLE)
 	private Vector<Status> 	status;
 	
 	@DatabaseField(foreign=true)
@@ -58,7 +61,8 @@ public class Equipment implements Serializable {
 	
 	public Equipment()
 	{
-
+		status = new Vector<Status>();
+		equipImg = new EquipmentImage();
 	}
 	
 	public Equipment(	int layer,String location, String invNo, 

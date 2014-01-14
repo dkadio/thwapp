@@ -25,6 +25,11 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 
 	public OrmDBHelper(Context context){
 		super(context,DB_NAME,null,DB_VERSION);
+		try {
+			dbHelperEquip = new DBHelperEquip(createEquipmentDAO());
+		} catch (SQLException e) {
+			Log.e(this.getClass().getName(), e.getMessage());
+		}
 	}
 
 	@Override
@@ -34,7 +39,6 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(src, EquipmentImage.class);
 			TableUtils.createTable(src, Equipment.class);
 			
-			dbHelperEquip = new DBHelperEquip(createEquipmentDAO());
 		} catch (SQLException e) {
 			Log.e(LOG, e.getMessage());
 		}
