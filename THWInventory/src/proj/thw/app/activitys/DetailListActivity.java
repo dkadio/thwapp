@@ -23,6 +23,7 @@ import android.widget.ListView;
 public class DetailListActivity extends Activity implements OnItemClickListener{
 	public final static String EQUIP_COLLECTION_KEY = "equip_collection_key";
 	public final static String SELECTED_EQUIP_KEY = "selected_equip_key";
+	public final static int REQUEST_CODE = 98613123;
 	ArrayList<Equipment> equipments;
 	ListView equipmentListView;
 	Intent intent;
@@ -80,7 +81,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener{
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 		// TODO start detailactivity fuer das gewuwnschte equipment
 		intent.putExtra(SELECTED_EQUIP_KEY, position);
-		startActivity(intent);
+		startActivityForResult(intent, REQUEST_CODE);
 	}
 
 }

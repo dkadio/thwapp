@@ -27,5 +27,8 @@
     <string name="status">Status</string>
     <string name="go">Go</string>
     <string name="search">Search</string>
+    <string name="soll">Soll</string>
+    <string name="ist">Ist</string>
+    <string name="fremdbeschafft">Fremdbeschafft</string>
 
 </resources>
