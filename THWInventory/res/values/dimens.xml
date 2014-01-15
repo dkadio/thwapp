@@ -4,5 +4,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="equipment_lv_margins">20dp</dimen>
+    <dimen name="seperator_dimension">8dp</dimen>
+    <dimen name="soll_ist_dim">30dp</dimen>
 
 </resources>

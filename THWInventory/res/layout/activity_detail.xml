@@ -1,16 +1,254 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".DetailActivity" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+    <LinearLayout
+        android:id="@+id/LL_Seperator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/seperator_dimension"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/seperator_dimension"
+        android:background="#37000000"
+        android:orientation="horizontal" >
+    </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/textViewType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:text="Art"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <CheckBox
+            android:id="@+id/checkBoxforeignpart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:text="Fremdbeschafft" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LL_Seperator3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/seperator_dimension"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/seperator_dimension"
+        android:background="#37000000"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textViewProducer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hersteller Austattung Typ"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textViewEquipNr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sachnummer 123"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LL_Seperator1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/seperator_dimension"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/seperator_dimension"
+        android:background="#37000000"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textViewInvNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:text="Inventarnummer"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textViewDeviceNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="gerätenummer"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/editTextInvNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10" />
+
+            <EditText
+                android:id="@+id/editTextDeviceNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <requestFocus />
+            </EditText>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LL_Seperator2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/seperator_dimension"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/seperator_dimension"
+        android:background="#37000000"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status: V"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/LL_Seperator4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/seperator_dimension"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/seperator_dimension"
+        android:background="#37000000"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/equipment_lv_margins"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/textViewSoll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Soll:2"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="@dimen/soll_ist_dim" 
+                android:textAlignment="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/textViewIst"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ist: 1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="@dimen/soll_ist_dim" 
+                android:textAlignment="center"/>
+
+        </LinearLayout>
+        
+        
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LL_Seperator5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/seperator_dimension"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/seperator_dimension"
+        android:background="#37000000"
+        android:orientation="horizontal" >
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/equipment_lv_margins"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/imageButtonBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_media_rew" />
+
+        <ImageButton
+            android:id="@+id/imageButtonStop"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/equipment_lv_margins"
+            android:layout_marginRight="@dimen/equipment_lv_margins"
+            android:src="@android:drawable/ic_lock_power_off" />
+
+        <ImageButton
+            android:id="@+id/imageForward"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_media_ff" />
+    </LinearLayout>
+
+</LinearLayout>
