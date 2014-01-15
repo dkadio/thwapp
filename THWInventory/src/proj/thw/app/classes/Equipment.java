@@ -3,8 +3,6 @@ package proj.thw.app.classes;
 import java.io.Serializable;
 import java.util.Vector;
 
-import android.graphics.BitmapFactory;
-
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -13,8 +11,8 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Equipment implements Serializable {
 	
 	public static enum Type{POS,SATZ,GWM,TEIL,NOTYPE};
-	public static enum Status {V,F,BA,NOSTATUS};
-	
+	public static enum Status {V,A,F,BA,NOSTATUS};
+
 	private static final long serialVersionUID = 1L;
 	
 	@DatabaseField(generatedId=true)
@@ -50,7 +48,7 @@ public class Equipment implements Serializable {
 	@DatabaseField
 	private boolean 		foreignPart;
 	
-	@DatabaseField
+	@DatabaseField(dataType=DataType.ENUM_STRING)
 	private Type 			type;
 	
 	@DatabaseField(dataType=DataType.SERIALIZABLE)
@@ -171,6 +169,11 @@ public class Equipment implements Serializable {
 
 	public void setEquipImg(EquipmentImage equipImg) {
 		this.equipImg = equipImg;
+	}
+	
+	public String toString()
+	{
+		return equipNo + " ("+status.toString()+") ";
 	}
 
 }

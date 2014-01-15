@@ -1,6 +1,7 @@
 package proj.thw.app.database;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -36,5 +37,10 @@ public class DBHelperEquip {
 	public void createOrUpdateEquipment(Equipment equip) throws SQLException
 	{
 		equipDao.createOrUpdate(equip);
+	}
+	
+	public List<Equipment> selectAllEquipments() throws SQLException
+	{
+		return equipDao.queryForAll();
 	}
 }

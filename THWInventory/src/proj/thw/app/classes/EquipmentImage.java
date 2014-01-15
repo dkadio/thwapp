@@ -8,7 +8,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 @DatabaseTable(tableName = "equipmentimage")
 public class EquipmentImage implements Serializable{
@@ -28,13 +27,13 @@ public class EquipmentImage implements Serializable{
 		//DB-Constructor
 	}
 	
-	public EquipmentImage(Bitmap img) throws Exception
+	public EquipmentImage(Bitmap img)
 	{
 		this.img = img;
 		imgBytes = imgToBytes();
 	}
 	
-	private byte[] imgToBytes() throws Exception
+	private byte[] imgToBytes()
 	{
 		if(img != null)
 		{
@@ -42,22 +41,18 @@ public class EquipmentImage implements Serializable{
 			img.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 			return baos.toByteArray();
 		}
-		else
-		{
-			throw new Exception("Image not init!");
-		}
+		return null;
 	}
 	
-	private Bitmap bytesToImage() throws Exception
+	private Bitmap bytesToImage()
 	{
 		if(imgBytes != null)
 		{
-			return BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
+			return BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);	
 		}
-		else
-		{
-			throw new Exception("ImageBytes not init!");
-		}
+		
+		return null;
+		
 	}
 	
 	public int getId() {
@@ -72,13 +67,8 @@ public class EquipmentImage implements Serializable{
 		
 		if(img == null)
 		{
-			try {
-				img = bytesToImage();
-			} catch (Exception e) {
-				Log.e(this.getClass().getName(), e.getMessage());
-			}
+			img = bytesToImage();
 		}
-		
 		return img;
 	}
 
@@ -92,11 +82,7 @@ public class EquipmentImage implements Serializable{
 
 	public void setImgBytes(byte[] imgBytes) {
 		this.imgBytes = imgBytes;
-		try {
-			img = bytesToImage();
-		} catch (Exception e) {
-			Log.e(this.getClass().getName(), e.getMessage());
-		}
+		img = bytesToImage();
 	}
 	
 }

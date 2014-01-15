@@ -1,5 +1,6 @@
 package proj.thw.app.activitys;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,17 +8,20 @@ import java.util.Set;
 import proj.thw.app.R;
 import proj.thw.app.adapters.ThwTreeViewAdapter;
 import proj.thw.app.classes.Equipment;
+import proj.thw.app.database.OrmDBHelper;
 import proj.thw.app.treeview.InMemoryTreeStateManager;
 import proj.thw.app.treeview.TreeBuilder;
 import proj.thw.app.treeview.TreeStateManager;
 import proj.thw.app.treeview.TreeViewList;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Window;
 
 /**
  * Demo activity showing how the tree view can be used.
@@ -29,24 +33,28 @@ public class EquipmentTreeViewListActivity extends Activity {
 	
     private final Set<Equipment> selected = new HashSet<Equipment>();
     private TreeViewList tvlEquipment;
-   
+    private ProgressDialog loadDialog;
+    
     private static final int LEVEL_NUMBER = 6;
     private TreeStateManager<Equipment> manager = null;
     private ThwTreeViewAdapter simpleAdapter;
     private boolean collapsible;
     
     private ArrayList<Equipment> equipmentList;
+    private OrmDBHelper dbHelper;
 
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      
-        if(getIntent().getExtras().containsKey(KEY_EQUIPMENTLIST))
-        {
-        	equipmentList = (ArrayList<Equipment>) getIntent().getExtras().getParcelable(KEY_EQUIPMENTLIST);
-        }
-
+        
+        dbHelper = new OrmDBHelper(this);
+        try {
+			equipmentList =  (ArrayList<Equipment>) dbHelper.getDbHelperEquip().selectAllEquipments();
+		} catch (SQLException e) {
+			equipmentList = new ArrayList<Equipment>();
+		}
+        
         boolean newCollapsible;
         if (savedInstanceState == null) {
             manager = new InMemoryTreeStateManager<Equipment>();
@@ -67,16 +75,25 @@ public class EquipmentTreeViewListActivity extends Activity {
         }
        
         
-        
         setContentView(R.layout.activity_tree_view_list);
-        tvlEquipment = (TreeViewList) findViewById(R.id.tvlequip);
-     
-        simpleAdapter = new ThwTreeViewAdapter(this, selected, manager,
-                LEVEL_NUMBER);
+        
+        
+        tvlEquipment 	= (TreeViewList) findViewById(R.id.tvlequip);
+        simpleAdapter 	= new ThwTreeViewAdapter(this, selected, manager,
+                		  LEVEL_NUMBER);
+        
         
         tvlEquipment.setAdapter(simpleAdapter);
         setCollapsible(newCollapsible);
         registerForContextMenu(tvlEquipment);
+        
+    }
+    
+    
+    @Override
+    protected void onStart() {
+    	super.onStart();
+    	
     }
 
     @Override

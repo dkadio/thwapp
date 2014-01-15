@@ -82,14 +82,14 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 		}
 		
 		CSVFile fileToImport = params[0];
-		
+		int rowCount = 0;
 		String line = "";
 		try {
 			if((line = fileToImport.getFileReader().readLine()) != null)
 			{
 				//lese header aus...
 				//Vector<String> columnHeaders = new Vector<String>();
-				
+				publishProgress("initialisiere Header...");
 				columnHeaders = new HashMap<String, Integer>();
 				String[] spHeader = line.split(fileToImport.getSeparator());
 				for(int i = 0; i <  spHeader.length; i++){
@@ -106,6 +106,7 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 				
 				while(( line = fileToImport.getFileReader().readLine()) != null)
 				{
+					publishProgress("load RowNr:  " + rowCount++);
 					String[] spRow = line.split(fileToImport.getSeparator());
 					
 					Equipment newEquip = new Equipment(); 
@@ -122,28 +123,28 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 					//parse DeviceNo
 					String deviceNo = "";
 					if(columnHeaders.containsKey(COLUMN_DEVICE_NO.toUpperCase()))
-						deviceNo = spRow[columnHeaders.get(COLUMN_DEVICE_NO.toUpperCase())];
+						deviceNo = getStringValue(spRow[columnHeaders.get(COLUMN_DEVICE_NO.toUpperCase())]);
 					
 					newEquip.setDeviceNo(deviceNo);
 					
 					//parse EquipNo
 					String equipNo = "";
 					if(columnHeaders.containsKey(COLUMN_EQUIP_NO.toUpperCase()))
-						deviceNo = spRow[columnHeaders.get(COLUMN_EQUIP_NO.toUpperCase())];
+						deviceNo = getStringValue(spRow[columnHeaders.get(COLUMN_EQUIP_NO.toUpperCase())]);
 					
 					newEquip.setEquipNo(equipNo);
 					
 					//parse InvNo
 					String invNo = "";
 					if(columnHeaders.containsKey(COLUMN_INV_NO.toUpperCase()))
-						invNo = spRow[columnHeaders.get(COLUMN_INV_NO.toUpperCase())];
+						invNo = getStringValue(spRow[columnHeaders.get(COLUMN_INV_NO.toUpperCase())]);
 					
 					newEquip.setInvNo(invNo);
 					
 					//parse Description
 					String desc = "";
 					if(columnHeaders.containsKey(COLUMN_DESCRIPTION.toUpperCase()))
-						desc = spRow[columnHeaders.get(COLUMN_DESCRIPTION.toUpperCase())];
+						desc = getStringValue(spRow[columnHeaders.get(COLUMN_DESCRIPTION.toUpperCase())]);
 					
 					newEquip.setDescription(desc);
 					
@@ -170,37 +171,50 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 					
 					
 					//Status split again..
-					String[] spStatus = spRow[columnHeaders.get(COLUMN_STATUS.toUpperCase())].split(fileToImport.getSeparator());
+					String[] spStatus = spRow[columnHeaders.get(COLUMN_STATUS.toUpperCase())].split(",");
 					for(String status : spStatus)
 					{
-						status = status.replace('"', ' ').trim();
+						status = getStringValue(status);
 						if(Equipment.Status.V.toString().equals(status))
 						{
 							newEquip.getStatus().add(Equipment.Status.V);
-						}else if(Equipment.Status.F.toString().equals(status))
+						}
+						else if(Equipment.Status.F.toString().equals(status))
 						{
 							newEquip.getStatus().add(Equipment.Status.F);
-						}else if(Equipment.Status.BA.toString().equals(status))
+						}
+						else if(Equipment.Status.BA.toString().equals(status))
 						{
 							newEquip.getStatus().add(Equipment.Status.BA);
-						}else
-							newEquip.getStatus().add(Equipment.Status.NOSTATUS);
+						}
+						else if (Equipment.Status.A.toString().equals(status))
 						{
-					}
+							newEquip.getStatus().add(Equipment.Status.A);
+						}else
+						{
+							newEquip.getStatus().add(Equipment.Status.NOSTATUS);
+						}
 						
-					if(Equipment.Type.POS.toString().equals(spRow[columnHeaders.get(COLUMN_TYPE.toUpperCase())]))
+					}
+					
+					String type = getStringValue(getStringValue(spRow[columnHeaders.get(COLUMN_TYPE.toUpperCase())]));
+					if(Equipment.Type.POS.toString().equals(type.toUpperCase()))
 					{
 						newEquip.setType(Equipment.Type.POS);
-					}else if(Equipment.Type.GWM.toString().equals(spRow[columnHeaders.get(COLUMN_TYPE.toUpperCase())]))
+					}else if(Equipment.Type.GWM.toString().equals(type.toUpperCase()))
 					{
 						newEquip.setType(Equipment.Type.GWM);
-					}else if(Equipment.Type.SATZ.toString().equals(spRow[columnHeaders.get(COLUMN_TYPE.toUpperCase())]))
+					}
+					else if(Equipment.Type.SATZ.toString().equals(type.toUpperCase()))
 					{
 						newEquip.setType(Equipment.Type.SATZ);
-					}else if(Equipment.Type.TEIL.toString().equals(spRow[columnHeaders.get(COLUMN_TYPE.toUpperCase())]))
+					}
+					else if(Equipment.Type.TEIL.toString().equals(type.toUpperCase()))
 					{
 						newEquip.setType(Equipment.Type.TEIL);
-					}else
+					}
+					else
+					{
 						newEquip.setType(Equipment.Type.NOTYPE);
 					}
 					
@@ -209,8 +223,7 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 					
 					//Wenn nicht, dann
 					Bitmap bmp = BitmapFactory.decodeStream(callContext.getResources().openRawResource(R.drawable.error));
-					EquipmentImage equipimg = new EquipmentImage();
-					equipimg.setImg(bmp);
+					EquipmentImage equipimg = new EquipmentImage(bmp);
 					newEquip.setEquipImg(equipimg);
 					
 					//speichere Equipmentobjekt in DB
@@ -224,6 +237,9 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 		} catch (SQLException e) {
 			Log.e(this.getClass().getName(), e.getMessage());
 			return false;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	
 		return true;
@@ -232,10 +248,16 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 	private int getIntValue(String rowValue)
 	{
 		try {
-			return Integer.parseInt(rowValue);
+			String intAsString = rowValue.replace('"', ' ').trim();
+			int rslt = Integer.parseInt(intAsString);
+			return rslt;
 		} catch (NumberFormatException e) {
-			Log.e(this.getClass().getName(), e.getMessage());
 			return 0;
 		}
+	}
+	
+	private String getStringValue(String rowValue)
+	{
+		return rowValue.replace('"', ' ').trim();
 	}
 }

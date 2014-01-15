@@ -13,6 +13,7 @@ import proj.thw.app.ie.CSVFile;
 import proj.thw.app.ie.FileIE;
 import proj.thw.app.ie.ThwCsvImporter;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -34,6 +35,8 @@ public class SplashScreenActivity extends Activity {
 	private TextView tvStatus;
 	
 	private OrmDBHelper dbHelper;
+	
+	private boolean importData = true; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,12 +128,21 @@ public class SplashScreenActivity extends Activity {
 	
 	public void onClick(View v)
 	{
-		v.setVisibility(View.INVISIBLE);
-		spLoadFile.setVisibility(View.INVISIBLE);
-		tvStatus.setVisibility(View.VISIBLE);
+		if(importData)
+		{
+			v.setVisibility(View.INVISIBLE);
+			spLoadFile.setVisibility(View.INVISIBLE);
+			tvStatus.setVisibility(View.VISIBLE);
+			
+			ThwCsvImporter importer = new ThwCsvImporter(dbHelper, this, tvStatus);
+			importer.execute((CSVFile)spLoadFile.getSelectedItem());
+		}
+		else
+		{
+			Intent i = new Intent(this, EquipmentTreeViewListActivity.class);
+			startActivity(i);
+		}
 		
-		ThwCsvImporter importer = new ThwCsvImporter(dbHelper, this, tvStatus);
-		importer.execute((CSVFile)spLoadFile.getSelectedItem());
 	}
 
 }
