@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -49,7 +50,7 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Equipment>{
 
 	    private String getDescription(final Equipment id) {
 	        final Integer[] hierarchy = getManager().getHierarchyDescription(id);
-	        return id.toString() + Arrays.asList(hierarchy);
+	        return id.toString(); //+ Arrays.asList(hierarchy);
 	    }
 
 	    @Override
@@ -67,8 +68,12 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Equipment>{
 	                .findViewById(R.id.tree_list_item_description);
 	        final TextView levelView = (TextView) viewLayout
 	                .findViewById(R.id.tree_list_item_level);
+	        final ImageView itemImage = (ImageView) viewLayout
+	                .findViewById(R.id.treeitemimg);
 	        descriptionView.setText(getDescription(treeNodeInfo.getId()));
 	        levelView.setText(Integer.toString(treeNodeInfo.getLevel()));
+	        if(treeNodeInfo.getId().getEquipImg().getImg() != null)
+	        	itemImage.setImageBitmap(treeNodeInfo.getId().getEquipImg().getImg());
 	        final CheckBox box = (CheckBox) viewLayout
 	                .findViewById(R.id.tree_list_checkbox);
 	        box.setTag(treeNodeInfo.getId());

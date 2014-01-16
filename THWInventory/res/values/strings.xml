@@ -30,5 +30,6 @@
     <string name="soll">Soll</string>
     <string name="ist">Ist</string>
     <string name="fremdbeschafft">Fremdbeschafft</string>
+    <string name="treeitemimage">TreeItemImage</string>
 
 </resources>

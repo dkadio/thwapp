@@ -173,7 +173,7 @@ public class Equipment implements Serializable {
 	
 	public String toString()
 	{
-		return equipNo + " ("+status.toString()+") ";
+		return type.toString() +"\r\n"+ equipNo;
 	}
 
 }

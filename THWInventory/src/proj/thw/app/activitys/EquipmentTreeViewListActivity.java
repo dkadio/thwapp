@@ -15,6 +15,9 @@ import proj.thw.app.treeview.TreeStateManager;
 import proj.thw.app.treeview.TreeViewList;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.SearchView;
 
 /**
  * Demo activity showing how the tree view can be used.
@@ -47,6 +51,7 @@ public class EquipmentTreeViewListActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
         
         dbHelper = new OrmDBHelper(this);
         try {
@@ -60,8 +65,10 @@ public class EquipmentTreeViewListActivity extends Activity {
             manager = new InMemoryTreeStateManager<Equipment>();
             final TreeBuilder<Equipment> treeBuilder = new TreeBuilder<Equipment>(manager);
             for (int i = 0; i < equipmentList.size(); i++) {
-                treeBuilder.sequentiallyAddNextNode(equipmentList.get(i),equipmentList.get(i).getLayer() -1);
-                Log.i("", "add: " + i);
+            	if(!equipmentList.get(i).getType().toString().equals(Equipment.Type.NOTYPE)){
+            		treeBuilder.sequentiallyAddNextNode(equipmentList.get(i),equipmentList.get(i).getLayer() -1);
+            		Log.i("", "add: " + i);
+            	}
             }
             newCollapsible = true;
             
@@ -111,7 +118,15 @@ public class EquipmentTreeViewListActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         final MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.main, menu);  
+        
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+         SearchView searchView =
+                 (SearchView) menu.findItem(R.id.search).getActionView();
+         searchView.setSearchableInfo(
+                 searchManager.getSearchableInfo(getComponentName()));
+        
         return true;
     }
     
