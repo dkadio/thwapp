@@ -3,6 +3,7 @@ package proj.thw.app.ie;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Locale;
 
 import proj.thw.app.R;
 import proj.thw.app.activitys.EquipmentTreeViewListActivity;
@@ -39,6 +40,8 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 	private Context 	callContext;
 	private TextView 	tvStatus;
 	private HashMap<String, Integer> columnHeaders;
+	
+	EquipmentImage defaultEquipImg;
 	
 	public ThwCsvImporter(OrmDBHelper dbHelper, Context callContext, TextView tvStatus)
 	{
@@ -82,6 +85,11 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 		}
 		
 		CSVFile fileToImport = params[0];
+		
+		//Bitmap als DefaultImage laden...
+		Bitmap bmp = BitmapFactory.decodeStream(callContext.getResources().openRawResource(R.drawable.error));
+		defaultEquipImg = new EquipmentImage(bmp);
+		
 		int rowCount = 0;
 		String line = "";
 		try {
@@ -91,6 +99,7 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 				//Vector<String> columnHeaders = new Vector<String>();
 				publishProgress("initialisiere Header...");
 				columnHeaders = new HashMap<String, Integer>();
+	
 				String[] spHeader = line.split(fileToImport.getSeparator());
 				for(int i = 0; i <  spHeader.length; i++){
 					String col = spHeader[i].replace('"',' ');
@@ -98,14 +107,15 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 				}
 				
 				//lese Standort aus
-				String[] spStandort = fileToImport.getFileReader().readLine().split(fileToImport.getSeparator());
+				String headerline = fileToImport.getFileReader().readLine();
+				String[] spStandort = headerline.split(fileToImport.getSeparator());
 				
 				String location = "";
 				if(columnHeaders.containsKey(COLUMN_OE.toUpperCase()))
 					location = spStandort[columnHeaders.get(COLUMN_OE.toUpperCase())];
 				
 				while(( line = fileToImport.getFileReader().readLine()) != null)
-				{
+				{	
 					publishProgress("load RowNr:  " + rowCount++);
 					String[] spRow = line.split(fileToImport.getSeparator());
 					
@@ -130,7 +140,7 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 					//parse EquipNo
 					String equipNo = "";
 					if(columnHeaders.containsKey(COLUMN_EQUIP_NO.toUpperCase()))
-						deviceNo = getStringValue(spRow[columnHeaders.get(COLUMN_EQUIP_NO.toUpperCase())]);
+						equipNo = getStringValue(spRow[columnHeaders.get(COLUMN_EQUIP_NO.toUpperCase())]);
 					
 					newEquip.setEquipNo(equipNo);
 					
@@ -220,11 +230,16 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 					
 					
 					//pruefe ob Image vohanden ist
-					
-					//Wenn nicht, dann
-					Bitmap bmp = BitmapFactory.decodeStream(callContext.getResources().openRawResource(R.drawable.error));
-					EquipmentImage equipimg = new EquipmentImage(bmp);
-					newEquip.setEquipImg(equipimg);
+					if(columnHeaders.containsKey(COLUMN_IMAGE.toUpperCase()))
+					{
+						
+					}
+					else
+					{
+						//Wenn nicht, dann nimm default
+						newEquip.setEquipImg(defaultEquipImg);
+					}
+						
 					
 					//speichere Equipmentobjekt in DB
 					dbHelper.getDbHelperEquip().insertEquipment(newEquip);
@@ -238,8 +253,8 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 			Log.e(this.getClass().getName(), e.getMessage());
 			return false;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(this.getClass().getName(), e.getMessage());
+			return false;
 		}
 	
 		return true;

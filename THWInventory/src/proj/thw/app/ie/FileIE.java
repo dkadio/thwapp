@@ -2,8 +2,10 @@ package proj.thw.app.ie;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 public abstract class FileIE {
 
@@ -18,12 +20,14 @@ public abstract class FileIE {
 	 * Constructor
 	 * @param filePath Absolute Path to File
 	 * @throws FileNotFoundException 
+	 * @throws UnsupportedEncodingException 
 	 */
-	public FileIE(String filePath) throws FileNotFoundException
+	public FileIE(String filePath) throws FileNotFoundException, UnsupportedEncodingException
 	{
 		this.filePath = filePath;
 		this.fileToParse = new File(filePath);
-		this.fileReader = new BufferedReader(new FileReader(fileToParse));
+		//this.fileReader = new BufferedReader(new FileReader(fileToParse));
+		this.fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileToParse),"ISO-8859-1"));
 		this.fileName = fileToParse.getName();
 	}
 	
@@ -31,12 +35,13 @@ public abstract class FileIE {
 	 * Constructor
 	 * @param fileToParse Fileobject
 	 * @throws FileNotFoundException 
+	 * @throws UnsupportedEncodingException 
 	 */
-	public FileIE(File fileToParse) throws FileNotFoundException
+	public FileIE(File fileToParse) throws FileNotFoundException, UnsupportedEncodingException
 	{
 		this.fileToParse = fileToParse;
 		this.filePath = fileToParse.getAbsolutePath();
-		this.fileReader = new BufferedReader(new FileReader(fileToParse));
+		this.fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileToParse),"ISO-8859-1"));
 		this.fileName = fileToParse.getName();
 	}
 	

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import proj.thw.app.R;
 import proj.thw.app.database.OrmDBHelper;
@@ -101,6 +102,8 @@ public class SplashScreenActivity extends Activity {
 			try {
 				adpLoadFile.add(new CSVFile(file.getAbsolutePath(),";"));
 			} catch (FileNotFoundException e) {
+				Log.e(this.getClass().getName(), e.getMessage());
+			} catch (UnsupportedEncodingException e) {
 				Log.e(this.getClass().getName(), e.getMessage());
 			}
 		}
