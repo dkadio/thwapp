@@ -103,7 +103,7 @@ public class SplashScreenActivity extends Activity {
 		for(File file : getFileList(ieFolder,FILE_EXTENTION))
 		{
 			try {
-				adpLoadFile.add(new CSVFile(file.getAbsolutePath(),";"));
+				adpLoadFile.add(new CSVFile(file.getAbsolutePath(),";\""));
 			} catch (FileNotFoundException e) {
 				Log.e(this.getClass().getName(), e.getMessage());
 			} catch (UnsupportedEncodingException e) {
@@ -134,7 +134,7 @@ public class SplashScreenActivity extends Activity {
 	
 	public void onClick(View v)
 	{
-		if(importData)
+		if(!importData)
 		{
 			v.setVisibility(View.INVISIBLE);
 			spLoadFile.setVisibility(View.INVISIBLE);

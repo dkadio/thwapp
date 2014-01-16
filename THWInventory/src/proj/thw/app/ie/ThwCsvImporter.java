@@ -102,7 +102,7 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 	
 				String[] spHeader = line.split(fileToImport.getSeparator());
 				for(int i = 0; i <  spHeader.length; i++){
-					String col = spHeader[i].replace('"',' ');
+					String col = spHeader[i].replace('"',' ').trim();
 					columnHeaders.put(col.trim().toUpperCase(),i);
 				}
 				

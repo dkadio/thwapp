@@ -22,6 +22,7 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 	public static final int DB_VERSION 		= 1;
 	
 	private DBHelperEquip dbHelperEquip;
+	private ConnectionSource src;
 
 	public OrmDBHelper(Context context){
 		super(context,DB_NAME,null,DB_VERSION);
@@ -36,8 +37,8 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 	public void onCreate(SQLiteDatabase db, ConnectionSource src) {
 		
 		try {
-			TableUtils.createTable(src, EquipmentImage.class);
-			TableUtils.createTable(src, Equipment.class);
+			this.src = src;
+			createTables(src);
 			
 		} catch (SQLException e) {
 			Log.e(LOG, e.getMessage());
@@ -58,4 +59,24 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 	public DBHelperEquip getDbHelperEquip() {
 		return dbHelperEquip;
 	}
+	
+	private void createTables(ConnectionSource src) throws SQLException
+	{
+		TableUtils.createTable(src, EquipmentImage.class);
+		TableUtils.createTable(src, Equipment.class);
+	}
+	
+	private void dropTables(ConnectionSource src) throws SQLException
+	{
+		TableUtils.dropTable(src, EquipmentImage.class, true);
+		TableUtils.dropTable(src, Equipment.class, true);
+	}
+	
+	public void cleanDB() throws SQLException
+	{
+		dropTables(src);
+		createTables(src);
+	}
+	
+	
 }
