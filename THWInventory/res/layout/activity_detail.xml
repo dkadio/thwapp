@@ -147,12 +147,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/status"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <Spinner
-            android:id="@+id/spinnerState"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:textAppearance="?android:attr/textAppearanceMedium" 
+            android:onClick="popupTheList"/>
 
     </LinearLayout>
 
