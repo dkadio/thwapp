@@ -2,18 +2,19 @@ package proj.thw.app.ie;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 
 public class CSVFile extends FileIE{
 
 	//evtl ein TableObject um CSVFile als Table im Speicher zu halten... JAVA besitzt kein TableObjekt!! ToDo
 	private String separator; 
 
-	public CSVFile(String filePath, String separator) throws FileNotFoundException {
+	public CSVFile(String filePath, String separator) throws FileNotFoundException, UnsupportedEncodingException {
 		super(filePath);
 		this.separator = separator;
 	}
 	
-	public CSVFile(File fileToParse, String separator) throws FileNotFoundException {
+	public CSVFile(File fileToParse, String separator) throws FileNotFoundException, UnsupportedEncodingException {
 		super(fileToParse);
 		this.separator = separator;
 	}
