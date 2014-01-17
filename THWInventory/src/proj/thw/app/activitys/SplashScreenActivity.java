@@ -39,7 +39,7 @@ public class SplashScreenActivity extends Activity {
 	
 	private OrmDBHelper dbHelper;
 	
-	private boolean importData = true; 
+	private boolean importData = false; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

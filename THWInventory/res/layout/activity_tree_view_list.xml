@@ -15,6 +15,14 @@
         android:layout_height="wrap_content" >
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btntest"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test" 
+        android:onClick="onClickTestButton"/>
+
     <proj.thw.app.treeview.TreeViewList
         android:id="@+id/tvlequip"
         android:layout_width="match_parent"
