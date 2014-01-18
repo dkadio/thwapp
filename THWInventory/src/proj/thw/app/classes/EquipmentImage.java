@@ -2,12 +2,12 @@ package proj.thw.app.classes;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 @DatabaseTable(tableName = "equipmentimage")
 public class EquipmentImage implements Serializable{

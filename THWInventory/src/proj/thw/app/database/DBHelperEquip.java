@@ -3,9 +3,9 @@ package proj.thw.app.database;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.j256.ormlite.dao.Dao;
-
 import proj.thw.app.classes.Equipment;
+
+import com.j256.ormlite.dao.Dao;
 
 public class DBHelperEquip {
 

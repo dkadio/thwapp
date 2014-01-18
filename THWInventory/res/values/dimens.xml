@@ -6,5 +6,7 @@
     <dimen name="equipment_lv_margins">20dp</dimen>
     <dimen name="seperator_dimension">8dp</dimen>
     <dimen name="soll_ist_dim">30dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
 
 </resources>

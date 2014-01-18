@@ -1,6 +1,5 @@
 package proj.thw.app.adapters;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import proj.thw.app.R;
@@ -13,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

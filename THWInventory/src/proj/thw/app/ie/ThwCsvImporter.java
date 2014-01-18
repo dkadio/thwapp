@@ -3,7 +3,6 @@ package proj.thw.app.ie;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Locale;
 
 import proj.thw.app.R;
 import proj.thw.app.activitys.EquipmentTreeViewListActivity;
@@ -66,6 +65,8 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 		{
 			Toast.makeText(callContext, "Import fehlgeschlagen...", Toast.LENGTH_LONG).show();
 		}
+		tvStatus.setText("");
+		tvStatus.setVisibility(View.INVISIBLE);
 		Intent i = new Intent(callContext, EquipmentTreeViewListActivity.class);
         callContext.startActivity(i);
 	}

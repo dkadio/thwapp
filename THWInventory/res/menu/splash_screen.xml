@@ -12,7 +12,7 @@
                 android:showAsAction="always"
                 android:checkable="true"/>
             <item
-                android:id="@+id/action_settings"
+                android:id="@+id/sploadfilesource"
                 android:orderInCategory="100"
                 android:showAsAction="always"
                 android:title="@string/action_settings"/>

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import proj.thw.app.ExportDataActivity;
 import proj.thw.app.R;
 import proj.thw.app.adapters.ThwTreeViewAdapter;
 import proj.thw.app.classes.Equipment;
@@ -16,21 +17,15 @@ import proj.thw.app.treeview.TreeViewList;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SearchView;
 
 /**
@@ -81,7 +76,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		c = this;
 		dbHelper = new OrmDBHelper(this);
 
@@ -205,14 +200,17 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.action_settings:
-			Intent intent = new Intent(this, DetailListActivity.class);
+		case R.id.importdata:
+			intent= new Intent(this, ImportDataActivity.class);
 			startActivity(intent);
 			break;
-
-		default:
+		case R.id.exportdata:
+			intent = new Intent(this, ExportDataActivity.class);
+			startActivity(intent);
 			break;
+		default: // Do Nothing...
 		}
 
 		return super.onOptionsItemSelected(item);

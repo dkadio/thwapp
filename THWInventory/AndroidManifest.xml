@@ -8,8 +8,8 @@
         android:minSdkVersion="15"
         android:targetSdkVersion="19" />
 
-    
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/thwlogo"
@@ -28,18 +28,25 @@
         <activity
             android:name="proj.thw.app.activitys.EquipmentTreeViewListActivity"
             android:label="@string/setEmptyLabel"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="proj.thw.app.activitys.DetailListActivity"
             android:label="@string/setEmptyLabel"
-            android:parentActivityName="proj.thw.app.activitys.EquipmentTreeViewListActivity" >      
+            android:parentActivityName="proj.thw.app.activitys.EquipmentTreeViewListActivity" >
         </activity>
         <activity
             android:name="proj.thw.app.activitys.DetailActivity"
-            android:label="@string/setEmptyLabel" 
-            android:parentActivityName="proj.thw.app.activitys.DetailListActivity">
-            
+            android:label="@string/setEmptyLabel"
+            android:parentActivityName="proj.thw.app.activitys.DetailListActivity" >
+        </activity>
+        <activity
+            android:name="proj.thw.app.activitys.ImportDataActivity"
+            android:label="@string/title_activity_import" >
+        </activity>
+        <activity
+            android:name="proj.thw.app.ExportDataActivity"
+            android:label="@string/title_activity_export_data" >
         </activity>
     </application>
 

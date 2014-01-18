@@ -3,21 +3,16 @@ package proj.thw.app.activitys;
 import java.util.ArrayList;
 
 import proj.thw.app.R;
-import proj.thw.app.R.layout;
-import proj.thw.app.R.menu;
 import proj.thw.app.adapters.EquipmentListAdapter;
 import proj.thw.app.classes.Equipment;
-import android.os.Bundle;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class DetailListActivity extends Activity implements OnItemClickListener {
