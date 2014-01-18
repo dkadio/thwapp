@@ -47,6 +47,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		equipmentListView = (ListView) findViewById(R.id.equipmentListView);
 		equipmentListView.setAdapter(new ArrayAdapter<Equipment>(this,
 				android.R.layout.simple_list_item_1, equipments));
+		equipmentListView.setOnItemClickListener(this);
 
 	}
 
