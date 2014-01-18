@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import proj.thw.app.ExportDataActivity;
 import proj.thw.app.R;
 import proj.thw.app.adapters.ThwTreeViewAdapter;
 import proj.thw.app.classes.Equipment;

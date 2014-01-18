@@ -1,5 +1,8 @@
-package proj.thw.app;
+package proj.thw.app.activitys;
 
+import proj.thw.app.R;
+import proj.thw.app.R.layout;
+import proj.thw.app.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;

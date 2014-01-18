@@ -45,7 +45,7 @@
             android:label="@string/title_activity_import" >
         </activity>
         <activity
-            android:name="proj.thw.app.ExportDataActivity"
+            android:name="proj.thw.app.activitys.ExportDataActivity"
             android:label="@string/title_activity_export_data" >
         </activity>
     </application>
