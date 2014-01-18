@@ -20,7 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class DetailListActivity extends Activity implements OnItemClickListener{
+public class DetailListActivity extends Activity implements OnItemClickListener {
 	public final static String EQUIP_COLLECTION_KEY = "equip_collection_key";
 	public final static String SELECTED_EQUIP_KEY = "selected_equip_key";
 	public final static int REQUEST_CODE = 98613123;
@@ -33,39 +33,20 @@ public class DetailListActivity extends Activity implements OnItemClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail_list);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		equipments = (ArrayList<Equipment>) getIntent()
-				.getExtras()
+		equipments = (ArrayList<Equipment>) getIntent().getExtras()
 				.getSerializable(
-						"hier kommt der key rein mit dem max mir die arraylist gibt");
+						EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
 		intent = new Intent(this, DetailActivity.class);
 		intent.putExtra(EQUIP_COLLECTION_KEY, equipments);
 		initView();
-		registerForContextMenu(equipmentListView);
 
 	}
-	
-
 
 	private void initView() {
 
 		equipmentListView = (ListView) findViewById(R.id.equipmentListView);
-		EquipmentListAdapter ea = new EquipmentListAdapter(this, equipments);
-		equipmentListView.setAdapter(ea);
-
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case 123:
-
-			// TODO do some shit
-			return true;
-
-		default:
-			return super.onContextItemSelected(item);
-
-		}
+		equipmentListView.setAdapter(new ArrayAdapter<Equipment>(this,
+				android.R.layout.simple_list_item_1, equipments));
 
 	}
 
@@ -75,7 +56,6 @@ public class DetailListActivity extends Activity implements OnItemClickListener{
 		getMenuInflater().inflate(R.menu.detail_list, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-
 
 	@Override
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
