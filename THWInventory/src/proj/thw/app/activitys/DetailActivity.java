@@ -93,16 +93,16 @@ public class DetailActivity extends Activity {
 		ArrayAdapter<Equipment.Status> sa = new ArrayAdapter<Equipment.Status>(
 				this, android.R.layout.simple_list_item_multiple_choice,
 				completestatuslist);
-		listpopupwindow.getListView().setAdapter(sa);
-		for (int i = 0; i < equipmentStatus.size(); i++) {
-			for (int j = 0; j < completestatuslist.size(); j++) {
-				if (equipmentStatus.get(i).equals(completestatuslist.get(j))) {
-					listpopupwindow.getListView().setItemChecked(i, true);
-				} else {
-					listpopupwindow.getListView().setItemChecked(i, false);
-				}
-			}
-		}
+//		listpopupwindow.getListView().setAdapter(sa);
+//		for (int i = 0; i < equipmentStatus.size(); i++) {
+//			for (int j = 0; j < completestatuslist.size(); j++) {
+//				if (equipmentStatus.get(i).equals(completestatuslist.get(j))) {
+//					listpopupwindow.getListView().setItemChecked(i, true);
+//				} else {
+//					listpopupwindow.getListView().setItemChecked(i, false);
+//				}
+//			}
+//		}
 
 	}
 
@@ -153,27 +153,27 @@ public class DetailActivity extends Activity {
 											// chris das aenderbar machen will
 		listpopupwindow = new ListPopupWindow(this);
 
-		listpopupwindow.getListView().setOnItemClickListener(
-				new OnItemClickListener() {
-
-					/**
-					 * entfernt bzw fuegt zu dem Status des Equipments einen
-					 * weiteren hinzu
-					 */
-					@Override
-					public void onItemClick(AdapterView<?> arg0, View arg1,
-							int arg2, long arg3) {
-						Equipment.Status state = (Status) arg0
-								.getItemAtPosition(arg2);
-						if (listpopupwindow.getListView().isItemChecked(arg2)) {
-							// schreib das teil rein
-							equipmentStatus.remove(state);
-						} else {
-							// hol den status raus
-							equipmentStatus.add(state);
-						}
-					}
-				});
+//		listpopupwindow.getListView().setOnItemClickListener(
+//				new OnItemClickListener() {
+//
+//					/**
+//					 * entfernt bzw fuegt zu dem Status des Equipments einen
+//					 * weiteren hinzu
+//					 */
+//					@Override
+//					public void onItemClick(AdapterView<?> arg0, View arg1,
+//							int arg2, long arg3) {
+//						Equipment.Status state = (Status) arg0
+//								.getItemAtPosition(arg2);
+//						if (listpopupwindow.getListView().isItemChecked(arg2)) {
+//							// schreib das teil rein
+//							equipmentStatus.remove(state);
+//						} else {
+//							// hol den status raus
+//							equipmentStatus.add(state);
+//						}
+//					}
+//				});
 
 	}
 
