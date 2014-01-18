@@ -46,7 +46,7 @@ public class DetailActivity extends Activity {
 		initStatusVector();
 
 		initViews();
-		setValues(firstSelectedEquip);
+//		setValues(firstSelectedEquip);
 
 	}
 
