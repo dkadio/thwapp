@@ -9,6 +9,7 @@ import proj.thw.app.R;
 import proj.thw.app.adapters.ThwTreeViewAdapter;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.database.OrmDBHelper;
+import proj.thw.app.database.ThwTreeViewLoader;
 import proj.thw.app.treeview.InMemoryTreeStateManager;
 import proj.thw.app.treeview.TreeBuilder;
 import proj.thw.app.treeview.TreeStateManager;
@@ -21,11 +22,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 /**
  * Demo activity showing how the tree view can be used.
@@ -33,142 +36,74 @@ import android.widget.SearchView;
  */
 public class EquipmentTreeViewListActivity extends Activity {
 
+	static final String LOG = "EquipmentTreeViewListActivity";
 	static final String KEY_EQUIPMENTLIST = "equip.list";
 	static final String KEY_EQUIPMENT = "equip";
 
 	private final Set<Equipment> selected = new HashSet<Equipment>();
 	private TreeViewList tvlEquipment;
-	private static ProgressDialog loadDialog;
 
-	private static final int LEVEL_NUMBER = 6;
+	//private static final int LEVEL_NUMBER = 6;
 	private static TreeStateManager<Equipment> manager = new InMemoryTreeStateManager<Equipment>();
-	private static TreeBuilder<Equipment> treeBuilder = new TreeBuilder<Equipment>(
-			manager);
+	private static TreeBuilder<Equipment> treeBuilder = new TreeBuilder<Equipment>(manager);
+	
 	private ThwTreeViewAdapter simpleAdapter;
 	private boolean collapsible;
 
 	private ArrayList<Equipment> equipmentList;
 	private OrmDBHelper dbHelper;
-	private Context c;
+	private ProgressDialog loadDialog;
 
-	private final Handler treeLoadHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					for (int i = 0; i < equipmentList.size(); i++) {
-						treeBuilder.sequentiallyAddNextNode(equipmentList.get(i),
-								equipmentList.get(i).getLayer() - 1);
-					}
-				}
-			});
-			
-
-		}
-	};
-
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		c = this;
+		setContentView(R.layout.activity_tree_view_list);
+		
+		tvlEquipment = (TreeViewList) findViewById(R.id.tvlequip);
 		dbHelper = new OrmDBHelper(this);
-
-		loadDialog = ProgressDialog.show(this, "Please Wait...",
-				"load Data from DB");
-
+		loadDialog = new ProgressDialog(this);
+		loadDialog.setTitle("Please Wait...");
+		loadDialog.setMessage("Load Data from DB!");
+		loadDialog.show();
+		
 		new Thread(new Runnable() {
-
+			
 			@Override
 			public void run() {
-
-				try {
-					equipmentList = (ArrayList<Equipment>) dbHelper
-							.getDbHelperEquip().selectAllEquipments();
-				} catch (SQLException e) {
-					equipmentList = new ArrayList<Equipment>();
-				}
-				for (int i = 0; i <  equipmentList.size(); i++) {
-					
-				final Equipment inEquipment = equipmentList.get(i);
 				
 				try {
-					Thread.currentThread().sleep(20);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+
+					equipmentList = (ArrayList<Equipment>)dbHelper.getDbHelperEquip().selectAllEquipments();
+				} catch (SQLException e) {
+					Log.e(LOG, e.getMessage());
 				}
+				
 				runOnUiThread(new Runnable() {
 					
 					@Override
 					public void run() {
+						loadDialog.dismiss();
+						int maxLayer  = 1;
+						for(Equipment loadedItem : equipmentList)
+						{
+							treeBuilder.sequentiallyAddNextNode(loadedItem, loadedItem.getLayer() -1);
+							if(maxLayer < loadedItem.getLayer())
+								maxLayer = loadedItem.getLayer();
+						}
 						
-						treeBuilder.sequentiallyAddNextNode(inEquipment,
-								inEquipment.getLayer() - 1);
-						
-						
+						simpleAdapter = new ThwTreeViewAdapter(EquipmentTreeViewListActivity.this,
+																					selected,
+																					manager,
+																					maxLayer);
+						tvlEquipment.setAdapter(simpleAdapter);
+						tvlEquipment.setCollapsible(true);
 					}
-					
-				
 				});
-				
-				}
-				loadDialog.dismiss();
-				try {
-					Thread.currentThread().sleep(5000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				//treeLoadHandler.handleMessage(new Message());
-				
-
 			}
 		}).start();
-		/*
-		 * try { equipmentList = (ArrayList<Equipment>)
-		 * dbHelper.getDbHelperEquip().selectAllEquipments(); } catch
-		 * (SQLException e) { equipmentList = new ArrayList<Equipment>(); }
-		 * 
-		 * boolean newCollapsible; if (savedInstanceState == null) { manager =
-		 * new InMemoryTreeStateManager<Equipment>(); final
-		 * TreeBuilder<Equipment> treeBuilder = new
-		 * TreeBuilder<Equipment>(manager); for (int i = 0; i <
-		 * equipmentList.size(); i++) {
-		 * if(!equipmentList.get(i).getType().toString
-		 * ().equals(Equipment.Type.NOTYPE)){
-		 * treeBuilder.sequentiallyAddNextNode
-		 * (equipmentList.get(i),equipmentList.get(i).getLayer() -1); Log.i("",
-		 * "add: " + i); } } newCollapsible = true;
-		 * 
-		 * 
-		 * } else { manager = (TreeStateManager<Equipment>) savedInstanceState
-		 * .getSerializable("treeManager"); if (manager == null) { manager = new
-		 * InMemoryTreeStateManager<Equipment>(); } newCollapsible =
-		 * savedInstanceState.getBoolean("collapsible"); }
-		 */
-
-		setContentView(R.layout.activity_tree_view_list);
-
-		tvlEquipment = (TreeViewList) findViewById(R.id.tvlequip);
-		simpleAdapter = new ThwTreeViewAdapter(this, selected, manager,
-				LEVEL_NUMBER);
-
-		tvlEquipment.setAdapter(simpleAdapter);
-		setCollapsible(true);
-		registerForContextMenu(tvlEquipment);
-
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-
+		
+		
 	}
 
 	@Override

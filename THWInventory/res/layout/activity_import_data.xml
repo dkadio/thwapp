@@ -43,7 +43,7 @@
             android:text="@string/clear_db" />
 
         <CheckBox
-            android:id="@+id/checkBox1"
+            android:id="@+id/cbcleardb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -185,9 +185,10 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnimport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/save_import" />
+        android:text="@string/save_import"
+        android:onClick="onClickImport" />
 
 </LinearLayout>

@@ -6,9 +6,11 @@ import java.util.HashMap;
 
 import proj.thw.app.R;
 import proj.thw.app.activitys.EquipmentTreeViewListActivity;
+import proj.thw.app.activitys.ImportDataActivity;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.classes.EquipmentImage;
 import proj.thw.app.database.OrmDBHelper;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,6 +37,8 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 	static final String COLUMN_STATUS			= "Status";
 	static final String COLUMN_IMAGE			= "Image";
 	
+	private ProgressDialog asyncDialog;
+	
 	private OrmDBHelper dbHelper;
 	private Context 	callContext;
 	private TextView 	tvStatus;
@@ -49,12 +53,28 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 		this.tvStatus 		= tvStatus;
 	}
 	
+	public ThwCsvImporter(OrmDBHelper dbHelper, Context callContext)
+	{
+		this.dbHelper 		= dbHelper;
+		this.callContext 	= callContext;
+		this.tvStatus 		= null;
+	}
 	
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
 
-		tvStatus.setVisibility(View.VISIBLE);
+		if(tvStatus != null)
+		{
+			tvStatus.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			asyncDialog = new ProgressDialog(callContext);
+			asyncDialog.setTitle("Please Wait...");
+			asyncDialog.setMessage("importiere Daten...");
+			asyncDialog.show();
+		}
 	}
 	
 	@Override
@@ -65,16 +85,30 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 		{
 			Toast.makeText(callContext, "Import fehlgeschlagen...", Toast.LENGTH_LONG).show();
 		}
-		tvStatus.setText("");
-		tvStatus.setVisibility(View.INVISIBLE);
-		Intent i = new Intent(callContext, EquipmentTreeViewListActivity.class);
-        callContext.startActivity(i);
+		if(tvStatus != null)
+		{
+			tvStatus.setText("");
+			tvStatus.setVisibility(View.INVISIBLE);
+		}
+		else
+		{
+			asyncDialog.dismiss();
+		}
+		//Intent i = new Intent(callContext, EquipmentTreeViewListActivity.class);
+        //callContext.startActivity(i);
 	}
 	
 	@Override
 	protected void onProgressUpdate(String... values) {
 		super.onProgressUpdate(values);
-		tvStatus.setText(values[0].toString());
+		if(tvStatus != null)
+		{
+			tvStatus.setText(values[0].toString());
+		}
+		else
+		{
+			asyncDialog.setMessage(values[0].toString());
+		}
 	}
 	
 	@Override

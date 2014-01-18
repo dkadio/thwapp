@@ -72,11 +72,9 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 		TableUtils.dropTable(src, Equipment.class, true);
 	}
 	
-	public void cleanDB() throws SQLException
+	public void clearDB() throws SQLException
 	{
-		dropTables(src);
-		createTables(src);
+		TableUtils.clearTable(getConnectionSource(), EquipmentImage.class);
+		TableUtils.clearTable(getConnectionSource(), Equipment.class);
 	}
-	
-	
 }

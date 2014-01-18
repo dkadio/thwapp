@@ -7,19 +7,21 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 
 import proj.thw.app.R;
-import proj.thw.app.R.layout;
-import proj.thw.app.R.menu;
 import proj.thw.app.database.OrmDBHelper;
 import proj.thw.app.ie.CSVFile;
 import proj.thw.app.ie.FileIE;
+import proj.thw.app.ie.ThwCsvImporter;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 
 public class ImportDataActivity extends Activity {
@@ -27,12 +29,15 @@ public class ImportDataActivity extends Activity {
 	//private static final String appFolder = "//storage//"
 	private static final String IMPORT_EXPORT_FILE_FOLDER 	= "IE";
 	private static final String DEFAULT_FILE_NAME 			= "default";
-	private static final String FILE_EXTENTION 				= ".csv";
+	private static final String FILE_EXTENTION_CSV 			= ".csv";
 	
 	private enum FileType{CSV,XML};
+	private OrmDBHelper dbHelper; 
 	
 	private Spinner spLoadFile;
 	private ArrayAdapter<FileIE> adpLoadFile;
+
+	private CheckBox cbCleanDBbeforImport;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,8 @@ public class ImportDataActivity extends Activity {
 		spLoadFile = (Spinner) findViewById(R.id.spfilesource);
 		adpLoadFile = new ArrayAdapter<FileIE>(this, android.R.layout.simple_spinner_dropdown_item);
 		
-		//dbHelper = new OrmDBHelper(this);
+		cbCleanDBbeforImport = (CheckBox)findViewById(R.id.cbcleardb);
+		dbHelper = new OrmDBHelper(this);
 		init();
 	}
 	
@@ -60,7 +66,7 @@ public class ImportDataActivity extends Activity {
 			ieFolder.mkdir();
 		
 		
-		if(getFileList(ieFolder,FILE_EXTENTION).length == 0)
+		if(getFileList(ieFolder,FILE_EXTENTION_CSV).length == 0)
 		{
 			int size;
 			try {
@@ -71,7 +77,7 @@ public class ImportDataActivity extends Activity {
 				is.close();
 				
 				
-				FileOutputStream fos = new FileOutputStream(new File(ieFolder,DEFAULT_FILE_NAME + FILE_EXTENTION));
+				FileOutputStream fos = new FileOutputStream(new File(ieFolder,DEFAULT_FILE_NAME + FILE_EXTENTION_CSV));
 				fos.write(buffer);
 				fos.flush();
 				fos.close();
@@ -83,7 +89,7 @@ public class ImportDataActivity extends Activity {
 		
 		
 		//add all Files to Adapter and set Adapter to Spinner
-		for(File file : getFileList(ieFolder,FILE_EXTENTION))
+		for(File file : getFileList(ieFolder,FILE_EXTENTION_CSV))
 		{
 			try {
 				adpLoadFile.add(new CSVFile(file.getAbsolutePath(),";\""));
@@ -97,12 +103,6 @@ public class ImportDataActivity extends Activity {
 		spLoadFile.setAdapter(adpLoadFile);
 		adpLoadFile.setNotifyOnChange(true);
 	}
-
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.import_data, menu);
-        return true;
-    }
 	
 	private File[] getFileList(File folder, String extention)
 	{
@@ -120,4 +120,30 @@ public class ImportDataActivity extends Activity {
 			}
 		});
 	}
+	
+	
+	public void onClickImport(View view)
+	{
+		if(cbCleanDBbeforImport.isChecked())
+		{
+			try {
+				dbHelper.clearDB();
+			} catch (SQLException e) {
+				Log.e(this.getClass().getName(), e.getMessage());
+			}
+		}
+		
+		ThwCsvImporter thwImporter = new ThwCsvImporter(dbHelper,this);
+		thwImporter.execute((CSVFile)spLoadFile.getSelectedItem());
+		
+	}
+	
+	//--------------------------MENUE-HANDLING---------------------------
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.import_data, menu);
+        return true;
+    }
+	
+	
 }
