@@ -44,5 +44,10 @@
      <string name="import_generell_settings">General Settings</string>
     <string name="title_activity_import">ImportActivity</string>
     <string name="title_activity_export_data">ExportData</string>
+    <string name="sachnummer">Sachnummer</string>
+        <string name="invno">Inventarnummer</string>
+        <string name="devno">Geraetenummer</string>
+    
+    
 
 </resources>

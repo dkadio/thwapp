@@ -36,7 +36,7 @@
             android:parentActivityName="proj.thw.app.activitys.EquipmentTreeViewListActivity" >
         </activity>
         <activity
-            android:name="proj.thw.app.activitys.DetailActivity"
+            android:name="proj.thw.app.activitys._DetailActivity"
             android:label="@string/setEmptyLabel"
             android:parentActivityName="proj.thw.app.activitys.DetailListActivity" >
         </activity>
@@ -47,6 +47,14 @@
         <activity
             android:name="proj.thw.app.activitys.ExportDataActivity"
             android:label="@string/title_activity_export_data" >
+        </activity>
+        <activity
+            android:name="proj.thw.app.activitys.DetailActivity"
+            android:label="@string/title_activity_detail"
+            android:parentActivityName="proj.thw.app.activitys.DetailListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="proj.thw.app.activitys.DetailListActivity" />
         </activity>
     </application>
 

@@ -1,23 +1,24 @@
+//TODO anderen Adapter setzen der bilder mit anzeigt
+//TODO schiest die app wenn sie aus der Detaillist ueber homebutton gestartet wird
 package proj.thw.app.activitys;
 
 import java.util.ArrayList;
 
 import proj.thw.app.R;
-import proj.thw.app.adapters.EquipmentListAdapter;
 import proj.thw.app.classes.Equipment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class DetailListActivity extends Activity implements OnItemClickListener {
-	public final static String EQUIP_COLLECTION_KEY = "equip_collection_key";
-	public final static String SELECTED_EQUIP_KEY = "selected_equip_key";
+	public final static String KEY_EQUIP_COLLECTION = "equip_collection_key";
+	public final static String KEY_SELECTED_EQUIP = "selected_equip_key";
 	public final static int REQUEST_CODE = 98613123;
 	ArrayList<Equipment> equipments;
 	ListView equipmentListView;
@@ -28,13 +29,16 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail_list);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		if(getIntent().hasExtra(EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST)){
 		equipments = (ArrayList<Equipment>) getIntent().getExtras()
 				.getSerializable(
 						EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
+		}
 		intent = new Intent(this, DetailActivity.class);
-		intent.putExtra(EQUIP_COLLECTION_KEY, equipments);
+		intent.putExtra(KEY_EQUIP_COLLECTION, equipments);
 		initView();
-
+		
+		
 	}
 
 	private void initView() {
@@ -56,7 +60,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	@Override
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 		// TODO start detailactivity fuer das gewuwnschte equipment
-		intent.putExtra(SELECTED_EQUIP_KEY, position);
+		intent.putExtra(KEY_SELECTED_EQUIP, position);
 		startActivityForResult(intent, REQUEST_CODE);
 	}
 
