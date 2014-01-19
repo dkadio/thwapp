@@ -35,11 +35,11 @@
     <string name="import_data">Import</string>
     <string name="file_format">Format</string>
     <string name="file_source">Source</string>
-    <string name="file_import">File Import</string>
-    <string name="db_import">DB Import</string>
+    <string name="file_import">File</string>
+    <string name="db_import">DB</string>
     <string name="db_import_automatic">automatic</string>
     <string name="db_url">Url</string>
-    <string name="clear_db">Clear DB befor Import</string>
+    <string name="clear_db">Clean Import</string>
     <string name="save_import">Save + Import</string>
      <string name="import_generell_settings">General Settings</string>
     <string name="title_activity_import">ImportActivity</string>

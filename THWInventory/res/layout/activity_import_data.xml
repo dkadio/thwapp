@@ -20,175 +20,106 @@
         android:textColor="@color/white"
         android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/LinearLayout03"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/seperator_dimension"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="@dimen/seperator_dimension"
-        android:background="#37000000"
-        android:orientation="horizontal" >
-    </LinearLayout>
-
-    <LinearLayout
+   	<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/tvcleanimport"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0.6"
-            android:text="@string/clear_db" />
+            android:text="@string/clear_db" 
+            android:gravity="center|left"/>
 
         <CheckBox
             android:id="@+id/cbcleardb"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
+
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dp_10" >
+   	<TabHost
+   	    android:id="@+id/tabhost"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="0dp"
+   	    android:layout_weight="1"
+   	    android:paddingTop="@dimen/dp_20" >
 
-        <RadioButton
-            android:id="@+id/RadioButton01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+   	    <LinearLayout
+   	        android:layout_width="match_parent"
+   	        android:layout_height="wrap_content"
+   	        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/TextView01"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            android:background="@color/ThwBlue"
-            android:text="@string/file_import"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+   	        <TabWidget
+   	            android:id="@android:id/tabs"
+   	            android:layout_width="match_parent"
+   	            android:layout_height="wrap_content" >
+   	        </TabWidget>
 
-    </LinearLayout>
+   	        <FrameLayout
+   	            android:id="@android:id/tabcontent"
+   	            android:layout_width="match_parent"
+   	            android:layout_height="168dp" >
 
-    <LinearLayout
-        android:id="@+id/LL_Seperator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/seperator_dimension"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="@dimen/seperator_dimension"
-        android:background="#37000000"
-        android:orientation="horizontal" >
+   	            <LinearLayout
+   	                android:id="@+id/File"
+   	                android:layout_width="match_parent"
+   	                android:layout_height="match_parent"
+   	                android:orientation="vertical" 
+   	                android:paddingTop="@dimen/dp_10">
 
-    </LinearLayout>
+   	                <TextView
+   	                    android:id="@+id/textView1"
+   	                    android:layout_width="match_parent"
+   	                    android:layout_height="wrap_content"
+   	                    android:text="@string/file_format"
+   	                    android:background="@color/ThwBlue" 
+   	                    android:textColor="@color/white"
+   	                    android:textStyle="bold"/>
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/file_format" />
+   	                <Spinner
+   	                    android:id="@+id/spformat"
+   	                    android:layout_width="match_parent"
+   	                    android:layout_height="30dp" />
 
-    <Spinner
-        android:id="@+id/Spinner01"
-        android:layout_width="match_parent"
-        android:layout_height="25dp" />
+   	                <TextView
+   	                    android:id="@+id/TextView03"
+   	                    android:layout_width="match_parent"
+   	                    android:layout_height="wrap_content"
+   	                    android:text="@string/file_source"
+   	                    android:background="@color/ThwBlue"
+   	                    android:textColor="@color/white"
+   	                    android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/TextView03"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/file_source" />
+   	                <Spinner
+   	                    android:id="@+id/spfilesource"
+   	                    android:layout_width="match_parent"
+   	                    android:layout_height="30dp" />
 
-    <Spinner
-        android:id="@+id/spfilesource"
-        android:layout_width="match_parent"
-        android:layout_height="25dp" />
+   	            </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dp_10" >
+   	            <LinearLayout
+   	                android:id="@+id/Datenbank"
+   	                android:layout_width="match_parent"
+   	                android:layout_height="match_parent" >
 
-        <RadioButton
-            android:id="@+id/radioButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+   	                <EditText
+   	                    android:id="@+id/editText1"
+   	                    android:layout_width="0dp"
+   	                    android:layout_height="wrap_content"
+   	                    android:layout_weight="1" />
+   	            </LinearLayout>
+   	        </FrameLayout>
+   	    </LinearLayout>
+   	</TabHost>
 
-        <TextView
-            android:id="@+id/TextView02"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            android:background="@color/ThwBlue"
-            android:text="@string/db_import"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/LinearLayout01"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/seperator_dimension"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="@dimen/seperator_dimension"
-        android:background="#37000000"
-        android:orientation="horizontal" >
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/db_url" />
-
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPostalAddress" >
-
-        <requestFocus />
-    </EditText>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/TextView04"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.64"
-            android:text="@string/db_import_automatic" />
-
-        <CheckBox
-            android:id="@+id/CheckBox01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/LinearLayout02"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/seperator_dimension"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="@dimen/seperator_dimension"
-        android:background="#37000000"
-        android:orientation="horizontal" >
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnimport"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/save_import"
-        android:onClick="onClickImport" />
+   	<Button
+   	    android:id="@+id/btnimport"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:onClick="onClickImport"
+   	    android:text="@string/save_import" />
 
 </LinearLayout>
