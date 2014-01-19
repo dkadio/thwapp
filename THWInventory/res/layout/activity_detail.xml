@@ -135,7 +135,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10" >
+            android:ems="10" 
+            android:inputType="none"
+            >
 
             <requestFocus />
         </EditText>
@@ -166,17 +168,17 @@
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/soll"
-            android:textAppearance="?android:attr/textAppearanceLarge" 
-            android:layout_weight="1"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/ist"
-            android:textAppearance="?android:attr/textAppearanceLarge" 
-            android:layout_weight="1"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
 
     <LinearLayout
@@ -187,16 +189,16 @@
             android:id="@+id/textViewSoll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="2"
             android:layout_weight="1"
+            android:text="2"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/textViewIst"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1"
             android:layout_weight="1"
+            android:text="1"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
@@ -223,6 +225,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="minusCount"
             android:src="@android:drawable/presence_busy" />
 
         <ImageButton
@@ -230,6 +233,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="plusCount"
             android:src="@android:drawable/presence_online" />
     </LinearLayout>
 
@@ -253,6 +257,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="previousItem"
             android:src="@android:drawable/ic_media_previous" />
 
         <ImageButton
@@ -260,6 +265,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="stop"
             android:src="@android:drawable/ic_lock_power_off" />
 
         <ImageButton
@@ -267,6 +273,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="nextItem"
             android:src="@android:drawable/ic_media_next" />
     </LinearLayout>
 
