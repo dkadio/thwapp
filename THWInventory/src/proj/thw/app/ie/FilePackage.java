@@ -1,18 +1,42 @@
 package proj.thw.app.ie;
 
-import java.util.ArrayList;
 
 public class FilePackage {
 
-	private ArrayList<FileIE> fileList;
+	private FileIE dataFile;
+	private FileIE imageFile;
+	
 	public FilePackage()
 	{
-		fileList = new ArrayList<FileIE>();
+		dataFile = null;
+		imageFile = null;
 	}
 	
-	public void addFile(FileIE addFile){
-		fileList.add(addFile);
+	public FilePackage(FileIE dataFile,FileIE imageFile)
+	{
+		this.dataFile = dataFile;
+		this.imageFile = imageFile;
+		
 	}
 	
+	public FileIE getDataFile() {
+		return dataFile;
+	}
+
+	public void setDataFile(FileIE dataFile) {
+		this.dataFile = dataFile;
+	}
+
+	public FileIE getImageFile() {
+		return imageFile;
+	}
+
+	public void setImageFile(FileIE imageFile) {
+		this.imageFile = imageFile;
+	}
 	
+	public String toString()
+	{
+		return dataFile.getFileName();
+	}
 }

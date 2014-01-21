@@ -16,12 +16,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
+public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean>{
 
 	static final String COLUMN_LAYER 			= "Ebene";
 	static final String COLUMN_OE				= "OE";
@@ -40,20 +41,20 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 	private ProgressDialog asyncDialog;
 	
 	private OrmDBHelper dbHelper;
-	private Context 	callContext;
+	private ImportDataActivity 	callContext;
 	private TextView 	tvStatus;
 	private HashMap<String, Integer> columnHeaders;
 	
 	EquipmentImage defaultEquipImg;
 	
-	public ThwCsvImporter(OrmDBHelper dbHelper, Context callContext, TextView tvStatus)
+	public ThwCsvImporter(OrmDBHelper dbHelper, ImportDataActivity callContext, TextView tvStatus)
 	{
 		this.dbHelper 		= dbHelper;
 		this.callContext 	= callContext;
 		this.tvStatus 		= tvStatus;
 	}
 	
-	public ThwCsvImporter(OrmDBHelper dbHelper, Context callContext)
+	public ThwCsvImporter(OrmDBHelper dbHelper, ImportDataActivity callContext)
 	{
 		this.dbHelper 		= dbHelper;
 		this.callContext 	= callContext;
@@ -93,6 +94,7 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 		else
 		{
 			asyncDialog.dismiss();
+			callContext.getReturnHandler().handleMessage(new Message());
 		}
 		//Intent i = new Intent(callContext, EquipmentTreeViewListActivity.class);
         //callContext.startActivity(i);
@@ -112,14 +114,14 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 	}
 	
 	@Override
-	protected Boolean doInBackground(CSVFile... params) {
+	protected Boolean doInBackground(FilePackage... params) {
 		
 		if(params.length == 0)
 		{
 			return false;
 		}
 		
-		CSVFile fileToImport = params[0];
+		FilePackage fileToImport = params[0];
 		
 		//Bitmap als DefaultImage laden...
 		Bitmap bmp = BitmapFactory.decodeStream(callContext.getResources().openRawResource(R.drawable.error));
@@ -128,31 +130,31 @@ public class ThwCsvImporter extends AsyncTask<CSVFile, String, Boolean>{
 		int rowCount = 0;
 		String line = "";
 		try {
-			if((line = fileToImport.getFileReader().readLine()) != null)
+			if((line = fileToImport.getDataFile().getFileReader().readLine()) != null)
 			{
 				//lese header aus...
 				//Vector<String> columnHeaders = new Vector<String>();
 				publishProgress("initialisiere Header...");
 				columnHeaders = new HashMap<String, Integer>();
 	
-				String[] spHeader = line.split(fileToImport.getSeparator());
+				String[] spHeader = line.split(((CSVFile)fileToImport.getDataFile()).getSeparator());
 				for(int i = 0; i <  spHeader.length; i++){
 					String col = spHeader[i].replace('"',' ').trim();
 					columnHeaders.put(col.trim().toUpperCase(),i);
 				}
 				
 				//lese Standort aus
-				String headerline = fileToImport.getFileReader().readLine();
-				String[] spStandort = headerline.split(fileToImport.getSeparator());
+				String headerline = fileToImport.getDataFile().getFileReader().readLine();
+				String[] spStandort = headerline.split(((CSVFile)fileToImport.getDataFile()).getSeparator());
 				
 				String location = "";
 				if(columnHeaders.containsKey(COLUMN_OE.toUpperCase()))
 					location = spStandort[columnHeaders.get(COLUMN_OE.toUpperCase())];
 				
-				while(( line = fileToImport.getFileReader().readLine()) != null)
+				while(( line = fileToImport.getDataFile().getFileReader().readLine()) != null)
 				{	
 					publishProgress("load RowNr:  " + rowCount++);
-					String[] spRow = line.split(fileToImport.getSeparator());
+					String[] spRow = line.split(((CSVFile)fileToImport.getDataFile()).getSeparator());
 					
 					Equipment newEquip = new Equipment(); 
 					
