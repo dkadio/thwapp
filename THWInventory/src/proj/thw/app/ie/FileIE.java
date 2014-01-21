@@ -94,6 +94,10 @@ public abstract class FileIE {
 		return fileReader;
 	}
 	
+	public String getFileName() {
+		return fileName;
+	}
+	
 	public String toString()
 	{
 		return fileName;

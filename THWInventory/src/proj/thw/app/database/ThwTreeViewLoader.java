@@ -3,6 +3,8 @@ package proj.thw.app.database;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import proj.thw.app.activitys.EquipmentTreeViewListActivity;
+import proj.thw.app.activitys.ImportDataActivity;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.treeview.TreeBuilder;
 import proj.thw.app.treeview.TreeViewList;
@@ -41,6 +43,8 @@ public class ThwTreeViewLoader extends AsyncTask<OrmDBHelper, Equipment, Integer
 		super.onPostExecute(result);
 		//tvlEquipment.setAdapter(simpleAdapter);
 		tvlEquipment.setCollapsible(true);
+		
+		//setResult(EquipmentTreeViewListActivity.KEY_REQUEST_IMPORT);
 		//tvlEquipment.registerForContextMenu(tvlEquipment);
 	}
 	

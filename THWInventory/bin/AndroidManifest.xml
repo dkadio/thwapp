@@ -42,7 +42,8 @@
         </activity>
         <activity
             android:name="proj.thw.app.activitys.ImportDataActivity"
-            android:label="@string/title_activity_import" >
+            android:label="@string/title_activity_import"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="proj.thw.app.activitys.ExportDataActivity"

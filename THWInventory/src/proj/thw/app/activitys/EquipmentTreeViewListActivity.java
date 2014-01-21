@@ -25,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 /**
  * Demo activity showing how the tree view can be used.
@@ -32,16 +33,17 @@ import android.widget.SearchView;
  */
 public class EquipmentTreeViewListActivity extends Activity {
 
-	static final String LOG = "EquipmentTreeViewListActivity";
-	static final String KEY_EQUIPMENTLIST = "equip.list";
-	static final String KEY_EQUIPMENT = "equip";
+	public static final int KEY_REQUEST_IMPORT = 4711;
+	protected static final String LOG = "EquipmentTreeViewListActivity";
+	protected static final String KEY_EQUIPMENTLIST = "equip.list";
+	protected static final String KEY_EQUIPMENT = "equip";
 
 	private final Set<Equipment> selected = new HashSet<Equipment>();
 	private TreeViewList tvlEquipment;
 
 	//private static final int LEVEL_NUMBER = 6;
-	private static TreeStateManager<Equipment> manager = new InMemoryTreeStateManager<Equipment>();
-	private static TreeBuilder<Equipment> treeBuilder = new TreeBuilder<Equipment>(manager);
+	private TreeStateManager<Equipment> manager = new InMemoryTreeStateManager<Equipment>();
+	private TreeBuilder<Equipment> treeBuilder;
 	
 	private ThwTreeViewAdapter simpleAdapter;
 	private boolean collapsible;
@@ -49,6 +51,8 @@ public class EquipmentTreeViewListActivity extends Activity {
 	private ArrayList<Equipment> equipmentList;
 	private OrmDBHelper dbHelper;
 	private ProgressDialog loadDialog;
+	
+	private TextView txttest;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -58,16 +62,24 @@ public class EquipmentTreeViewListActivity extends Activity {
 		
 		tvlEquipment = (TreeViewList) findViewById(R.id.tvlequip);
 		dbHelper = new OrmDBHelper(this);
+
+		init();
+		
+	}
+
+	
+	
+	private void init()
+	{
+		txttest = (TextView) findViewById(R.id.txttest);
 		loadDialog = new ProgressDialog(this);
 		loadDialog.setTitle("Please Wait...");
 		loadDialog.setMessage("Load Data from DB!");
 		loadDialog.show();
-		
 		new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
-				
 				try {
 
 					equipmentList = (ArrayList<Equipment>)dbHelper.getDbHelperEquip().selectAllEquipments();
@@ -79,6 +91,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 					
 					@Override
 					public void run() {
+						
+						manager = new InMemoryTreeStateManager<Equipment>(); 
+						treeBuilder = new TreeBuilder<Equipment>(manager);
 						loadDialog.dismiss();
 						int maxLayer  = 1;
 						for(Equipment loadedItem : equipmentList)
@@ -94,25 +109,13 @@ public class EquipmentTreeViewListActivity extends Activity {
 																					maxLayer);
 						tvlEquipment.setAdapter(simpleAdapter);
 						tvlEquipment.setCollapsible(true);
+						txttest.setText("Anzahl Nodes: "+equipmentList.size());
 					}
 				});
 			}
 		}).start();
-		
-		
 	}
 
-	@Override
-	protected void onSaveInstanceState(final Bundle outState) {
-		outState.putSerializable("treeManager", manager);
-		outState.putBoolean("collapsible", this.collapsible);
-		super.onSaveInstanceState(outState);
-	}
-
-	protected final void setCollapsible(final boolean newCollapsible) {
-		this.collapsible = newCollapsible;
-		tvlEquipment.setCollapsible(this.collapsible);
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
@@ -134,7 +137,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.importdata:
 			intent= new Intent(this, ImportDataActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, KEY_REQUEST_IMPORT);
 			break;
 		case R.id.exportdata:
 			intent = new Intent(this, ExportDataActivity.class);
@@ -145,20 +148,33 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		switch(requestCode){
+		case KEY_REQUEST_IMPORT: 
+				if(resultCode == RESULT_OK)
+					init();
+			break;
+		default: //Do Nothing..
+		}
+	}
 
-	/*
-	 * @Override public boolean onContextItemSelected(final MenuItem item) {
-	 * final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-	 * .getMenuInfo(); final long id = info.id; if (item.getItemId() ==
-	 * R.id.context_menu_collapse) { manager.collapseChildren(id); return true;
-	 * } else if (item.getItemId() == R.id.context_menu_expand_all) {
-	 * manager.expandEverythingBelow(id); return true; } else if
-	 * (item.getItemId() == R.id.context_menu_expand_item) {
-	 * manager.expandDirectChildren(id); return true; } else if
-	 * (item.getItemId() == R.id.context_menu_delete) {
-	 * manager.removeNodeRecursively(id); return true; } else { return
-	 * super.onContextItemSelected(item); } }
-	 */
+/*
+	 @Override
+	 public boolean onContextItemSelected(final MenuItem item) {
+		 final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo(); final long id = info.id; if (item.getItemId() ==
+	  R.id.context_menu_collapse) { manager.collapseChildren(id); return true;
+	  } else if (item.getItemId() == R.id.context_menu_expand_all) {
+	  manager.expandEverythingBelow(id); return true; } else if
+	  (item.getItemId() == R.id.context_menu_expand_item) {
+	  manager.expandDirectChildren(id); return true; } else if
+	  (item.getItemId() == R.id.context_menu_delete) {
+	  manager.removeNodeRecursively(id); return true; } else { return
+	  super.onContextItemSelected(item); } }
+*/
 
 	public void onClickTestButton(View view) {
 		Intent in = new Intent(this, DetailListActivity.class);
@@ -171,4 +187,6 @@ public class EquipmentTreeViewListActivity extends Activity {
 		in.putExtra(KEY_EQUIPMENTLIST, test);
 		startActivity(in);
 	}
+	
+	
 }
