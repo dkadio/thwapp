@@ -10,6 +10,7 @@ import proj.thw.app.adapters.ThwTreeViewAdapter;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.database.OrmDBHelper;
 import proj.thw.app.treeview.InMemoryTreeStateManager;
+import proj.thw.app.treeview.OnTreeViewListItemClickListener;
 import proj.thw.app.treeview.TreeBuilder;
 import proj.thw.app.treeview.TreeStateManager;
 import proj.thw.app.treeview.TreeViewList;
@@ -27,6 +28,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -56,14 +61,31 @@ public class EquipmentTreeViewListActivity extends Activity {
 	private ProgressDialog loadDialog;
 
 	private TextView txttest;
+	private Context context;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_tree_view_list);
-
+		context = this; 
 		tvlEquipment = (TreeViewList) findViewById(R.id.tvlequip);
+		tvlEquipment.setTreeViewListItemClickListener(new OnTreeViewListItemClickListener() {
+			
+			@Override
+			public void onTreeViewListItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+				//getClickedItem
+				Equipment equipitem = (Equipment)view.getTag();
+				ArrayList<Equipment> selectedList = new ArrayList<Equipment>( manager.getChildren(equipitem));
+				selectedList.add(0, equipitem);
+				manager.collapseChildren(equipitem);
+				Intent in = new Intent(context, DetailListActivity.class);
+				in.putExtra(KEY_EQUIPMENTLIST, selectedList);
+				startActivity(in);
+			}
+		});
 		dbHelper = new OrmDBHelper(this);
 
 		init();
@@ -187,15 +209,6 @@ public class EquipmentTreeViewListActivity extends Activity {
 	 */
 
 	public void onClickTestButton(View view) {
-		Intent in = new Intent(this, DetailListActivity.class);
-
-		ArrayList<Equipment> test = new ArrayList<Equipment>();
-		for (int i = 5; i < 11; i++) {
-			test.add(equipmentList.get(i));
-		}
-
-		in.putExtra(KEY_EQUIPMENTLIST, test);
-		startActivity(in);
 	}
 
 	@Override
