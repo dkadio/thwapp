@@ -18,7 +18,8 @@
         <activity
             android:name="proj.thw.app.activitys.SplashScreenActivity"
             android:label="@string/setEmptyLabel"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
