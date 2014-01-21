@@ -22,8 +22,10 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DetailActivity extends Activity {
 
@@ -32,6 +34,7 @@ public class DetailActivity extends Activity {
 	EditText etequipNo, etdeviveNo, etinvNo, etStatus;
 	TextView tvtype, tvdescription, tvSoll, tvIst;
 	CheckBox cbforeignpart;
+	ImageView imageequip;
 
 	Vector<Equipment.Status> selectedstates;
 	ArrayList<Equipment.Status> allstates;
@@ -117,6 +120,9 @@ public class DetailActivity extends Activity {
 	}
 
 	private void setValues() {
+		imageequip.setImageBitmap(equipments.get(selectedItem).getEquipImg().getImg());
+
+		
 		etdeviveNo.setText(equipments.get(selectedItem).getDeviceNo());
 		etequipNo.setText(equipments.get(selectedItem).getEquipNo());
 		etinvNo.setText(equipments.get(selectedItem).getInvNo());
@@ -126,10 +132,11 @@ public class DetailActivity extends Activity {
 		tvdescription.setText(equipments.get(selectedItem).getDescription());
 		tvtype.setText(equipments.get(selectedItem).getType().toString());
 
-		tvIst.setText(String.valueOf(equipments.get(selectedItem).getActualQuantity()));
-		tvSoll.setText(String.valueOf(equipments.get(selectedItem).getTargetQuantity()));
+		tvIst.setText(String.valueOf(equipments.get(selectedItem)
+				.getActualQuantity()));
+		tvSoll.setText(String.valueOf(equipments.get(selectedItem)
+				.getTargetQuantity()));
 
-		
 		etStatus.setText(equipments.get(selectedItem).getStatus().toString());
 		selectedstates = equipments.get(selectedItem).getStatus();
 		firsttime = true;
@@ -148,6 +155,8 @@ public class DetailActivity extends Activity {
 
 	private void init() {
 
+		imageequip = (ImageView) findViewById(R.id.imageEquip);
+		
 		etdeviveNo = (EditText) findViewById(R.id.editTextDeviceNo);
 		etequipNo = (EditText) findViewById(R.id.editTextEquipNo);
 		etinvNo = (EditText) findViewById(R.id.editTextInvNo);
@@ -195,6 +204,9 @@ public class DetailActivity extends Activity {
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+		case R.id.takePicture:
+			equipments.get(selectedItem).getEquipImg().getImg();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -223,19 +235,25 @@ public class DetailActivity extends Activity {
 		equipments.get(selectedItem).setInvNo(etinvNo.getText().toString());
 		equipments.get(selectedItem).setForeignPart(cbforeignpart.isChecked());
 		// status speichern und vector zuruecksetzen
-		equipments.get(selectedItem).setStatus(selectedstates);	
-		equipments.get(selectedItem).setActualQuantity(Integer.valueOf(tvIst.getText().toString()));
-	}
-
-	public void plusCount(View v) {
-//TODO darf das groeser werden als Soll?		if(Integer.valueOf(tvIst.getText().toString()) < Integer.valueOf(tvSoll.getText().toString()))
-			tvIst.setText(String.valueOf(Integer.valueOf(tvIst.getText().toString()) + 1));
+		equipments.get(selectedItem).setStatus(selectedstates);
+		equipments.get(selectedItem).setActualQuantity(
+				Integer.valueOf(tvIst.getText().toString()));
 		
 	}
 
+	public void plusCount(View v) {
+		// TODO darf das groeser werden als Soll?
+		// if(Integer.valueOf(tvIst.getText().toString()) <
+		// Integer.valueOf(tvSoll.getText().toString()))
+		tvIst.setText(String.valueOf(Integer
+				.valueOf(tvIst.getText().toString()) + 1));
+
+	}
+
 	public void minusCount(View v) {
-		if(Integer.valueOf(tvIst.getText().toString()) > 0)
-		tvIst.setText(String.valueOf(Integer.valueOf(tvIst.getText().toString()) - 1));
+		if (Integer.valueOf(tvIst.getText().toString()) > 0)
+			tvIst.setText(String.valueOf(Integer.valueOf(tvIst.getText()
+					.toString()) - 1));
 	}
 
 	public void stop(View v) {

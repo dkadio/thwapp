@@ -8,8 +8,8 @@
         android:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/item1"
-                android:title="item1"/>
+                android:id="@+id/takePicture"
+                android:title="Bild aufnehmen"/>
             <item
                 android:id="@+id/item2"
                 android:title="item2"/>
