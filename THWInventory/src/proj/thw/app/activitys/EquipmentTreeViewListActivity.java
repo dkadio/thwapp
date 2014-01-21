@@ -119,7 +119,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 								manager, maxLayer);
 						tvlEquipment.setAdapter(simpleAdapter);
 						tvlEquipment.setCollapsible(true);
-						txttest.setText("Anzahl Nodes: " + equipmentList.size());
+						txttest.setText(getResources().getString(R.string.treesize)+": " + equipmentList.size());
 					}
 				});
 			}
