@@ -30,7 +30,7 @@ public class DetailActivity extends Activity {
 	static final String MYTAG = "DetailActivity.class";
 
 	EditText etequipNo, etdeviveNo, etinvNo, etStatus;
-	TextView tvtype, tvdescription, tvSoll; //tvIst;
+	TextView tvtype, tvdescription, tvSoll, tvIst;
 	CheckBox cbforeignpart;
 
 	Vector<Equipment.Status> selectedstates;
@@ -126,8 +126,9 @@ public class DetailActivity extends Activity {
 		tvdescription.setText(equipments.get(selectedItem).getDescription());
 		tvtype.setText(equipments.get(selectedItem).getType().toString());
 
-//		tvIst.setText(equipments.get(selectedItem).getActualQuantity());
-		tvSoll.setText(equipments.get(selectedItem).getTargetQuantity());
+		tvIst.setText(String.valueOf(equipments.get(selectedItem).getActualQuantity()));
+		tvSoll.setText(String.valueOf(equipments.get(selectedItem).getTargetQuantity()));
+
 		
 		etStatus.setText(equipments.get(selectedItem).getStatus().toString());
 		selectedstates = equipments.get(selectedItem).getStatus();
@@ -155,7 +156,7 @@ public class DetailActivity extends Activity {
 		tvdescription = (TextView) findViewById(R.id.textViewProducer);
 		tvtype = (TextView) findViewById(R.id.textViewTyp);
 
-//		tvIst = (TextView) findViewById(R.id.TextViewIst);
+		tvIst = (TextView) findViewById(R.id.TextViewIst);
 		tvSoll = (TextView) findViewById(R.id.textViewSoll);
 
 		cbforeignpart = (CheckBox) findViewById(R.id.checkBoxforeignPart);
@@ -222,17 +223,19 @@ public class DetailActivity extends Activity {
 		equipments.get(selectedItem).setInvNo(etinvNo.getText().toString());
 		equipments.get(selectedItem).setForeignPart(cbforeignpart.isChecked());
 		// status speichern und vector zuruecksetzen
-		equipments.get(selectedItem).setStatus(selectedstates);
-		
-//		equipments.get(selectedItem).setActualQuantity(Integer.valueOf(tvIst.getText().toString()));
+		equipments.get(selectedItem).setStatus(selectedstates);	
+		equipments.get(selectedItem).setActualQuantity(Integer.valueOf(tvIst.getText().toString()));
 	}
 
 	public void plusCount(View v) {
-//		tvIst.setText(Integer.valueOf(tvIst.getText().toString()) + 1);
+//TODO darf das groeser werden als Soll?		if(Integer.valueOf(tvIst.getText().toString()) < Integer.valueOf(tvSoll.getText().toString()))
+			tvIst.setText(String.valueOf(Integer.valueOf(tvIst.getText().toString()) + 1));
+		
 	}
 
 	public void minusCount(View v) {
-//		tvIst.setText(Integer.valueOf(tvIst.getText().toString()) - 1);
+		if(Integer.valueOf(tvIst.getText().toString()) > 0)
+		tvIst.setText(String.valueOf(Integer.valueOf(tvIst.getText().toString()) - 1));
 	}
 
 	public void stop(View v) {
