@@ -238,9 +238,6 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean>{
 						else if (Equipment.Status.A.toString().equals(status))
 						{
 							newEquip.getStatus().add(Equipment.Status.A);
-						}else
-						{
-							newEquip.getStatus().add(Equipment.Status.NOSTATUS);
 						}
 						
 					}

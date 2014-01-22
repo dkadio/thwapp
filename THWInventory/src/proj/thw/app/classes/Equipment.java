@@ -11,7 +11,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Equipment implements Serializable {
 	
 	public static enum Type{POS,SATZ,GWM,TEIL,NOTYPE};
-	public static enum Status {V,A,F,BA,NOSTATUS};
+	public static enum Status {V,A,F,BA};
 
 	private static final long serialVersionUID = 1L;
 	
