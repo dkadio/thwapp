@@ -120,7 +120,7 @@ public class DetailActivity extends Activity {
 	}
 
 	private void setValues() {
-		tvdebug.setText("Interne Id: " + String.valueOf(equipments.get(selectedItem).getId()));
+		tvdebug.setText(String.valueOf(selectedItem) + "/" + equipments.size());
 		
 		imageequip.setImageBitmap(equipments.get(selectedItem).getEquipImg().getImg());
 
