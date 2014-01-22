@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class DetailListActivity extends Activity implements OnItemClickListener {
 	public final static String KEY_EQUIP_COLLECTION = "equip_collection_key";
@@ -37,6 +38,8 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		intent = new Intent(this, DetailActivity.class);
 		intent.putExtra(KEY_EQUIP_COLLECTION, equipments);
 		initView();
+		TextView many = (TextView) findViewById(R.id.eintraege);
+		many.setText("Eingetragene elemente: " + String.valueOf(equipments.size()));
 		
 		
 	}

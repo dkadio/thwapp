@@ -10,6 +10,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".DetailListActivity" >
 
+    <TextView
+        android:id="@+id/eintraege"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
     <ListView
         android:id="@+id/equipmentListView"
         android:layout_width="match_parent"
