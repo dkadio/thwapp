@@ -19,22 +19,23 @@ import android.widget.TextView;
 
 public class SplashScreenActivity extends Activity {
 
-	private static final String LOG 						= "SplashScreenActivity";
-	private static final int SPLASH_TIME_OUT 				= 3000;
-	private static final String IMPORT_EXPORT_FILE_FOLDER 	= "IE";
-	private static final String XML_FOLDER 					= "XML";
-	private static final String CSV_FOLDER 					= "CSV";
-	private static final String DEFAULT_FOLDER 				= "Default";
-	private static final String DEFAULT_FILE 				= "default";
-	private static final String FILE_EXTENTION_CSV 			= ".csv";
-	private static final String FILE_EXTENTION_XML 			= ".xml";
+	private static final String LOG = "SplashScreenActivity";
+	private static final int SPLASH_TIME_OUT = 3000;
+	private static final String IMPORT_EXPORT_FILE_FOLDER = "IE";
+	private static final String IMAGE_FOLDER_TEMP = "Temp";
+	private static final String XML_FOLDER = "XML";
+	private static final String CSV_FOLDER = "CSV";
+	private static final String DEFAULT_FOLDER = "Default";
+	private static final String DEFAULT_FILE = "default";
+	private static final String FILE_EXTENTION_CSV = ".csv";
+	private static final String FILE_EXTENTION_XML = ".xml";
 
 	private File csvFolder;
 	private File xmlFolder;
 	private File defaultFolder;
-	
+
 	private static Context callContext;
-	
+
 	private ProgressBar pbload;
 	private TextView tvstatus;
 
@@ -43,16 +44,16 @@ public class SplashScreenActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);
 		callContext = this;
-		
+
 		pbload = (ProgressBar) findViewById(R.id.pbloaddb);
 		pbload.setVisibility(View.VISIBLE);
-		
+
 		tvstatus = (TextView) findViewById(R.id.tvstatus);
 		tvstatus.setText("Init Folders");
 		tvstatus.setVisibility(View.VISIBLE);
-		
+
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				writeMsg("Init Folders...");
@@ -69,13 +70,12 @@ public class SplashScreenActivity extends Activity {
 						EquipmentTreeViewListActivity.class);
 				callContext.startActivity(i);
 				finish();
-				
+
 			}
 		}).start();
 	}
-	
-	private void writeMsg(final String msg)
-	{
+
+	private void writeMsg(final String msg) {
 		tvstatus.post(new Runnable() {
 			@Override
 			public void run() {
@@ -94,6 +94,11 @@ public class SplashScreenActivity extends Activity {
 		if (!sysFolderOnExternalStorage.exists())
 			sysFolderOnExternalStorage.mkdir();
 
+		File tempFolder = new File(sysFolderOnExternalStorage,
+				IMAGE_FOLDER_TEMP);
+		if (!tempFolder.exists())
+			tempFolder.mkdir();
+
 		File ieFolder = new File(sysFolderOnExternalStorage,
 				IMPORT_EXPORT_FILE_FOLDER);
 		if (!ieFolder.exists())
@@ -102,9 +107,9 @@ public class SplashScreenActivity extends Activity {
 		csvFolder = new File(ieFolder, CSV_FOLDER);
 		if (!csvFolder.exists())
 			csvFolder.mkdir();
-		
+
 		createDefaultCSV();
-		
+
 		xmlFolder = new File(ieFolder, XML_FOLDER);
 		if (!xmlFolder.exists())
 			xmlFolder.mkdir();

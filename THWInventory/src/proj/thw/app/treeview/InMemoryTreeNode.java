@@ -1,8 +1,11 @@
 package proj.thw.app.treeview;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import proj.thw.app.classes.Equipment;
 
 /**
  * Node. It is package protected so that it cannot be used outside.
@@ -48,12 +51,19 @@ class InMemoryTreeNode<T> implements Serializable {
         return childIdListCache;
     }
     
+    
     public synchronized List<T> getChildIdAbsoluteList() {
-        for (final InMemoryTreeNode<T> n : children) {
-            childIdListCache.add(n.getId());
-	}
+       
+    	if(childIdListCache !=  null)
+    	{
+    		for (final InMemoryTreeNode<T> n : children) {
+                childIdListCache.add(n.getId());
+                
+    		}
+    	
+    	}
     return childIdListCache;
-}
+    }
 
     public boolean isVisible() {
         return visible;

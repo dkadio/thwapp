@@ -54,8 +54,6 @@ public class EquipmentTreeViewListActivity extends Activity {
 	private TreeBuilder<Equipment> treeBuilder;
 
 	private ThwTreeViewAdapter simpleAdapter;
-	private boolean collapsible;
-
 	private ArrayList<Equipment> equipmentList;
 	private OrmDBHelper dbHelper;
 	private ProgressDialog loadDialog;
@@ -92,6 +90,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 	}
 
+	//TODO collabsed enable falls tree leer ist
 	private void init() {
 		txttest = (TextView) findViewById(R.id.txttest);
 		// loadDialog = ProgressDialog.show(this, "Please Wait...",
