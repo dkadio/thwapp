@@ -8,6 +8,7 @@ import proj.thw.app.classes.Equipment;
 import proj.thw.app.treeview.AbstractTreeViewAdapter;
 import proj.thw.app.treeview.TreeNodeInfo;
 import proj.thw.app.treeview.TreeStateManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;

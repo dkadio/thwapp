@@ -68,6 +68,7 @@ public class SplashScreenActivity extends Activity {
 				Intent i = new Intent(callContext,
 						EquipmentTreeViewListActivity.class);
 				callContext.startActivity(i);
+				finish();
 				
 			}
 		}).start();

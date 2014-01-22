@@ -72,6 +72,7 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean>{
 		else
 		{
 			asyncDialog = new ProgressDialog(callContext);
+			asyncDialog.setCanceledOnTouchOutside(false);
 			asyncDialog.setTitle("Please Wait...");
 			asyncDialog.setMessage("importiere Daten...");
 			asyncDialog.show();
