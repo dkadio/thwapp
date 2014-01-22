@@ -1,48 +1,55 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/TableLayout1"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".DetailActivity" >
 
-    <TableRow
-        android:id="@+id/tableRow1"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/textViewTyp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/imageEquip"
+            <TextView
+                android:id="@+id/textViewTyp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textViewProducer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Hersteller AUstattung"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/error" />
-    </TableRow>
+            android:orientation="vertical" >
 
-    <TableRow
-        android:id="@+id/tableRow2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/seperator_dimension" >
-
-        <TextView
-            android:id="@+id/textViewProducer"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_50"
-            android:text="Hersteller AUstattung"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </TableRow>
+            <ImageView
+                android:id="@+id/imageEquip"
+                android:layout_width="@dimen/pictureSize"
+                android:layout_height="@dimen/pictureSize"
+                android:src="@drawable/error" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/LL_Seperator2"
@@ -135,9 +142,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10" 
-            android:inputType="none"
-            >
+            android:ems="10"
+            android:inputType="none" >
 
             <requestFocus />
         </EditText>
@@ -202,19 +208,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
-    <TableRow
-        android:id="@+id/tableRow8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/seperator_dimension" >
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow13"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </TableRow>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -249,7 +242,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <ImageButton
@@ -275,7 +268,6 @@
             android:layout_weight="1"
             android:onClick="nextItem"
             android:src="@android:drawable/ic_media_next" />
-
     </LinearLayout>
 
     <TextView
@@ -285,4 +277,4 @@
         android:layout_weight="1"
         android:text="TextView" />
 
-</TableLayout>
+</LinearLayout>

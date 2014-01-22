@@ -1,14 +1,28 @@
 //TODO status wird beim ersten mal beim laden geloescht weil man nicht anders an die checkboxen kommt ausser ueber die onclickmethode --> saubere loesung waere nett 
+//TODO shared preference fuer die attribute schreiben
 package proj.thw.app.activitys;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 
 import proj.thw.app.R;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.classes.Equipment.Status;
+import proj.thw.app.classes.EquipmentImage;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -30,6 +44,8 @@ import android.widget.Toast;
 public class DetailActivity extends Activity {
 
 	static final String MYTAG = "DetailActivity.class";
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	private Uri fileUri;
 
 	EditText etequipNo, etdeviveNo, etinvNo, etStatus;
 	TextView tvtype, tvdescription, tvSoll, tvIst, tvdebug;
@@ -43,6 +59,8 @@ public class DetailActivity extends Activity {
 	ListPopupWindow popuplist;
 	Activity thisact = this;
 	boolean firsttime;
+	File lastmediafile;
+	EquipmentImage temp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,10 +138,12 @@ public class DetailActivity extends Activity {
 	}
 
 	private void setValues() {
-		tvdebug.setText(String.valueOf(selectedItem + 1) + "/" + equipments.size());
-		
-		imageequip.setImageBitmap(equipments.get(selectedItem).getEquipImg().getImg());
+		tvdebug.setText(String.valueOf(selectedItem + 1) + "/"
+				+ equipments.size());
 
+		imageequip.setImageBitmap(equipments.get(selectedItem).getEquipImg()
+				.getImg());
+		temp = equipments.get(selectedItem).getEquipImg();
 		
 		etdeviveNo.setText(equipments.get(selectedItem).getDeviceNo());
 		etequipNo.setText(equipments.get(selectedItem).getEquipNo());
@@ -157,9 +177,9 @@ public class DetailActivity extends Activity {
 
 	private void init() {
 		tvdebug = (TextView) findViewById(R.id.debug);
-		
+
 		imageequip = (ImageView) findViewById(R.id.imageEquip);
-		
+
 		etdeviveNo = (EditText) findViewById(R.id.editTextDeviceNo);
 		etequipNo = (EditText) findViewById(R.id.editTextEquipNo);
 		etinvNo = (EditText) findViewById(R.id.editTextInvNo);
@@ -194,26 +214,6 @@ public class DetailActivity extends Activity {
 		return true;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		case R.id.takePicture:
-			equipments.get(selectedItem).getEquipImg().getImg();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	public void nextItem(View v) {
 		if (selectedItem < equipments.size() - 1) {
 			saveValues();
@@ -241,7 +241,8 @@ public class DetailActivity extends Activity {
 		equipments.get(selectedItem).setStatus(selectedstates);
 		equipments.get(selectedItem).setActualQuantity(
 				Integer.valueOf(tvIst.getText().toString()));
-		
+		equipments.get(selectedItem).setEquipImg(temp);
+
 	}
 
 	public void plusCount(View v) {
@@ -262,4 +263,112 @@ public class DetailActivity extends Activity {
 	public void stop(View v) {
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				// Image captured and saved to fileUri specified in the Intent
+				setImage();
+				Log.d(MYTAG, "Bild aufgenommen ok");
+			} else if (resultCode == RESULT_CANCELED) {
+				// User cancelled the image capture
+				Log.d(MYTAG, "Benutzer hat Aufnahme abgebrochen canceld");
+			} else {
+				// Image capture failed, advise user
+				Log.d(MYTAG, "Fehler beim aufnhemen eines Bildes failed");
+			}
+		}
+	}
+
+	private void setImage() {
+		//les ein image aus dem Ordner Temp und loesche es dannach
+		
+		File imagefile = lastmediafile;
+		FileInputStream fis = null;
+		try {
+		    fis = new FileInputStream(imagefile);
+		    } catch (FileNotFoundException e) {
+		    e.printStackTrace();
+		}
+
+		Bitmap bm = BitmapFactory.decodeStream(fis);
+		int h = 100; // height in pixels
+		int w = 100; // width in pixels    
+		Bitmap scaled = Bitmap.createScaledBitmap(bm, h, w, true);
+		imageequip.setImageBitmap(scaled);
+		temp = new EquipmentImage(scaled);
+		imagefile.delete();
+		
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		case R.id.takePicture:
+			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE); // create a file
+																// to save the
+																// image
+			intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); //
+			startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	public static final int MEDIA_TYPE_IMAGE = 1;
+	public static final int MEDIA_TYPE_VIDEO = 2;
+
+	/** Create a file Uri for saving an image or video */
+	private Uri getOutputMediaFileUri(int type) {
+		return Uri.fromFile(getOutputMediaFile(type));
+	}
+
+	/** Create a File for saving an image or video */
+	private File getOutputMediaFile(int type) {
+		// To be safe, you should check that the SDCard is mounted
+		// using Environment.getExternalStorageState() before doing this.
+
+		File mediaStorageDir = new File(
+				Environment.getExternalStorageDirectory(), getResources()
+						.getString(R.string.app_name)
+						+ File.separator
+						+ SplashScreenActivity.FOLDER_TEMP);
+		// This location works best if you want the created images to be shared
+		// between applications and persist after your app has been uninstalled.
+
+		// Create the storage directory if it does not exist
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d("MyCameraApp", "failed to create directory");
+				return null;
+			}
+		}
+
+		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+				.format(new Date());
+		File mediaFile;
+		if (type == MEDIA_TYPE_IMAGE) {
+			mediaFile = new File(mediaStorageDir.getPath() + File.separator
+					+ "IMG_" + timeStamp + ".jpg");
+		} else if (type == MEDIA_TYPE_VIDEO) {
+			mediaFile = new File(mediaStorageDir.getPath() + File.separator
+					+ "VID_" + timeStamp + ".mp4");
+		} else {
+			return null;
+		}
+		lastmediafile=mediaFile;
+		return mediaFile;
+	}
 }
