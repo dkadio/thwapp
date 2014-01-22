@@ -21,6 +21,12 @@
                 android:id="@+id/exportdata"
                 android:showAsAction="always"
                 android:title="@string/export_data"/>
+             <item
+                android:id="@+id/collapsed"
+                android:showAsAction="always"
+                android:title="@string/collapsed"
+                android:checkable="true"
+                android:checked="false"/>
         </menu>
     </item>
     

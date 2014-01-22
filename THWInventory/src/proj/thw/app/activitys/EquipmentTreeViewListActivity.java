@@ -78,9 +78,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 				
 				//getClickedItem
 				Equipment equipitem = (Equipment)view.getTag();
+				manager.expandEverythingBelow(equipitem);
 				ArrayList<Equipment> selectedList = new ArrayList<Equipment>( manager.getChildren(equipitem));
 				selectedList.add(0, equipitem);
-				manager.collapseChildren(equipitem);
 				Intent in = new Intent(context, DetailListActivity.class);
 				in.putExtra(KEY_EQUIPMENTLIST, selectedList);
 				startActivity(in);
@@ -141,6 +141,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 								manager, maxLayer);
 						tvlEquipment.setAdapter(simpleAdapter);
 						tvlEquipment.setCollapsible(true);
+						manager.expandEverythingBelow(null);
 						txttest.setText(getResources().getString(R.string.treesize)+": " + equipmentList.size());
 					}
 				});
@@ -174,6 +175,17 @@ public class EquipmentTreeViewListActivity extends Activity {
 		case R.id.exportdata:
 			intent = new Intent(this, ExportDataActivity.class);
 			startActivity(intent);
+			break;
+		case R.id.collapsed:
+			if(item.isChecked()){
+				item.setChecked(false);
+				manager.expandEverythingBelow(null);
+			}
+			else{
+				item.setChecked(true);
+				manager.collapseChildren(null);
+			}
+				
 			break;
 		default: // Do Nothing...
 		}

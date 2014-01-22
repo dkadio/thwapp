@@ -52,6 +52,8 @@ public interface TreeStateManager<T> extends Serializable {
      * @return children of the node
      */
     List<T> getChildren(T id);
+    
+    List<T> getAbsoluteChildren(T id);
 
     /**
      * Returns parent of the node.

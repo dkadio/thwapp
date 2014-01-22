@@ -90,6 +90,12 @@ public class InMemoryTreeStateManager<T> implements TreeStateManager<T> {
         final InMemoryTreeNode<T> node = getNodeFromTreeOrThrowAllowRoot(id);
         return node.getChildIdList();
     }
+    
+    @Override
+    public synchronized List<T> getAbsoluteChildren(final T id) {
+        final InMemoryTreeNode<T> node = getNodeFromTreeOrThrowAllowRoot(id);
+        return node.getChildIdAbsoluteList();
+    }
 
     @Override
     public synchronized T getParent(final T id) {
