@@ -32,7 +32,7 @@ public class DetailActivity extends Activity {
 	static final String MYTAG = "DetailActivity.class";
 
 	EditText etequipNo, etdeviveNo, etinvNo, etStatus;
-	TextView tvtype, tvdescription, tvSoll, tvIst;
+	TextView tvtype, tvdescription, tvSoll, tvIst, tvdebug;
 	CheckBox cbforeignpart;
 	ImageView imageequip;
 
@@ -120,6 +120,8 @@ public class DetailActivity extends Activity {
 	}
 
 	private void setValues() {
+		tvdebug.setText("Interne Id: " + String.valueOf(equipments.get(selectedItem).getId()));
+		
 		imageequip.setImageBitmap(equipments.get(selectedItem).getEquipImg().getImg());
 
 		
@@ -154,7 +156,8 @@ public class DetailActivity extends Activity {
 	}
 
 	private void init() {
-
+		tvdebug = (TextView) findViewById(R.id.debug);
+		
 		imageequip = (ImageView) findViewById(R.id.imageEquip);
 		
 		etdeviveNo = (EditText) findViewById(R.id.editTextDeviceNo);

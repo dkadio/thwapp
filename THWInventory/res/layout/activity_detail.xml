@@ -39,7 +39,7 @@
         <TextView
             android:id="@+id/textViewProducer"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_50"
             android:text="Hersteller AUstattung"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </TableRow>
@@ -275,6 +275,14 @@
             android:layout_weight="1"
             android:onClick="nextItem"
             android:src="@android:drawable/ic_media_next" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/debug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView" />
 
 </TableLayout>
