@@ -297,7 +297,7 @@ public class DetailActivity extends Activity {
 		Bitmap scaled = Bitmap.createScaledBitmap(bm, h, w, true);
 		imageequip.setImageBitmap(scaled);
 		temp = new EquipmentImage(scaled);
-		imagefile.delete();
+		lastmediafile.delete();
 		
 	}
 
