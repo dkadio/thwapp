@@ -91,10 +91,43 @@ public class InMemoryTreeStateManager<T> implements TreeStateManager<T> {
         return node.getChildIdList();
     }
     
+    List<T> idAsoluteList = new ArrayList<T>();
     @Override
     public synchronized List<T> getAbsoluteChildren(final T id) {
-        final InMemoryTreeNode<T> node = getNodeFromTreeOrThrowAllowRoot(id);
-        return node.getChildIdAbsoluteList();
+        idAsoluteList.add(id);
+        T firstChildId = getChildren(id).get(0);
+        if(firstChildId != null){
+        	 idAsoluteList.add(firstChildId);
+        	SetAbsolteChildList(firstChildId);
+        }
+        return idAsoluteList;
+    }
+    
+
+    private void SetAbsolteChildList(final T id)
+    {
+    	 InMemoryTreeNode<T> node = getNodeFromTreeOrThrowAllowRoot(id);
+         List<InMemoryTreeNode<T>> children = node.getChildren();
+         idAsoluteList.add(id);
+         if (!children.isEmpty()) {
+        	 InMemoryTreeNode<T> firstChild = children.get(0);
+        	 for(int i = 0; i < children.size(); i++)
+	         {
+	        	 firstChild = children.get(i);
+	        	 SetAbsolteChildList(firstChild.getId());
+	         }
+         }
+         else{
+        	 node = getNodeFromTreeOrThrowAllowRoot(getParent(id));
+        	 children = node.getChildren();
+        	 InMemoryTreeNode<T> firstChild;
+        	 for(int i = 1; i < children.size(); i++)
+	         {
+	        	 firstChild = children.get(i);
+	        	 SetAbsolteChildList(firstChild.getId());
+	         }
+        	 SetAbsolteChildList(getNextSibling(getParent(id)));
+         }
     }
 
     @Override

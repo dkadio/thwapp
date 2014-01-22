@@ -77,7 +77,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 				//getClickedItem
 				Equipment equipitem = (Equipment)view.getTag();
 				manager.expandEverythingBelow(equipitem);
-				ArrayList<Equipment> selectedList = new ArrayList<Equipment>( manager.getChildren(equipitem));
+				ArrayList<Equipment> selectedList = new ArrayList<Equipment>( manager.getAbsoluteChildren(equipitem));
 				selectedList.add(0, equipitem);
 				Intent in = new Intent(context, DetailListActivity.class);
 				in.putExtra(KEY_EQUIPMENTLIST, selectedList);
