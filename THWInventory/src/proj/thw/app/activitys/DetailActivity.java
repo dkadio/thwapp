@@ -120,7 +120,7 @@ public class DetailActivity extends Activity {
 	}
 
 	private void setValues() {
-		tvdebug.setText(String.valueOf(selectedItem) + "/" + equipments.size());
+		tvdebug.setText(String.valueOf(selectedItem + 1) + "/" + equipments.size());
 		
 		imageequip.setImageBitmap(equipments.get(selectedItem).getEquipImg().getImg());
 
