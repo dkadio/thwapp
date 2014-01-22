@@ -319,6 +319,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
     @SuppressWarnings("unchecked")
     public void handleItemClick(final View view, final Object id) {
         expandCollapse((T) id);
+        
     }
 
 }

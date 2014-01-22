@@ -41,12 +41,15 @@
     <string name="db_url">Url</string>
     <string name="clear_db">Clean Import</string>
     <string name="save_import">Save + Import</string>
-     <string name="import_generell_settings">General Settings</string>
+    <string name="import_generell_settings">General Settings</string>
     <string name="title_activity_import">ImportActivity</string>
     <string name="title_activity_export_data">ExportData</string>
     <string name="sachnummer">Sachnummer</string>
-        <string name="invno">Inventarnummer</string>
-        <string name="devno">Geraetenummer</string>
+    <string name="invno">Inventarnummer</string>
+    <string name="devno">Geraetenummer</string>
+    <string name="treesize">TreeSize</string>
+    <string name="path">Path</string>
+    <string name="collapsed">Collapsed</string>
     
     
 

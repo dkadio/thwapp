@@ -71,7 +71,7 @@
    	                android:paddingTop="@dimen/dp_10">
 
    	                <TextView
-   	                    android:id="@+id/textView1"
+   	                    android:id="@+id/tvpath"
    	                    android:layout_width="match_parent"
    	                    android:layout_height="wrap_content"
    	                    android:text="@string/file_format"

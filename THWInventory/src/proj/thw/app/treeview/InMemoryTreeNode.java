@@ -39,14 +39,21 @@ class InMemoryTreeNode<T> implements Serializable {
      * @return list of ids of children
      */
     public synchronized List<T> getChildIdList() {
-        if (childIdListCache == null) {
-            childIdListCache = new LinkedList<T>();
+        	if (childIdListCache == null) {
+    			childIdListCache = new LinkedList<T>();
             for (final InMemoryTreeNode<T> n : children) {
                 childIdListCache.add(n.getId());
             }
-        }
+    	}
         return childIdListCache;
     }
+    
+    public synchronized List<T> getChildIdAbsoluteList() {
+        for (final InMemoryTreeNode<T> n : children) {
+            childIdListCache.add(n.getId());
+	}
+    return childIdListCache;
+}
 
     public boolean isVisible() {
         return visible;

@@ -21,7 +21,9 @@
         <activity
             android:name="proj.thw.app.activitys.SplashScreenActivity"
             android:label="@string/setEmptyLabel"
+
             android:screenOrientation="portrait" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
