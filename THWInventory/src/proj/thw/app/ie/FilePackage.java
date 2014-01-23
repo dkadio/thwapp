@@ -37,6 +37,9 @@ public class FilePackage {
 	
 	public String toString()
 	{
-		return dataFile.getFileName();
+		if(dataFile != null){
+			return dataFile.getFileName();
+		}
+		return "";
 	}
 }

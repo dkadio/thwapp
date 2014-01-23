@@ -37,117 +37,108 @@ import android.widget.TabWidget;
 
 public class ImportDataActivity extends Activity {
 
-	private static final String IMAGE_FILE_NAME 			= "EquipmentImage";
-	private static final String DEFAULT_FILE_NAME 			= "default";
-	private static final String FILE_EXTENTION_CSV 			= ".csv";
-	private static final String FILE_EXTENTION_XML 			= ".xml";
-	
-	
-	private enum FileType{CSV,XML};
-	private OrmDBHelper dbHelper; 
-	
+	private static final String IMAGE_FILE_NAME = "EquipmentImage";
+	private static final String FILE_EXTENTION_CSV = ".csv";
+	private static final String FILE_EXTENTION_XML = ".xml";
+
+	private enum FileType {
+		CSV, XML
+	};
+
+	private OrmDBHelper dbHelper;
+
 	private Spinner spTypeFile;
 	private Spinner spLoadFile;
 	private ArrayAdapter<FilePackage> adpLoadFile;
 	private ArrayAdapter<FileType> adpTypeFile;
 
 	private CheckBox cbCleanDBbeforImport;
-	private TabHost tabImport;
-	
+	// private TabHost tabImport; erweiterung fuer DB import/export
+
 	private File ieFolder;
-	
+
 	private Handler returnHandler;
-	
+
 	public Handler getReturnHandler() {
 		return returnHandler;
 	}
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_import_data);
-		
-		returnHandler = new Handler(){
+
+		returnHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
 				setResult(RESULT_OK);
 				finish();
 			};
 		};
-		
+
 		ieFolder = new File(Environment.getExternalStorageDirectory(),
-										getResources().getString(R.string.app_name) + File.separator + "IE");
-	//	tabImport = (TabHost) findViewById();
-		//tabImport.setup();
-		
+				getResources().getString(R.string.app_name) + File.separator
+						+ "IE");
+		// tabImport = (TabHost) findViewById();
+		// tabImport.setup();
+
 		spTypeFile = (Spinner) findViewById(R.id.spformat);
-		adpTypeFile = new ArrayAdapter<FileType>(this, android.R.layout.simple_spinner_dropdown_item,FileType.values());
+		adpTypeFile = new ArrayAdapter<FileType>(this,
+				android.R.layout.simple_spinner_dropdown_item,
+				FileType.values());
 		spTypeFile.setAdapter(adpTypeFile);
 		spTypeFile.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> adp, View arg1,
-					int arg2, long arg3) {
-				switch((FileType)adp.getSelectedItem())
-				{
-				case CSV:
-					try {
+			public void onItemSelected(AdapterView<?> adp, View arg1, int arg2,
+					long arg3) {
+
+				try {
+					switch ((FileType) adp.getSelectedItem()) {
+					case CSV:
+
 						adpLoadFile.clear();
-						adpLoadFile.addAll(loadFilePackages(new File(ieFolder, "CSV"),FILE_EXTENTION_CSV , FileType.CSV));
-					} catch (FileNotFoundException e) {
-						Log.e("", e.getMessage());
-					} catch (UnsupportedEncodingException e) {
-						Log.e("", e.getMessage());
+						adpLoadFile.addAll(loadFilePackages(new File(ieFolder,
+								FileType.CSV.toString()), FILE_EXTENTION_CSV,
+								FileType.CSV));
+						break;
+					case XML:
+
+						adpLoadFile.clear();
+						adpLoadFile.addAll(loadFilePackages(new File(ieFolder,
+								FileType.XML.toString()), FILE_EXTENTION_XML,
+								FileType.XML));
+
+						break;
+					default: // Do Nothing...
+
 					}
-					break;
-				case XML: 
-					break;
-				default: // Do Nothing...
-				
+
+					adpLoadFile.setNotifyOnChange(true);
+
+				} catch (FileNotFoundException e) {
+					Log.e("", e.getMessage());
+				} catch (UnsupportedEncodingException e) {
+					Log.e("", e.getMessage());
 				}
-				
-				adpLoadFile.setNotifyOnChange(true);
-				
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
 			}
 		});
-		
+
 		spLoadFile = (Spinner) findViewById(R.id.spfilesource);
-		adpLoadFile = new ArrayAdapter<FilePackage>(this, android.R.layout.simple_spinner_dropdown_item);
+		adpLoadFile = new ArrayAdapter<FilePackage>(this,
+				android.R.layout.simple_spinner_dropdown_item);
 		spLoadFile.setAdapter(adpLoadFile);
-		
-		cbCleanDBbeforImport = (CheckBox)findViewById(R.id.cbcleardb);
+
+		cbCleanDBbeforImport = (CheckBox) findViewById(R.id.cbcleardb);
 		dbHelper = new OrmDBHelper(this);
-		//init();
+		// init();
 	}
-	
-	
-	/*private void init()
-	{
-			
-		//add all Files to Adapter and set Adapter to Spinner
-		for(File file : getFileList(ieFolder,FILE_EXTENTION_CSV))
-		{
-			try {
-				adpLoadFile.add(new CSVFile(file.getAbsolutePath(),";\""));
-			} catch (FileNotFoundException e) {
-				Log.e(this.getClass().getName(), e.getMessage());
-			} catch (UnsupportedEncodingException e) {
-				Log.e(this.getClass().getName(), e.getMessage());
-			}
-		}
-		
-		spLoadFile.setAdapter(adpLoadFile);
-		adpLoadFile.setNotifyOnChange(true);
-	}	*/
-	
-	public void onClickImport(View view)
-	{
-		if(cbCleanDBbeforImport.isChecked())
-		{
+
+	public void onClickImport(View view) {
+		if (cbCleanDBbeforImport.isChecked()) {
 			try {
 				dbHelper.clearDB();
 			} catch (SQLException e) {
@@ -155,64 +146,66 @@ public class ImportDataActivity extends Activity {
 			}
 		}
 
-		ThwCsvImporter thwImporter = new ThwCsvImporter(dbHelper,this);
-		thwImporter.execute((FilePackage)spLoadFile.getSelectedItem());
-		
+		ThwCsvImporter thwImporter = new ThwCsvImporter(dbHelper, this);
+		thwImporter.execute((FilePackage) spLoadFile.getSelectedItem());
+
 	}
-	
-	//--------------------------MENUE-HANDLING---------------------------
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.import_data, menu);
-        return true;
-    }
-	
-	private FilePackage folderToFilePackage(File folder, String extention,FileType ft ) throws FileNotFoundException, UnsupportedEncodingException
-	{
+
+	private FilePackage folderToFilePackage(File folder, String extention,
+			FileType ft) throws FileNotFoundException,
+			UnsupportedEncodingException {
 		FilePackage newFilePackage = new FilePackage();
-		
-		for(File currentFile : folder.listFiles())
-		{
-			if(currentFile.getName().equals(IMAGE_FILE_NAME + extention))
-			{
-				switch(ft){
-				case CSV:
-					newFilePackage.setImageFile(new CSVFile(currentFile, "\";"));
-					break;
-				case XML:
-					break;
-				default: // Do Nothing...
+		if (folder.listFiles().length > 0) {
+			for (File currentFile : folder.listFiles()) {
+				if (currentFile.getName().equals(IMAGE_FILE_NAME + extention)) {
+					switch (ft) {
+					case CSV:
+						newFilePackage.setImageFile(new CSVFile(currentFile,
+								"\";"));
+						break;
+					case XML:
+						break;
+					default: // Do Nothing...
+					}
 				}
-			}
-			
-			if(currentFile.getName().toUpperCase().equals((folder.getName() + extention).toUpperCase()))
-			{
-				switch(ft){
-				case CSV:
-					newFilePackage.setDataFile(new CSVFile(currentFile, ";"));
-					break;
-				case XML:
-					break;
-				default: // Do Nothing...
+
+				if (currentFile.getName().toUpperCase()
+						.equals((folder.getName() + extention).toUpperCase())) {
+					switch (ft) {
+					case CSV:
+						newFilePackage
+								.setDataFile(new CSVFile(currentFile, ";"));
+						break;
+					case XML:
+						break;
+					default: // Do Nothing...
+					}
 				}
 			}
 		}
+
 		return newFilePackage;
 	}
-	
-	private ArrayList<FilePackage> loadFilePackages(File parentFolder, String extension, FileType ft ) throws FileNotFoundException, UnsupportedEncodingException
-	{
-		
+
+	private ArrayList<FilePackage> loadFilePackages(File parentFolder,
+			String extension, FileType ft) throws FileNotFoundException,
+			UnsupportedEncodingException {
+
 		ArrayList<FilePackage> packageList = new ArrayList<FilePackage>();
-		for(File currentFile : parentFolder.listFiles())
-		{
-			if(currentFile.isDirectory())
-			{
-				packageList.add(folderToFilePackage(currentFile, extension, ft));
+		for (File currentFile : parentFolder.listFiles()) {
+			if (currentFile.isDirectory()) {
+				packageList
+						.add(folderToFilePackage(currentFile, extension, ft));
 			}
 		}
 		return packageList;
 	}
-	
-	
+
+	// --------------------------MENUE-HANDLING---------------------------
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.import_data, menu);
+		return true;
+	}
+
 }

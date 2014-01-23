@@ -6,13 +6,29 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/txttest"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/ThwBlue"
-        android:text="@string/treesize"
-        android:textColor="@color/white" />
+        android:orientation="horizontal" 
+        android:background="@color/ThwBlue">
+
+        <TextView
+            android:id="@+id/tvtreesize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/ThwBlue"
+            android:text="@string/treesize"
+            android:textColor="@color/white" />
+
+        <ProgressBar
+            android:id="@+id/pbloadtreeview"
+            android:layout_width="40dp"
+            android:layout_height="17dp"
+            android:layout_weight="0.01" 
+            android:visibility="invisible"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +50,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:onClick="onClickTestButton"
+            android:onClick="onClickGoButton"
             android:text="@string/go"
             android:textColor="@color/ThwBlue" />
 
