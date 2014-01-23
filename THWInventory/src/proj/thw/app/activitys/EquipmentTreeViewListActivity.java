@@ -12,6 +12,7 @@ import proj.thw.app.database.OrmDBHelper;
 import proj.thw.app.treeview.InMemoryTreeStateManager;
 import proj.thw.app.treeview.OnTreeViewListItemClickListener;
 import proj.thw.app.treeview.TreeBuilder;
+import proj.thw.app.treeview.TreeNodeInfo;
 import proj.thw.app.treeview.TreeStateManager;
 import proj.thw.app.treeview.TreeViewList;
 import android.app.Activity;
@@ -28,17 +29,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-/**
- * Demo activity showing how the tree view can be used.
- * 
- */
+//TODO rogessdialog cancel bei backbutton click
 public class EquipmentTreeViewListActivity extends Activity {
 
 	public static final int KEY_REQUEST_IMPORT = 4711;
@@ -46,7 +41,6 @@ public class EquipmentTreeViewListActivity extends Activity {
 	protected static final String KEY_EQUIPMENTLIST = "equip.list";
 	protected static final String KEY_EQUIPMENT = "equip";
 
-	private final Set<Equipment> selected = new HashSet<Equipment>();
 	private TreeViewList tvlEquipment;
 
 	// private static final int LEVEL_NUMBER = 6;
@@ -75,13 +69,28 @@ public class EquipmentTreeViewListActivity extends Activity {
 					int position, long id) {
 				
 				//getClickedItem
-				Equipment equipitem = (Equipment)view.getTag();
+				final Equipment equipitem = (Equipment)view.getTag();
 				manager.expandEverythingBelow(equipitem);
-				ArrayList<Equipment> selectedList = new ArrayList<Equipment>( manager.getChildren(equipitem));
-				selectedList.add(0, equipitem);
-				Intent in = new Intent(context, DetailListActivity.class);
-				in.putExtra(KEY_EQUIPMENTLIST, selectedList);
-				startActivity(in);
+				
+				loadDialog = new ProgressDialog(context);
+				loadDialog.setTitle("Please Wait...");
+				loadDialog.setMessage("Load TreePath...");
+				loadDialog.setCanceledOnTouchOutside(false);
+				loadDialog.show();
+				
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						
+						ArrayList<Equipment> selectedList = new ArrayList<Equipment>( manager.getAbsoluteChildren(equipitem));
+						Intent in = new Intent(context, DetailListActivity.class);
+						in.putExtra(KEY_EQUIPMENTLIST, selectedList);
+						startActivity(in);
+						
+						loadDialog.dismiss();
+					}
+				}).start();
 			}
 		});
 		dbHelper = new OrmDBHelper(this);
@@ -136,7 +145,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 						}
 
 						simpleAdapter = new ThwTreeViewAdapter(
-								EquipmentTreeViewListActivity.this, selected,
+								EquipmentTreeViewListActivity.this, null,
 								manager, maxLayer);
 						tvlEquipment.setAdapter(simpleAdapter);
 						tvlEquipment.setCollapsible(true);
@@ -204,22 +213,12 @@ public class EquipmentTreeViewListActivity extends Activity {
 		default: // Do Nothing..
 		}
 	}
-
-	/*
-	 * @Override public boolean onContextItemSelected(final MenuItem item) {
-	 * final AdapterContextMenuInfo info = (AdapterContextMenuInfo)
-	 * item.getMenuInfo(); final long id = info.id; if (item.getItemId() ==
-	 * R.id.context_menu_collapse) { manager.collapseChildren(id); return true;
-	 * } else if (item.getItemId() == R.id.context_menu_expand_all) {
-	 * manager.expandEverythingBelow(id); return true; } else if
-	 * (item.getItemId() == R.id.context_menu_expand_item) {
-	 * manager.expandDirectChildren(id); return true; } else if
-	 * (item.getItemId() == R.id.context_menu_delete) {
-	 * manager.removeNodeRecursively(id); return true; } else { return
-	 * super.onContextItemSelected(item); } }
-	 */
-
+//TODO funktion umbenennen
 	public void onClickTestButton(View view) {
+		ArrayList<Equipment> checkedList = new ArrayList<Equipment>(simpleAdapter.getSelected());
+		Intent in = new Intent(context, DetailListActivity.class);
+		in.putExtra(KEY_EQUIPMENTLIST, checkedList);
+		startActivity(in);
 	}
 
 	@Override
