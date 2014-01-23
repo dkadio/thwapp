@@ -2,8 +2,6 @@ package proj.thw.app.activitys;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import proj.thw.app.R;
 import proj.thw.app.adapters.ThwTreeViewAdapter;
@@ -12,7 +10,6 @@ import proj.thw.app.database.OrmDBHelper;
 import proj.thw.app.treeview.InMemoryTreeStateManager;
 import proj.thw.app.treeview.OnTreeViewListItemClickListener;
 import proj.thw.app.treeview.TreeBuilder;
-import proj.thw.app.treeview.TreeNodeInfo;
 import proj.thw.app.treeview.TreeStateManager;
 import proj.thw.app.treeview.TreeViewList;
 import android.app.Activity;

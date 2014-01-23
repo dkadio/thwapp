@@ -4,10 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ImportActivity" >
 
     <TextView
@@ -15,10 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/ThwBlue"
-        android:text="@string/import_generell_settings"
+        android:text="@string/import_settings"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textSize="@dimen/dp_20" />
 
    	<LinearLayout
         android:layout_width="match_parent"
@@ -40,80 +37,33 @@
 
     </LinearLayout>
 
-   	<TabHost
-   	    android:id="@+id/tabhost"
+   	<TextView
+   	    android:id="@+id/tvpath"
    	    android:layout_width="match_parent"
-   	    android:layout_height="0dp"
-   	    android:layout_weight="1"
-   	    android:paddingTop="@dimen/dp_20" >
+   	    android:layout_height="wrap_content"
+   	    android:background="@color/ThwBlue"
+   	    android:text="@string/file_format"
+   	    android:textColor="@color/white"
+   	    android:textStyle="bold" />
 
-   	    <LinearLayout
-   	        android:layout_width="match_parent"
-   	        android:layout_height="wrap_content"
-   	        android:orientation="vertical" >
+   	<Spinner
+   	    android:id="@+id/spformat"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content" />
 
-   	        <TabWidget
-   	            android:id="@android:id/tabs"
-   	            android:layout_width="match_parent"
-   	            android:layout_height="wrap_content" >
-   	        </TabWidget>
+   	<TextView
+   	    android:id="@+id/TextView03"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content"
+   	    android:background="@color/ThwBlue"
+   	    android:text="@string/file_source"
+   	    android:textColor="@color/white"
+   	    android:textStyle="bold" />
 
-   	        <FrameLayout
-   	            android:id="@android:id/tabcontent"
-   	            android:layout_width="match_parent"
-   	            android:layout_height="168dp" >
-
-   	            <LinearLayout
-   	                android:id="@+id/File"
-   	                android:layout_width="match_parent"
-   	                android:layout_height="match_parent"
-   	                android:orientation="vertical" 
-   	                android:paddingTop="@dimen/dp_10">
-
-   	                <TextView
-   	                    android:id="@+id/tvpath"
-   	                    android:layout_width="match_parent"
-   	                    android:layout_height="wrap_content"
-   	                    android:text="@string/file_format"
-   	                    android:background="@color/ThwBlue" 
-   	                    android:textColor="@color/white"
-   	                    android:textStyle="bold"/>
-
-   	                <Spinner
-   	                    android:id="@+id/spformat"
-   	                    android:layout_width="match_parent"
-   	                    android:layout_height="30dp" />
-
-   	                <TextView
-   	                    android:id="@+id/TextView03"
-   	                    android:layout_width="match_parent"
-   	                    android:layout_height="wrap_content"
-   	                    android:text="@string/file_source"
-   	                    android:background="@color/ThwBlue"
-   	                    android:textColor="@color/white"
-   	                    android:textStyle="bold" />
-
-   	                <Spinner
-   	                    android:id="@+id/spfilesource"
-   	                    android:layout_width="match_parent"
-   	                    android:layout_height="30dp" />
-
-   	            </LinearLayout>
-
-   	            <LinearLayout
-   	                android:id="@+id/Datenbank"
-   	                android:layout_width="match_parent"
-   	                android:layout_height="match_parent" >
-
-   	                <EditText
-   	                    android:id="@+id/editText1"
-   	                    android:layout_width="0dp"
-   	                    android:layout_height="wrap_content"
-   	                    android:layout_weight="1" />
-   	            </LinearLayout>
-   	        </FrameLayout>
-   	    </LinearLayout>
-   	</TabHost>
+   	<Spinner
+   	    android:id="@+id/spfilesource"
+   	    android:layout_width="match_parent"
+   	    android:layout_height="wrap_content" />
 
    	<Button
    	    android:id="@+id/btnimport"
