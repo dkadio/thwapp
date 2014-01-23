@@ -170,7 +170,16 @@ public class Equipment implements Serializable {
 	public void setEquipImg(EquipmentImage equipImg) {
 		this.equipImg = equipImg;
 	}
-	
+	/*
+	@Override
+	public boolean equals(Object o) {
+		if(equipNo.equals(((Equipment)o).getEquipNo()))
+		{
+			return true;
+		}
+				return false;
+	}
+	*/
 	public String toString()
 	{
 		return type.toString() +"\r\n"+ equipNo;

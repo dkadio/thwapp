@@ -2,6 +2,7 @@ package proj.thw.app.activitys;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import proj.thw.app.R;
 import proj.thw.app.adapters.ThwTreeViewAdapter;
@@ -19,6 +20,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,10 +28,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //TODO rogessdialog cancel bei backbutton click
 public class EquipmentTreeViewListActivity extends Activity {
@@ -167,8 +172,47 @@ public class EquipmentTreeViewListActivity extends Activity {
 				.getActionView();
 		searchView.setSearchableInfo(searchManager
 				.getSearchableInfo(getComponentName()));
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				List<Equipment> searchList = searchItems(query);
+				
+				if(searchList.isEmpty()){
+					Toast.makeText(context, "Kein Eintrag gefunden!", Toast.LENGTH_SHORT).show();
+				}
+				else{
+					getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+					tvlEquipment.setSelection(equipmentList.indexOf(searchList.get(0))-1);
+					//tvlEquipment.getChildAt(equipmentList.indexOf(searchList.get(0))).setBackgroundColor(Color.GREEN);
+				}
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
 
 		return true;
+	}
+	
+	private List<Equipment> searchItems(String query)
+	{
+		ArrayList<Equipment> searchList = new ArrayList<Equipment>();
+		
+		//hier eigentlich Contains, kann aber nicht benutzt werden,
+		//da equals am Equipmentobjekt nicht ueberschrieben werden kann...
+		for(Equipment searchItem : equipmentList)
+		{
+			if(searchItem.getEquipNo().equals(query))
+			{
+				searchList.add(searchItem);
+			}
+		}	
+		return searchList;
 	}
 
 	@Override
