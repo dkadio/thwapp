@@ -30,6 +30,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -51,8 +52,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 	private ArrayList<Equipment> equipmentList;
 	private OrmDBHelper dbHelper;
 	private ProgressDialog loadDialog;
+	private ProgressBar pbLoadTreeView;
 
-	private TextView txttest;
+	private TextView tvTreeSize;
 	private Context context;
 
 	@Override
@@ -61,6 +63,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_tree_view_list);
 		context = this; 
+		
+		tvTreeSize = (TextView) findViewById(R.id.tvtreesize);
+		pbLoadTreeView = (ProgressBar) findViewById(R.id.pbloadtreeview);
 		tvlEquipment = (TreeViewList) findViewById(R.id.tvlequip);
 		tvlEquipment.setTreeViewListItemClickListener(new OnTreeViewListItemClickListener() {
 			
@@ -71,13 +76,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 				//getClickedItem
 				final Equipment equipitem = (Equipment)view.getTag();
 				manager.expandEverythingBelow(equipitem);
-				
-				loadDialog = new ProgressDialog(context);
-				loadDialog.setTitle("Please Wait...");
-				loadDialog.setMessage("Load TreePath...");
-				loadDialog.setCanceledOnTouchOutside(false);
-				loadDialog.show();
-				
+				pbLoadTreeView.setVisibility(View.VISIBLE);
 				new Thread(new Runnable() {
 					
 					@Override
@@ -88,7 +87,13 @@ public class EquipmentTreeViewListActivity extends Activity {
 						in.putExtra(KEY_EQUIPMENTLIST, selectedList);
 						startActivity(in);
 						
-						loadDialog.dismiss();
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								pbLoadTreeView.setVisibility(View.INVISIBLE);
+							}
+						});
 					}
 				}).start();
 			}
@@ -101,9 +106,6 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 	//TODO collabsed enable falls tree leer ist
 	private void init() {
-		txttest = (TextView) findViewById(R.id.txttest);
-		// loadDialog = ProgressDialog.show(this, "Please Wait...",
-		// "Load Data From DB", false, false);
 		loadDialog = new ProgressDialog(this);
 		loadDialog.setTitle("Please Wait...");
 		loadDialog.setMessage("Load Data from DB!");
@@ -150,7 +152,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 						tvlEquipment.setAdapter(simpleAdapter);
 						tvlEquipment.setCollapsible(true);
 						manager.expandEverythingBelow(null);
-						txttest.setText(getResources().getString(R.string.treesize)+": " + equipmentList.size());
+						tvTreeSize.setText(getResources().getString(R.string.treesize)+": " + equipmentList.size());
 					}
 				});
 			}
@@ -210,11 +212,11 @@ public class EquipmentTreeViewListActivity extends Activity {
 			if (resultCode == RESULT_OK)
 				init();
 			break;
-		default: // Do Nothing..
+		default: // Do Nothing...
 		}
 	}
-//TODO funktion umbenennen
-	public void onClickTestButton(View view) {
+	
+	public void onClickGoButton(View view) {
 		ArrayList<Equipment> checkedList = new ArrayList<Equipment>(simpleAdapter.getSelected());
 		Intent in = new Intent(context, DetailListActivity.class);
 		in.putExtra(KEY_EQUIPMENTLIST, checkedList);
