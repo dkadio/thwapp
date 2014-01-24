@@ -20,7 +20,7 @@ public class EquipmentImage implements Serializable{
 	@DatabaseField(dataType=DataType.BYTE_ARRAY)
 	private byte[] imgBytes;
 	
-	private Bitmap img;
+	transient private Bitmap img;
 	
 	public EquipmentImage()
 	{
@@ -72,8 +72,11 @@ public class EquipmentImage implements Serializable{
 		return img;
 	}
 
+	
+	//hier muss man das image direkt in bytes umwandeln sonst isses nach dem ser. weg
 	public void setImg(Bitmap img) {
 		this.img = img;
+		this.imgBytes = imgToBytes();
 	}
 
 	public byte[] getImgBytes() {
