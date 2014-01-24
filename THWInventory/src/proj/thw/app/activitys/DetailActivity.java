@@ -44,8 +44,10 @@ import android.widget.Toast;
 public class DetailActivity extends Activity {
 static final String KEY_SAVE_EQUIPMENTS = "key.to.save.the.equipments";
 static final String KEY_SAVE_CURRENT_INDEX = "ke.to.save.the.current.index";
+static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.for.detaillistactivity";
+
 	static final String MYTAG = "DetailActivity.class";
-	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 2341;
 	private Uri fileUri;
 
 	EditText etequipNo, etdeviveNo, etinvNo, etStatus;
@@ -262,8 +264,17 @@ static final String KEY_SAVE_CURRENT_INDEX = "ke.to.save.the.current.index";
 	}
 
 	public void stop(View v) {
+		//speicher die daten und gib alles an die detaillistactivity wieder zurueck
+		returnResultIntent();
 	}
 
+	private void returnResultIntent() {
+		Intent resultintent = new Intent();
+		resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT, equipments);
+		setResult(RESULT_OK, resultintent);
+	}
+
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -390,4 +401,5 @@ static final String KEY_SAVE_CURRENT_INDEX = "ke.to.save.the.current.index";
 			selectedItem = savedInstanceState.getInt(KEY_SAVE_CURRENT_INDEX);
 			setValues();
 		}
+	
 }
