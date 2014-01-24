@@ -52,6 +52,11 @@
     <string name="path">Path</string>
     <string name="collapsed">Collapsed</string>
     <string name="save">Save</string>
+    <string name="sachnummer_kurz">Sachnr:</string>
+        <string name="InvNo_kurz">InvNo:</string>
+            <string name="deviceNo_kurz">GerNr:</string>
+        
+    
     
     
 

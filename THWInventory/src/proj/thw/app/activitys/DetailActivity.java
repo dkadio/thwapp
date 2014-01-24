@@ -42,7 +42,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class DetailActivity extends Activity {
-
+static final String KEY_SAVE_EQUIPMENTS = "key.to.save.the.equipments";
+static final String KEY_SAVE_CURRENT_INDEX = "ke.to.save.the.current.index";
 	static final String MYTAG = "DetailActivity.class";
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private Uri fileUri;
@@ -371,4 +372,22 @@ public class DetailActivity extends Activity {
 		lastmediafile=mediaFile;
 		return mediaFile;
 	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		saveValues();
+		outState.putSerializable(KEY_SAVE_EQUIPMENTS, equipments);
+		outState.putInt(KEY_SAVE_CURRENT_INDEX, selectedItem);
+	}
+	
+	@Override
+		protected void onRestoreInstanceState(Bundle savedInstanceState) {
+			// TODO Auto-generated method stub
+			super.onRestoreInstanceState(savedInstanceState);
+			equipments = (ArrayList<Equipment>) savedInstanceState.getSerializable(KEY_SAVE_EQUIPMENTS);
+			selectedItem = savedInstanceState.getInt(KEY_SAVE_CURRENT_INDEX);
+			setValues();
+		}
 }
