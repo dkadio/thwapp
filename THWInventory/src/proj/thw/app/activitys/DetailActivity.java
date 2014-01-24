@@ -1,4 +1,5 @@
 //TODO den user vor nex oder prev darauf aufmerksam machen das noch was fehlt per Alertdialog
+//TODO bild auf imageview zu schneiden und rotieren funktion implementieren
 package proj.thw.app.activitys;
 
 import java.io.File;

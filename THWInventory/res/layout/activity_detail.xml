@@ -17,6 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/dp_12"
             android:layout_weight="5"
             android:orientation="vertical" >
 
@@ -47,7 +48,8 @@
                 android:id="@+id/imageEquip"
                 android:layout_width="@dimen/pictureSize"
                 android:layout_height="@dimen/pictureSize"
-                android:src="@drawable/error" />
+                
+                android:background="@color/ThwBlue"/>
         </LinearLayout>
     </LinearLayout>
 
