@@ -1,5 +1,5 @@
 //TODO anderen Adapter setzen der bilder mit anzeigt
-//TODO schiest die app wenn sie aus der Detaillist ueber homebutton gestartet wird
+//TODO nach verschiedenen kritereien im baum suchen und diese dann in der detail activity anzeigen
 package proj.thw.app.activitys;
 
 import java.util.ArrayList;

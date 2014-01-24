@@ -1,5 +1,4 @@
-//TODO status wird beim ersten mal beim laden geloescht weil man nicht anders an die checkboxen kommt ausser ueber die onclickmethode --> saubere loesung waere nett 
-//TODO shared preference fuer die attribute schreiben
+//TODO den user vor nex oder prev darauf aufmerksam machen das noch was fehlt per Alertdialog
 package proj.thw.app.activitys;
 
 import java.io.File;
@@ -15,6 +14,8 @@ import proj.thw.app.classes.Equipment;
 import proj.thw.app.classes.Equipment.Status;
 import proj.thw.app.classes.EquipmentImage;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -46,7 +47,9 @@ public class DetailActivity extends Activity {
 	static final String KEY_SAVE_CURRENT_INDEX = "ke.to.save.the.current.index";
 	static final String KEY_MEDIA_FILE = "das.ist.scheisse.wenn.der.hier.fehlt";
 	static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.for.detaillistactivity";
-
+	static final String ARE_YOU_SURE = "Sind Sie sicher das Sie nicht etwas vergessen haben?";
+	static final String ALERT_TITLE = "Fehlende Eingaben";
+	
 	static final String MYTAG = "DetailActivity.class";
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 2341;
 	private Uri fileUri;
@@ -65,6 +68,7 @@ public class DetailActivity extends Activity {
 	boolean firsttime;
 	File lastmediafile;
 	EquipmentImage temp;
+	AlertDialog.Builder builder;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +101,30 @@ public class DetailActivity extends Activity {
 				popuplist.show();
 			}
 		});
+
+		builder.setPositiveButton(R.string.dialog_detail_pos,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// trotzdem weiter
+						if (selectedItem < equipments.size() - 1) {
+							Log.d(MYTAG, "nextitem!");
+							selectedItem++;
+							setValues();
+						}
+					}
+				});
+		builder.setNegativeButton(R.string.dialog_detail_neg,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// bleib hier
+						setValues();
+					}
+				});
+
 	}
 
 	public static void hideSoftKeyboard(Activity activity) {
@@ -190,6 +218,8 @@ public class DetailActivity extends Activity {
 	private void init() {
 		Log.d(MYTAG, "init()");
 
+		builder = new AlertDialog.Builder(this).setTitle(ALERT_TITLE).setMessage(ARE_YOU_SURE);
+
 		tvdebug = (TextView) findViewById(R.id.debug);
 
 		imageequip = (ImageView) findViewById(R.id.imageEquip);
@@ -230,12 +260,23 @@ public class DetailActivity extends Activity {
 
 	public void nextItem(View v) {
 		Log.d(MYTAG, "nextitem");
-
-		if (selectedItem < equipments.size() - 1) {
-			saveValues();
-			selectedItem++;
-			setValues();
+		saveValues();
+		if (equipments.get(selectedItem).getInvNo().isEmpty()
+				|| equipments.get(selectedItem).getDeviceNo().isEmpty()
+				|| equipments.get(selectedItem).getActualQuantity() < equipments
+						.get(selectedItem).getTargetQuantity()) {
+			builder.show();
+		}else{
+			if (selectedItem < equipments.size() - 1) {
+				Log.d(MYTAG, "nextitem!");
+				selectedItem++;
+				setValues();
+			}		
 		}
+		
+
+
+		
 	}
 
 	public void previousItem(View v) {
@@ -334,23 +375,19 @@ public class DetailActivity extends Activity {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
 
 		Bitmap bm = BitmapFactory.decodeStream(fis);
-		
 
 		int h = 100; // height in pixels
 		int w = 100; // width in pixels
 		Bitmap scaled = Bitmap.createScaledBitmap(bm, h, w, true);
-		
 
 		imageequip.setImageBitmap(scaled);
 		temp = new EquipmentImage(scaled);
-		
 
 		Log.d(MYTAG, "delete file" + lastmediafile.toString());
 		lastmediafile.delete();
-		
+
 		Log.d(MYTAG, "setimage() -- ende");
 
 	}
@@ -441,7 +478,7 @@ public class DetailActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
 		saveValues();
-		
+
 		outState.putSerializable(KEY_MEDIA_FILE, lastmediafile);
 		Log.d(MYTAG, "vor equipments");
 		outState.putSerializable(KEY_SAVE_EQUIPMENTS, equipments);
@@ -455,7 +492,8 @@ public class DetailActivity extends Activity {
 
 		// TODO Auto-generated method stub
 		super.onRestoreInstanceState(savedInstanceState);
-		lastmediafile = (File) savedInstanceState.getSerializable(KEY_MEDIA_FILE);
+		lastmediafile = (File) savedInstanceState
+				.getSerializable(KEY_MEDIA_FILE);
 		savedInstanceState.getSerializable(KEY_SAVE_EQUIPMENTS);
 		selectedItem = savedInstanceState.getInt(KEY_SAVE_CURRENT_INDEX);
 		setValues();
