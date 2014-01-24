@@ -292,7 +292,7 @@ public class DetailActivity extends Activity {
 
 	private void returnResultIntent() {
 		Log.d(MYTAG, "returnresultintent");
-
+		saveValues();
 		Intent resultintent = new Intent();
 		resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT, equipments);
 		setResult(RESULT_OK, resultintent);
@@ -441,9 +441,12 @@ public class DetailActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
 		saveValues();
+		
 		outState.putSerializable(KEY_MEDIA_FILE, lastmediafile);
+		Log.d(MYTAG, "vor equipments");
 		outState.putSerializable(KEY_SAVE_EQUIPMENTS, equipments);
 		outState.putInt(KEY_SAVE_CURRENT_INDEX, selectedItem);
+		Log.d(MYTAG, "onSaveInstanceState() -- ende");
 	}
 
 	@Override

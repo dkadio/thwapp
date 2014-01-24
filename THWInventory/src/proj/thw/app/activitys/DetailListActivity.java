@@ -9,6 +9,7 @@ import proj.thw.app.classes.Equipment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,12 +25,14 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	public static final String KEY_FOR_TREEVIEW_RESULT = "the.equipment.returns.to.the.treeview";
 	public static final String KEY_SAVE_THE_EQUIPMENT = "save.the.equipment.for.death";
 	public final static int REQUEST_CODE = 98613123;
+	private final static String MYTAG = "DetailListActivity";
 	ArrayList<Equipment> equipments;
 	ListView equipmentListView;
 	Intent intent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(MYTAG, "onCreate()");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail_list);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -37,19 +40,21 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 				EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST)) {
 			equipments = (ArrayList<Equipment>) getIntent().getExtras()
 					.getSerializable(
-							EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
+							EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);	
 		}
+	
 		intent = new Intent(this, DetailActivity.class);
-		intent.putExtra(KEY_EQUIP_COLLECTION, equipments);
+
 		initView();
 		TextView many = (TextView) findViewById(R.id.eintraege);
 		many.setText("Eingetragene elemente: "
 				+ String.valueOf(equipments.size()));
+		Log.d(MYTAG, "onCreate() --- ende");
 
 	}
 
 	private void initView() {
-
+		Log.d(MYTAG, "initviews()");
 		equipmentListView = (ListView) findViewById(R.id.equipmentListView);
 		equipmentListView.setAdapter(new ArrayAdapter<Equipment>(this,
 				android.R.layout.simple_list_item_1, equipments));
@@ -67,13 +72,17 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	@Override
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 		// TODO start detailactivity fuer das gewuwnschte equipment
+		intent.putExtra(KEY_EQUIP_COLLECTION, equipments);
 		intent.putExtra(KEY_SELECTED_EQUIP, position);
 		startActivityForResult(intent, REQUEST_CODE);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(MYTAG, "onActivityResult()");
 		if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+			Log.d(MYTAG, "onActivityResult() - result ok");
+
 			equipments = (ArrayList<Equipment>) data
 					.getSerializableExtra(DetailActivity.KEY_RESULT_INTENT_EQUIPMENT);
 			initView();
@@ -84,20 +93,30 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 					Toast.LENGTH_SHORT); // TODO Was sollte man in diesem fall
 											// tun? is ja eh alles zu spaet
 		}
+		Log.d(MYTAG, "onActivityResult() --- Ende");
+
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		Log.d(MYTAG, "onSaveInstanceState()");
+
 		outState.putSerializable(KEY_SAVE_THE_EQUIPMENT, equipments);
+		Log.d(MYTAG, "onSaveInstanceState() --- Ende");
+
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		Log.d(MYTAG, "onRestoreInstanceState()");
+
 		super.onRestoreInstanceState(savedInstanceState);
 		equipments = (ArrayList<Equipment>) savedInstanceState
 				.getSerializable(KEY_SAVE_THE_EQUIPMENT);
 		initView();
+		Log.d(MYTAG, "onRestoreInstanceState()--Ende");
+
 	}
 
 	@Override
