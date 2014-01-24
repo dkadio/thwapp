@@ -42,9 +42,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class DetailActivity extends Activity {
-static final String KEY_SAVE_EQUIPMENTS = "key.to.save.the.equipments";
-static final String KEY_SAVE_CURRENT_INDEX = "ke.to.save.the.current.index";
-static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.for.detaillistactivity";
+	static final String KEY_SAVE_EQUIPMENTS = "key.to.save.the.equipments";
+	static final String KEY_SAVE_CURRENT_INDEX = "ke.to.save.the.current.index";
+	static final String KEY_MEDIA_FILE = "das.ist.scheisse.wenn.der.hier.fehlt";
+	static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.for.detaillistactivity";
 
 	static final String MYTAG = "DetailActivity.class";
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 2341;
@@ -67,6 +68,8 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(MYTAG, "onCreate()");
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);
 		// Show the Up button in the action bar.
@@ -75,16 +78,17 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 		// initalisiere views
 		init();
 		// hole inhalt des intents ab
-		getintentContent();
-
+		if (getIntent().hasExtra(DetailListActivity.KEY_EQUIP_COLLECTION))
+			getintentContent();
+		// setz die values des ersten items
 		setValues();
-
-		setPopUpList();
+		// init der listener
 		setListener();
+		Log.d(MYTAG, "onCreate() ---------Ende");
 	}
 
 	private void setListener() {
-
+		Log.d(MYTAG, "setlistener");
 		etStatus.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -103,6 +107,7 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 	}
 
 	private void setPopUpList() {
+		Log.d(MYTAG, "setPopUpList");
 		popuplist = new ListPopupWindow(this);
 		popuplist.setAdapter(new ArrayAdapter<Equipment.Status>(this,
 				android.R.layout.simple_list_item_multiple_choice,
@@ -141,13 +146,15 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 	}
 
 	private void setValues() {
+		Log.d(MYTAG, "setValues");
+
 		tvdebug.setText(String.valueOf(selectedItem + 1) + "/"
 				+ equipments.size());
 
 		imageequip.setImageBitmap(equipments.get(selectedItem).getEquipImg()
 				.getImg());
 		temp = equipments.get(selectedItem).getEquipImg();
-		
+
 		etdeviveNo.setText(equipments.get(selectedItem).getDeviceNo());
 		etequipNo.setText(equipments.get(selectedItem).getEquipNo());
 		etinvNo.setText(equipments.get(selectedItem).getInvNo());
@@ -170,15 +177,19 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 	}
 
 	private void getintentContent() {
+		Log.d(MYTAG, "getintentContent");
+
 		equipments = (ArrayList<Equipment>) getIntent().getExtras()
 				.getSerializable(DetailListActivity.KEY_EQUIP_COLLECTION);
-		Log.d(MYTAG, "Array erhalten: " + equipments.toString());
+		Log.d(MYTAG, "Array erhalten: ");
 		selectedItem = getIntent().getExtras().getInt(
 				DetailListActivity.KEY_SELECTED_EQUIP);
 		Log.d(MYTAG, "SelectedItem erhalten: " + selectedItem);
 	}
 
 	private void init() {
+		Log.d(MYTAG, "init()");
+
 		tvdebug = (TextView) findViewById(R.id.debug);
 
 		imageequip = (ImageView) findViewById(R.id.imageEquip);
@@ -218,6 +229,8 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 	}
 
 	public void nextItem(View v) {
+		Log.d(MYTAG, "nextitem");
+
 		if (selectedItem < equipments.size() - 1) {
 			saveValues();
 			selectedItem++;
@@ -226,6 +239,8 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 	}
 
 	public void previousItem(View v) {
+		Log.d(MYTAG, "previous item");
+
 		if (selectedItem > 0) {
 			saveValues();
 			selectedItem--;
@@ -235,6 +250,8 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 	}
 
 	private void saveValues() {
+		Log.d(MYTAG, "savevalues()");
+
 		// equipments.get(selectedItem).setEquipNo(etequipNo.getText().toString());
 		equipments.get(selectedItem).setDeviceNo(
 				etdeviveNo.getText().toString());
@@ -245,6 +262,7 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 		equipments.get(selectedItem).setActualQuantity(
 				Integer.valueOf(tvIst.getText().toString()));
 		equipments.get(selectedItem).setEquipImg(temp);
+		Log.d(MYTAG, "saveValues() -  ---- end");
 
 	}
 
@@ -264,24 +282,35 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 	}
 
 	public void stop(View v) {
-		//speicher die daten und gib alles an die detaillistactivity wieder zurueck
+		Log.d(MYTAG, "stop");
+
+		// speicher die daten und gib alles an die detaillistactivity wieder
+		// zurueck
 		returnResultIntent();
+		finish();
 	}
 
 	private void returnResultIntent() {
+		Log.d(MYTAG, "returnresultintent");
+
 		Intent resultintent = new Intent();
 		resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT, equipments);
 		setResult(RESULT_OK, resultintent);
+		Log.d(MYTAG, "returnintent --- ende");
+
 	}
 
-	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(MYTAG, "onactivityresult");
+
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				// Image captured and saved to fileUri specified in the Intent
-				setImage();
 				Log.d(MYTAG, "Bild aufgenommen ok");
+
+				setImage();
+				Log.d(MYTAG, "nach setzen des bildes");
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the image capture
 				Log.d(MYTAG, "Benutzer hat Aufnahme abgebrochen canceld");
@@ -293,24 +322,37 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 	}
 
 	private void setImage() {
-		//les ein image aus dem Ordner Temp und loesche es dannach
-		
+		// les ein image aus dem Ordner Temp und loesche es dannach
+		Log.d(MYTAG, "setimage()");
+
 		File imagefile = lastmediafile;
+		Log.d(MYTAG, "lade file: " + imagefile.toString());
+
 		FileInputStream fis = null;
 		try {
-		    fis = new FileInputStream(imagefile);
-		    } catch (FileNotFoundException e) {
-		    e.printStackTrace();
+			fis = new FileInputStream(imagefile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
+		
 
 		Bitmap bm = BitmapFactory.decodeStream(fis);
+		
+
 		int h = 100; // height in pixels
-		int w = 100; // width in pixels    
+		int w = 100; // width in pixels
 		Bitmap scaled = Bitmap.createScaledBitmap(bm, h, w, true);
+		
+
 		imageequip.setImageBitmap(scaled);
 		temp = new EquipmentImage(scaled);
+		
+
+		Log.d(MYTAG, "delete file" + lastmediafile.toString());
 		lastmediafile.delete();
 		
+		Log.d(MYTAG, "setimage() -- ende");
+
 	}
 
 	@Override
@@ -343,6 +385,7 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 
 	/** Create a file Uri for saving an image or video */
 	private Uri getOutputMediaFileUri(int type) {
+		Log.d(MYTAG, "create mediafileuri()");
 		return Uri.fromFile(getOutputMediaFile(type));
 	}
 
@@ -356,6 +399,11 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 						.getString(R.string.app_name)
 						+ File.separator
 						+ SplashScreenActivity.FOLDER_TEMP);
+		Log.d(MYTAG,
+				"erstelle file in: "
+						+ getResources().getString(R.string.app_name)
+						+ File.separator + SplashScreenActivity.FOLDER_TEMP);
+
 		// This location works best if you want the created images to be shared
 		// between applications and persist after your app has been uninstalled.
 
@@ -380,26 +428,34 @@ static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.f
 		} else {
 			return null;
 		}
-		lastmediafile=mediaFile;
+		lastmediafile = mediaFile;
+		Log.d(MYTAG, "Filename: " + lastmediafile.toString());
+
 		return mediaFile;
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
+		Log.d(MYTAG, "onSaveInstanceState()");
+
 		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
 		saveValues();
+		outState.putSerializable(KEY_MEDIA_FILE, lastmediafile);
 		outState.putSerializable(KEY_SAVE_EQUIPMENTS, equipments);
 		outState.putInt(KEY_SAVE_CURRENT_INDEX, selectedItem);
 	}
-	
+
 	@Override
-		protected void onRestoreInstanceState(Bundle savedInstanceState) {
-			// TODO Auto-generated method stub
-			super.onRestoreInstanceState(savedInstanceState);
-			equipments = (ArrayList<Equipment>) savedInstanceState.getSerializable(KEY_SAVE_EQUIPMENTS);
-			selectedItem = savedInstanceState.getInt(KEY_SAVE_CURRENT_INDEX);
-			setValues();
-		}
-	
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		Log.d(MYTAG, "onRestoreInstanceState()");
+
+		// TODO Auto-generated method stub
+		super.onRestoreInstanceState(savedInstanceState);
+		lastmediafile = (File) savedInstanceState.getSerializable(KEY_MEDIA_FILE);
+		savedInstanceState.getSerializable(KEY_SAVE_EQUIPMENTS);
+		selectedItem = savedInstanceState.getInt(KEY_SAVE_CURRENT_INDEX);
+		setValues();
+	}
+
 }
