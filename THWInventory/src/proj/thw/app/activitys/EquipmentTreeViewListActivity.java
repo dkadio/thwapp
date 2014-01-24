@@ -20,7 +20,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -57,7 +56,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 	private ProgressBar pbLoadTreeView;
 
 	private TextView tvTreeSize;
+	private SearchView searchView;
 	private Context context;
+	//private boolean isChange = false; fuer abfrage, ob gespeichert werden soll vor dem beenden
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -168,7 +169,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 		inflater.inflate(R.menu.main, menu);
 
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.search)
+		searchView = (SearchView) menu.findItem(R.id.search)
 				.getActionView();
 		searchView.setSearchableInfo(searchManager
 				.getSearchableInfo(getComponentName()));
@@ -182,7 +183,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 					Toast.makeText(context, "Kein Eintrag gefunden!", Toast.LENGTH_SHORT).show();
 				}
 				else{
-					getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+					searchView.clearFocus();
+					manager.expandEverythingBelow(null);
+					getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 					tvlEquipment.setSelection(equipmentList.indexOf(searchList.get(0))-1);
 					//tvlEquipment.getChildAt(equipmentList.indexOf(searchList.get(0))).setBackgroundColor(Color.GREEN);
 				}
@@ -219,6 +222,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
+		case R.id.save:
+				saveToDB();
+			break;
 		case R.id.importdata:
 			intent = new Intent(this, ImportDataActivity.class);
 			startActivityForResult(intent, KEY_REQUEST_IMPORT);
@@ -259,9 +265,42 @@ public class EquipmentTreeViewListActivity extends Activity {
 	
 	public void onClickGoButton(View view) {
 		ArrayList<Equipment> checkedList = new ArrayList<Equipment>(simpleAdapter.getSelected());
-		Intent in = new Intent(context, DetailListActivity.class);
-		in.putExtra(KEY_EQUIPMENTLIST, checkedList);
-		startActivity(in);
+		if(checkedList.isEmpty()){
+			Toast.makeText(this, "Kein Eintrag ausgewaehlt! Eintrag anchecken", Toast.LENGTH_LONG).show();
+		}
+		else{
+			Intent in = new Intent(context, DetailListActivity.class);
+			in.putExtra(KEY_EQUIPMENTLIST, checkedList);
+			startActivity(in);
+		}
+		
+	}
+	
+	public void saveToDB()
+	{
+		loadDialog = new ProgressDialog(this);
+		loadDialog.setTitle("Please Wait...");
+		loadDialog.setMessage("Save Data to DB!");
+		loadDialog.setCanceledOnTouchOutside(false);
+		loadDialog.show();
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				for(Equipment saveItem : equipmentList)
+				{
+					try {
+						dbHelper.getDbHelperEquip().updateEquipment(saveItem);
+					} catch (SQLException e) {
+						Log.e(EquipmentTreeViewListActivity.class.getName(), e.getMessage());
+						Toast.makeText(context, "Fehler beim speichern: " + e.getMessage(), Toast.LENGTH_LONG).show();
+					}
+				}
+				
+				loadDialog.dismiss();
+			}
+		}).start();
 	}
 
 	@Override

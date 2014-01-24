@@ -7,6 +7,12 @@
 		 android:showAsAction="always"
 		 android:actionViewClass="android.widget.SearchView"/>
     
+    <item
+         android:id="@+id/save"
+		 android:title="@string/save"
+		 android:icon="@drawable/save"
+		 android:showAsAction="always"/>
+    
      <item
         android:id="@+id/menu_overflow"
         android:icon="@drawable/overflow_icon"
