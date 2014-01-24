@@ -22,16 +22,19 @@
             <item
                 android:id="@+id/importdata"
                 android:title="@string/import_data"
+                android:icon="@drawable/impo"
                 android:showAsAction="always"/>
             <item
                 android:id="@+id/exportdata"
                 android:showAsAction="always"
+                android:icon="@drawable/export"
                 android:title="@string/export_data"/>
              <item
                 android:id="@+id/collapsed"
                 android:showAsAction="always"
                 android:title="@string/collapsed"
                 android:checkable="true"
+                android:icon="@drawable/collapse"
                 android:checked="false"/>
         </menu>
     </item>
