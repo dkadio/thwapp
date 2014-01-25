@@ -204,6 +204,8 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
      * @return view to used as row indented content
      */
     public abstract View updateView(View view, TreeNodeInfo<T> treeNodeInfo);
+    
+    public abstract void updateItem(View view,T udpItem);
 
     /**
      * Retrieves background drawable for the node.

@@ -216,9 +216,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 	private List<Equipment> searchItems(String query) {
 		ArrayList<Equipment> searchList = new ArrayList<Equipment>();
-
-		// hier eigentlich Contains, kann aber nicht benutzt werden,
-		// da equals am Equipmentobjekt nicht ueberschrieben werden kann...
+		// gibt hier eine Liste mit allen gefunden items zurueck
+		// derzeit wird aber nur das erste beruecksichtigt
+		// kann erweitert werden...
 		for (Equipment searchItem : equipmentList) {
 			if (searchItem.getEquipNo().equals(query)) {
 				searchList.add(searchItem);
@@ -269,29 +269,13 @@ public class EquipmentTreeViewListActivity extends Activity {
 			break;
 		case KEY_REQUEST_DETAILLIST:
 			if (resultCode == RESULT_OK) {
-				List<Equipment> updatedList = (List<Equipment>)data.getExtras().getSerializable(
-												DetailListActivity.KEY_FOR_TREEVIEW_RESULT);
-				
-			if(updatedList.size() > 0)
-				updateTreeFromResult(updatedList);
+				init();
 			}
 
 			break;
 		default: // Do Nothing...
 		}
 	}
-	
-	private void updateTreeFromResult(List<Equipment> updatedList)
-	{
-		if(updatedList != null)
-		{
-			for(Equipment updEquip : updatedList)
-			{
-				
-			}
-		}
-	}
-
 	public void onClickGoButton(View view) {
 		ArrayList<Equipment> checkedList = new ArrayList<Equipment>(
 				simpleAdapter.getSelected());

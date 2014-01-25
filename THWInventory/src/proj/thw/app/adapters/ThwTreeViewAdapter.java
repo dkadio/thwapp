@@ -1,7 +1,10 @@
 package proj.thw.app.adapters;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import javax.net.ssl.ManagerFactoryParameters;
 
 import proj.thw.app.R;
 import proj.thw.app.activitys.EquipmentTreeViewListActivity;
@@ -9,6 +12,7 @@ import proj.thw.app.classes.Equipment;
 import proj.thw.app.treeview.AbstractTreeViewAdapter;
 import proj.thw.app.treeview.TreeNodeInfo;
 import proj.thw.app.treeview.TreeStateManager;
+import proj.thw.app.treeview.TreeViewList;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,11 +56,6 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Equipment> {
 			this.selected = selected;
 		}
 
-	}
-	
-	public void UpdateNode()
-	{
-		
 	}
 
 	private String getDescription(final Equipment id) {
@@ -122,4 +121,19 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Equipment> {
 	public Set<Equipment> getSelected() {
 		return selected;
 		}
+
+	@Override
+	public void updateItem(View view, Equipment udpItem) {
+		//funktioniert nicht, da die Instanz von einer anderen Activity geandert wird...
+		boolean hasChild = false;
+		List<Equipment> childList = getManager().getChildren(udpItem);
+		if(childList.size() > 0)
+			hasChild = true;
+		
+		TreeNodeInfo<Equipment> udpNodeInfo = new TreeNodeInfo<Equipment>(udpItem, udpItem.getLayer() -1,hasChild, true, true);
+		updateView(view, udpNodeInfo);
+		refresh();
+		
+	}
+
 }
