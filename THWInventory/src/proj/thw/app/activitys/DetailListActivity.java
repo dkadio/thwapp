@@ -2,6 +2,8 @@
 //TODO nach verschiedenen kritereien im baum suchen und diese dann in der detail activity anzeigen
 package proj.thw.app.activitys;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import proj.thw.app.R;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.database.OrmDBHelper;
+import proj.thw.app.tools.Helper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -16,6 +19,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,23 +55,31 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		if (getIntent().hasExtra(
 				EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST)) {
-			equipments = (ArrayList<Equipment>) getIntent().getExtras()
+			try {
+				String pathTotempFile = getIntent().getExtras().getString(EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
+				equipments = (ArrayList<Equipment>) Helper.FileStreamToList(pathTotempFile);
+				context = this;
+
+				dbHelper = new OrmDBHelper(this);
+
+				intent = new Intent(this, DetailActivity.class);
+
+				initView();
+				TextView many = (TextView) findViewById(R.id.eintraege);
+				many.setText("Eingetragene elemente: "
+						+ String.valueOf(equipments.size()));
+				Log.d(MYTAG, "onCreate() --- ende");
+			} catch (ClassNotFoundException e) {
+				Log.e(this.getClass().getName(), e.getMessage());
+				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			} catch (IOException e) {
+				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			}
+			/*equipments = (ArrayList<Equipment>) getIntent().getExtras()
 					.getSerializable(
-							EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
+							EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);*/
 			oldlist = equipments;
 		}
-		context = this;
-
-		dbHelper = new OrmDBHelper(this);
-
-		intent = new Intent(this, DetailActivity.class);
-
-		initView();
-		TextView many = (TextView) findViewById(R.id.eintraege);
-		many.setText("Eingetragene elemente: "
-				+ String.valueOf(equipments.size()));
-		Log.d(MYTAG, "onCreate() --- ende");
-
 	}
 
 	@Override
@@ -107,9 +119,23 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	@Override
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 		// TODO start detailactivity fuer das gewuwnschte equipment
-		intent.putExtra(KEY_EQUIP_COLLECTION, equipments);
-		intent.putExtra(KEY_SELECTED_EQUIP, position);
-		startActivityForResult(intent, REQUEST_CODE);
+		
+		String tempFolderPath = Environment.getExternalStorageDirectory() 
+				+ File.separator 
+				+ getResources().getString(R.string.app_name) 
+				+ File.separator 
+				+ SplashScreenActivity.FOLDER_TEMP;
+		
+		File tempFile;
+		try {
+			tempFile = Helper.ListToFileStream(equipments,tempFolderPath);
+			intent.putExtra(KEY_EQUIP_COLLECTION, tempFile.getAbsolutePath());
+			intent.putExtra(KEY_SELECTED_EQUIP, position);
+			startActivityForResult(intent, REQUEST_CODE);
+		} catch (IOException e) {
+			Log.e(this.getClass().getName(), e.getMessage());
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override
@@ -118,9 +144,22 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
 			Log.d(MYTAG, "onActivityResult() - result ok");
 
-			equipments = (ArrayList<Equipment>) data
-					.getSerializableExtra(DetailActivity.KEY_RESULT_INTENT_EQUIPMENT);
-			Log.d(MYTAG, "updated equipmentlist");
+			if(data.getExtras().containsKey(DetailActivity.KEY_RESULT_INTENT_EQUIPMENT))
+			{
+				String pathTempFile = data.getExtras().getString(DetailActivity.KEY_RESULT_INTENT_EQUIPMENT);
+				try {
+					equipments = (ArrayList<Equipment>)  Helper.FileStreamToList(pathTempFile);
+					Log.d(MYTAG, "updated equipmentlist");
+				} catch (ClassNotFoundException e) {
+					Log.e(this.getClass().getName(), e.getMessage());
+					Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+				} catch (IOException e) {
+					Log.e(this.getClass().getName(), e.getMessage());
+					Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+				}
+			}
+			/*equipments = (ArrayList<Equipment>) data
+					.getSerializableExtra(DetailActivity.KEY_RESULT_INTENT_EQUIPMENT);*/
 //			for(Equipment a : equipments){
 //				if(a.getEquipImg().getImg() == null){
 //					Log.d(MYTAG, "0");
@@ -194,7 +233,8 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 						Log.d(MYTAG, "ja clicked");
 
 						loadDialog.setTitle("Please Wait...");
-						loadDialog.setMessage("Save Data to DB!");
+						loadDialog.setMessage("Saving Data to DB...");
+						loadDialog.setIcon(getResources().getDrawable(R.drawable.db_icon));
 						loadDialog.setCanceledOnTouchOutside(false);
 						loadDialog.show();
 						Log.d(MYTAG, "start thread");

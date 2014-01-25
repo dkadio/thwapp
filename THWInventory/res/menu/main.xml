@@ -8,10 +8,10 @@
 		 android:actionViewClass="android.widget.SearchView"/>
     
     <item
-         android:id="@+id/save"
+         android:id="@+id/refresh"
 		 android:title="@string/save"
-		 android:icon="@drawable/save"
-		 android:visible="false"
+		 android:icon="@drawable/refresh2"
+		 android:visible="true"
 		 android:showAsAction="always"/>
     
      <item

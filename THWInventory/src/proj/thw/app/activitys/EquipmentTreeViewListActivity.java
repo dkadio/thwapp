@@ -1,13 +1,17 @@
 package proj.thw.app.activitys;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import proj.thw.app.R;
 import proj.thw.app.adapters.ThwTreeViewAdapter;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.database.OrmDBHelper;
+import proj.thw.app.tools.Helper;
 import proj.thw.app.treeview.InMemoryTreeStateManager;
 import proj.thw.app.treeview.OnTreeViewListItemClickListener;
 import proj.thw.app.treeview.TreeBuilder;
@@ -21,6 +25,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.TransactionTooLargeException;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -92,12 +98,8 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 								ArrayList<Equipment> selectedList = new ArrayList<Equipment>(
 										manager.getAbsoluteChildren(equipitem));
-								Intent in = new Intent(context,
-										DetailListActivity.class);
-								in.putExtra(KEY_EQUIPMENTLIST, selectedList);
-								startActivityForResult(in,
-										KEY_REQUEST_DETAILLIST);
-
+									
+								callDetailListActivity(selectedList);
 								runOnUiThread(new Runnable() {
 
 									@Override
@@ -115,14 +117,41 @@ public class EquipmentTreeViewListActivity extends Activity {
 		init();
 
 	}
+	
+	private void callDetailListActivity(List<Equipment> callList)
+	{
+		//uebergabe ueber eine File, da uebergabe auf 1 MB
+		//beschraenkt ist und keine Exception zum abfangen
+		//geworfen wird
+		String tempFolderPath = Environment.getExternalStorageDirectory() 
+								+ File.separator 
+								+ getResources().getString(R.string.app_name) 
+								+ File.separator 
+								+ SplashScreenActivity.FOLDER_TEMP;
+		
+		try {
+			File tempFile = Helper.ListToFileStream(callList,tempFolderPath);
+			Intent in = new Intent(context,
+					DetailListActivity.class);
+			in.putExtra(KEY_EQUIPMENTLIST, tempFile.getAbsolutePath());
+			startActivityForResult(in,
+					KEY_REQUEST_DETAILLIST);
+		} catch (IOException e) {
+			Log.e(this.getClass().getName(), e.getMessage());
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();	
+		}
+		
+	}
 
 	// TODO collabsed enable falls tree leer ist
 	private void init() {
 		loadDialog = new ProgressDialog(this);
 		loadDialog.setTitle("Please Wait...");
-		loadDialog.setMessage("Load Data from DB!");
+		loadDialog.setMessage("Loading Data from DB...");
+		loadDialog.setIcon(getResources().getDrawable(R.drawable.db_icon));
 		loadDialog.setCanceledOnTouchOutside(false);
 		loadDialog.show();
+
 		new Thread(new Runnable() {
 
 			@Override
@@ -231,8 +260,8 @@ public class EquipmentTreeViewListActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.save:
-			saveToDB();
+		case R.id.refresh:
+			init();
 			break;
 		case R.id.importdata:
 			intent = new Intent(this, ImportDataActivity.class);
@@ -290,13 +319,12 @@ public class EquipmentTreeViewListActivity extends Activity {
 			Toast.makeText(this, "Kein Eintrag ausgewaehlt! Eintrag anchecken",
 					Toast.LENGTH_LONG).show();
 		} else {
-			Intent in = new Intent(context, DetailListActivity.class);
-			in.putExtra(KEY_EQUIPMENTLIST, checkedList);
-			startActivityForResult(in, KEY_REQUEST_DETAILLIST);
+			callDetailListActivity(checkedList);
 		}
 
 	}
 
+	@Deprecated
 	public void saveToDB() {
 		loadDialog = new ProgressDialog(this);
 		loadDialog.setTitle("Please Wait...");

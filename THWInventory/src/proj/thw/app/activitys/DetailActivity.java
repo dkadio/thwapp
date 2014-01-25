@@ -5,6 +5,7 @@ package proj.thw.app.activitys;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +15,7 @@ import proj.thw.app.R;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.classes.Equipment.Status;
 import proj.thw.app.classes.EquipmentImage;
+import proj.thw.app.tools.Helper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -52,6 +54,8 @@ public class DetailActivity extends Activity {
 	static final String ALERT_TITLE = "Fehlende Eingaben";
 
 	static final String MYTAG = "DetailActivity.class";
+	protected static final int KEY_RSLT_ERROR = -1;
+	
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 2341;
 	private Uri fileUri;
 
@@ -86,10 +90,12 @@ public class DetailActivity extends Activity {
 		if (getIntent().hasExtra(DetailListActivity.KEY_EQUIP_COLLECTION))
 			getintentContent();
 		// setz die values des ersten items
-		setValues();
-		// init der listener
-		setListener();
-		Log.d(MYTAG, "onCreate() ---------Ende");
+		if(equipments != null){
+			setValues();
+			// init der listener
+			setListener();
+			Log.d(MYTAG, "onCreate() ---------Ende");
+		}
 	}
 
 	private void setListener() {
@@ -210,13 +216,24 @@ public class DetailActivity extends Activity {
 
 	private void getintentContent() {
 		Log.d(MYTAG, "getintentContent");
-
-		equipments = (ArrayList<Equipment>) getIntent().getExtras()
-				.getSerializable(DetailListActivity.KEY_EQUIP_COLLECTION);
-		Log.d(MYTAG, "Array erhalten: ");
-		selectedItem = getIntent().getExtras().getInt(
-				DetailListActivity.KEY_SELECTED_EQUIP);
-		Log.d(MYTAG, "SelectedItem erhalten: " + selectedItem);
+		
+		String tempFilePath = getIntent().getExtras().getString(DetailListActivity.KEY_EQUIP_COLLECTION);
+		
+		try {
+			equipments = (ArrayList<Equipment>) Helper.FileStreamToList(tempFilePath);
+			Log.d(MYTAG, "Array erhalten: ");
+			selectedItem = getIntent().getExtras().getInt(
+					DetailListActivity.KEY_SELECTED_EQUIP);
+			Log.d(MYTAG, "SelectedItem erhalten: " + selectedItem);
+		} catch (ClassNotFoundException e) {
+			Log.e(this.getClass().getName(), e.getMessage());
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+		} catch (IOException e) {
+			Log.e(this.getClass().getName(), e.getMessage());
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+		}
+		/*equipments = (ArrayList<Equipment>) getIntent().getExtras()
+				.getSerializable(DetailListActivity.KEY_EQUIP_COLLECTION);*/
 	}
 
 	private void init() {
@@ -336,11 +353,26 @@ public class DetailActivity extends Activity {
 		Log.d(MYTAG, "returnresultintent");
 		saveValues();
 		Intent resultintent = new Intent();
-		resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT, equipments);
-		setResult(RESULT_OK, resultintent);
-		finish();
-		Log.d(MYTAG, "returnintent --- ende");
-
+		
+		String tempFolderPath = Environment.getExternalStorageDirectory() 
+				+ File.separator 
+				+ getResources().getString(R.string.app_name) 
+				+ File.separator 
+				+ SplashScreenActivity.FOLDER_TEMP;
+		
+		File tempFile;
+			try {
+				tempFile = Helper.ListToFileStream(equipments,tempFolderPath);
+				resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT, tempFile.getAbsolutePath());
+				setResult(RESULT_OK, resultintent);
+				finish();
+				Log.d(MYTAG, "returnintent --- ende");
+			} catch (IOException e) {
+				setResult(KEY_RSLT_ERROR, resultintent);
+				finish();
+			}
+		
+		
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import proj.thw.app.classes.Equipment;
 import proj.thw.app.classes.EquipmentImage;
 import proj.thw.app.database.OrmDBHelper;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -72,6 +73,7 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean>{
 			asyncDialog.setCanceledOnTouchOutside(false);
 			asyncDialog.setTitle("Please Wait...");
 			asyncDialog.setMessage("importiere Daten...");
+			asyncDialog.setIcon(callContext.getResources().getDrawable(R.drawable.db_icon));
 			asyncDialog.show();
 		}
 	}

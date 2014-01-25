@@ -9,12 +9,12 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "equipmentimage")
+//@DatabaseTable(tableName = "equipmentimage")
 public class EquipmentImage implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
-	@DatabaseField(generatedId=true)
+	//@DatabaseField(generatedId=true)
 	private int id;
 
 	@DatabaseField(dataType=DataType.BYTE_ARRAY)
