@@ -48,8 +48,7 @@
                 android:id="@+id/imageEquip"
                 android:layout_width="@dimen/pictureSize"
                 android:layout_height="@dimen/pictureSize"
-                
-                android:background="@color/ThwBlue"/>
+                android:src="@drawable/error" />
         </LinearLayout>
     </LinearLayout>
 
