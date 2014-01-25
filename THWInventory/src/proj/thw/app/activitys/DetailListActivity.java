@@ -124,5 +124,6 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		super.onPause();
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(KEY_FOR_TREEVIEW_RESULT, equipments);
+		setResult(RESULT_OK, resultIntent);
 	}
 }
