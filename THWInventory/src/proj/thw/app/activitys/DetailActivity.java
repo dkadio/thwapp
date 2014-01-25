@@ -179,7 +179,8 @@ public class DetailActivity extends Activity {
 
 		tvdebug.setText(String.valueOf(selectedItem + 1) + "/"
 				+ equipments.size());
-
+		if(equipments.get(selectedItem).getEquipImg()
+				.getImg() != null)
 		imageequip.setImageBitmap(equipments.get(selectedItem).getEquipImg()
 				.getImg());
 		temp = equipments.get(selectedItem).getEquipImg();
@@ -218,7 +219,7 @@ public class DetailActivity extends Activity {
 
 	private void init() {
 		Log.d(MYTAG, "init()");
-
+		
 		builder = new AlertDialog.Builder(this).setTitle(ALERT_TITLE).setMessage(ARE_YOU_SURE);
 
 		tvdebug = (TextView) findViewById(R.id.debug);
@@ -382,7 +383,6 @@ public class DetailActivity extends Activity {
 		int h = 100; // height in pixels
 		int w = 100; // width in pixels
 		Bitmap scaled = Bitmap.createScaledBitmap(bm, h, w, true);
-
 		imageequip.setImageBitmap(scaled);
 		temp = new EquipmentImage(scaled);
 
