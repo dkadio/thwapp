@@ -345,7 +345,10 @@ public class DetailActivity extends Activity {
 
 	@Override
 	protected void onPause() {
-		returnResultIntent();
+		saveValues();
+		Intent resultintent = new Intent();
+		resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT, equipments);
+		setResult(RESULT_OK, resultintent);
 		super.onPause();
 	}
 	

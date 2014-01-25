@@ -2,6 +2,7 @@
 //TODO nach verschiedenen kritereien im baum suchen und diese dann in der detail activity anzeigen
 package proj.thw.app.activitys;
 
+import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -9,8 +10,10 @@ import proj.thw.app.R;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.database.OrmDBHelper;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +41,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	Context context;
 	ProgressDialog loadDialog;
 	boolean isupdated = false;
+	ArrayList<Equipment> oldlist;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 			equipments = (ArrayList<Equipment>) getIntent().getExtras()
 					.getSerializable(
 							EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
+			oldlist = equipments;
 		}
 		context = this;
 
@@ -115,10 +120,19 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 
 			equipments = (ArrayList<Equipment>) data
 					.getSerializableExtra(DetailActivity.KEY_RESULT_INTENT_EQUIPMENT);
-			initView();
+			Log.d(MYTAG, "updated equipmentlist");
+//			for(Equipment a : equipments){
+//				if(a.getEquipImg().getImg() == null){
+//					Log.d(MYTAG, "0");
+//				}else{
+//					Log.d(MYTAG, "1");
+//				}
+//					
+//			}
 			isupdated = true;
 			Log.d(MYTAG, "start save to db");
 			saveToDB();
+
 		} else {
 			isupdated = false;
 			Toast.makeText(
@@ -167,33 +181,67 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	}
 
 	public void saveToDB() {
-
 		loadDialog = new ProgressDialog(this);
-		loadDialog.setTitle("Please Wait...");
-		loadDialog.setMessage("Save Data to DB!");
-		loadDialog.setCanceledOnTouchOutside(false);
-		loadDialog.show();
-		Log.d(MYTAG, "start thread");
-		new Thread(new Runnable() {
 
-			@Override
-			public void run() {
-				Log.d(MYTAG, "speicher objekte");
-				for (Equipment saveItem : equipments) {
-					try {
-						Log.d(MYTAG, saveItem.toString());
-						dbHelper.getDbHelperEquip().updateEquipment(saveItem);
-					} catch (SQLException e) {
-						Log.e(EquipmentTreeViewListActivity.class.getName(),
-								e.getMessage());
-						Toast.makeText(context,
-								"Fehler beim speichern: " + e.getMessage(),
-								Toast.LENGTH_LONG).show();
+		new AlertDialog.Builder(this)
+				.setTitle("Achtung")
+				.setMessage(
+						"Moechten Sie die Aenderungen in der DB beibehalten?")
+				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Log.d(MYTAG, "ja clicked");
+
+						loadDialog.setTitle("Please Wait...");
+						loadDialog.setMessage("Save Data to DB!");
+						loadDialog.setCanceledOnTouchOutside(false);
+						loadDialog.show();
+						Log.d(MYTAG, "start thread");
+						new Thread(new Runnable() {
+
+							@Override
+							public void run() {
+								Log.d(MYTAG, "speicher objekte");
+								for (Equipment saveItem : equipments) {
+									try {
+//										if(saveItem.getEquipImg().getImg() == null){
+//											Log.d(MYTAG, "0");	
+//										}else{
+//											Log.d(MYTAG, "1");
+//										}
+										
+										dbHelper.getDbHelperEquip().updateEquipment(saveItem);
+									} catch (SQLException e) {
+										Log.e(EquipmentTreeViewListActivity.class.getName(),
+												e.getMessage());
+										Toast.makeText(context,
+												"Fehler beim speichern: " + e.getMessage(),
+												Toast.LENGTH_LONG).show();
+									}
+								}
+
+								loadDialog.dismiss();
+
+							}
+						}).start();
 					}
-				}
+				})
+				.setNegativeButton("Nein",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								Log.d(MYTAG, "nein clicked");
 
-				loadDialog.dismiss();
-			}
-		}).start();
+								equipments = oldlist;
+								isupdated = false;			
+								initView();
+
+							}
+						}).show();
+		
+		
+
 	}
 }
