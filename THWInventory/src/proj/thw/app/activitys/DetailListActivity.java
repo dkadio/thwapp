@@ -37,7 +37,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	OrmDBHelper dbHelper;
 	Context context;
 	ProgressDialog loadDialog;
-	boolean isupdated;
+	boolean isupdated = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +101,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 			isupdated = true;
 			saveToDB();
 		} else {
+			isupdated = false;
 			Toast.makeText(
 					this,
 					"Da is wohl was beim ueberreichen der Dataen was schief gelaufen! musche nommo zaehlen",
@@ -137,7 +138,6 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	protected void onPause() {
 		super.onPause();
 		Intent resultIntent = new Intent();
-		isupdated = false;
 		resultIntent.putExtra(KEY_FOR_TREEVIEW_RESULT, isupdated);
 		setResult(RESULT_OK, resultIntent);
 	}
