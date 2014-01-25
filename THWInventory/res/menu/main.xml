@@ -11,6 +11,7 @@
          android:id="@+id/save"
 		 android:title="@string/save"
 		 android:icon="@drawable/save"
+		 android:visible="false"
 		 android:showAsAction="always"/>
     
      <item
