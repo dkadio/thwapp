@@ -39,6 +39,8 @@ import android.widget.Toast;
 public class EquipmentTreeViewListActivity extends Activity {
 
 	public static final int KEY_REQUEST_IMPORT = 4711;
+	public static final int KEY_REQUEST_EXPORT = 4712;
+	public static final int KEY_REQUEST_DETAILLIST = 4713;
 	protected static final String LOG = "EquipmentTreeViewListActivity";
 	protected static final String KEY_EQUIPMENTLIST = "equip.list";
 	protected static final String KEY_EQUIPMENT = "equip";
@@ -58,56 +60,63 @@ public class EquipmentTreeViewListActivity extends Activity {
 	private TextView tvTreeSize;
 	private SearchView searchView;
 	private Context context;
-	//private boolean isChange = false; fuer abfrage, ob gespeichert werden soll vor dem beenden
+
+	// private boolean isChange = false; fuer abfrage, ob gespeichert werden
+	// soll vor dem beenden
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		setContentView(R.layout.activity_tree_view_list);
-		context = this; 
-		
+		context = this;
+
 		tvTreeSize = (TextView) findViewById(R.id.tvtreesize);
 		pbLoadTreeView = (ProgressBar) findViewById(R.id.pbloadtreeview);
 		tvlEquipment = (TreeViewList) findViewById(R.id.tvlequip);
-		tvlEquipment.setTreeViewListItemClickListener(new OnTreeViewListItemClickListener() {
-			
-			@Override
-			public void onTreeViewListItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				
-				//getClickedItem
-				final Equipment equipitem = (Equipment)view.getTag();
-				manager.expandEverythingBelow(equipitem);
-				pbLoadTreeView.setVisibility(View.VISIBLE);
-				new Thread(new Runnable() {
-					
+		tvlEquipment
+				.setTreeViewListItemClickListener(new OnTreeViewListItemClickListener() {
+
 					@Override
-					public void run() {
-						
-						ArrayList<Equipment> selectedList = new ArrayList<Equipment>( manager.getAbsoluteChildren(equipitem));
-						Intent in = new Intent(context, DetailListActivity.class);
-						in.putExtra(KEY_EQUIPMENTLIST, selectedList);
-						startActivity(in);
-						
-						runOnUiThread(new Runnable() {
-							
+					public void onTreeViewListItemClick(AdapterView<?> parent,
+							View view, int position, long id) {
+
+						// getClickedItem
+						final Equipment equipitem = (Equipment) view.getTag();
+						manager.expandEverythingBelow(equipitem);
+						pbLoadTreeView.setVisibility(View.VISIBLE);
+						new Thread(new Runnable() {
+
 							@Override
 							public void run() {
-								pbLoadTreeView.setVisibility(View.INVISIBLE);
+
+								ArrayList<Equipment> selectedList = new ArrayList<Equipment>(
+										manager.getAbsoluteChildren(equipitem));
+								Intent in = new Intent(context,
+										DetailListActivity.class);
+								in.putExtra(KEY_EQUIPMENTLIST, selectedList);
+								startActivityForResult(in,
+										KEY_REQUEST_DETAILLIST);
+
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										pbLoadTreeView
+												.setVisibility(View.INVISIBLE);
+									}
+								});
 							}
-						});
+						}).start();
 					}
-				}).start();
-			}
-		});
+				});
 		dbHelper = new OrmDBHelper(this);
 
 		init();
 
 	}
 
-	//TODO collabsed enable falls tree leer ist
+	// TODO collabsed enable falls tree leer ist
 	private void init() {
 		loadDialog = new ProgressDialog(this);
 		loadDialog.setTitle("Please Wait...");
@@ -155,7 +164,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 						tvlEquipment.setAdapter(simpleAdapter);
 						tvlEquipment.setCollapsible(true);
 						manager.expandEverythingBelow(null);
-						tvTreeSize.setText(getResources().getString(R.string.treesize)+": " + equipmentList.size());
+						tvTreeSize.setText(getResources().getString(
+								R.string.treesize)
+								+ ": " + equipmentList.size());
 					}
 				});
 			}
@@ -169,29 +180,30 @@ public class EquipmentTreeViewListActivity extends Activity {
 		inflater.inflate(R.menu.main, menu);
 
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		searchView = (SearchView) menu.findItem(R.id.search)
-				.getActionView();
+		searchView = (SearchView) menu.findItem(R.id.search).getActionView();
 		searchView.setSearchableInfo(searchManager
 				.getSearchableInfo(getComponentName()));
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-			
+
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				List<Equipment> searchList = searchItems(query);
-				
-				if(searchList.isEmpty()){
-					Toast.makeText(context, "Kein Eintrag gefunden!", Toast.LENGTH_SHORT).show();
-				}
-				else{
+
+				if (searchList.isEmpty()) {
+					Toast.makeText(context, "Kein Eintrag gefunden!",
+							Toast.LENGTH_SHORT).show();
+				} else {
 					searchView.clearFocus();
 					manager.expandEverythingBelow(null);
-					getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-					tvlEquipment.setSelection(equipmentList.indexOf(searchList.get(0))-1);
-					//tvlEquipment.getChildAt(equipmentList.indexOf(searchList.get(0))).setBackgroundColor(Color.GREEN);
+					getWindow().setSoftInputMode(
+							WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+					tvlEquipment.setSelection(equipmentList.indexOf(searchList
+							.get(0)) - 1);
+					// tvlEquipment.getChildAt(equipmentList.indexOf(searchList.get(0))).setBackgroundColor(Color.GREEN);
 				}
 				return false;
 			}
-			
+
 			@Override
 			public boolean onQueryTextChange(String newText) {
 				// TODO Auto-generated method stub
@@ -201,20 +213,17 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 		return true;
 	}
-	
-	private List<Equipment> searchItems(String query)
-	{
+
+	private List<Equipment> searchItems(String query) {
 		ArrayList<Equipment> searchList = new ArrayList<Equipment>();
-		
-		//hier eigentlich Contains, kann aber nicht benutzt werden,
-		//da equals am Equipmentobjekt nicht ueberschrieben werden kann...
-		for(Equipment searchItem : equipmentList)
-		{
-			if(searchItem.getEquipNo().equals(query))
-			{
+
+		// hier eigentlich Contains, kann aber nicht benutzt werden,
+		// da equals am Equipmentobjekt nicht ueberschrieben werden kann...
+		for (Equipment searchItem : equipmentList) {
+			if (searchItem.getEquipNo().equals(query)) {
 				searchList.add(searchItem);
 			}
-		}	
+		}
 		return searchList;
 	}
 
@@ -223,7 +232,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 		Intent intent;
 		switch (item.getItemId()) {
 		case R.id.save:
-				saveToDB();
+			saveToDB();
 			break;
 		case R.id.importdata:
 			intent = new Intent(this, ImportDataActivity.class);
@@ -234,15 +243,14 @@ public class EquipmentTreeViewListActivity extends Activity {
 			startActivity(intent);
 			break;
 		case R.id.collapsed:
-			if(item.isChecked()){
+			if (item.isChecked()) {
 				item.setChecked(false);
 				manager.expandEverythingBelow(null);
-			}
-			else{
+			} else {
 				item.setChecked(true);
 				manager.collapseChildren(null);
 			}
-				
+
 			break;
 		default: // Do Nothing...
 		}
@@ -259,45 +267,68 @@ public class EquipmentTreeViewListActivity extends Activity {
 			if (resultCode == RESULT_OK)
 				init();
 			break;
+		case KEY_REQUEST_DETAILLIST:
+			if (resultCode == RESULT_OK) {
+				List<Equipment> updatedList = (List<Equipment>)data.getExtras().getSerializable(
+												DetailListActivity.KEY_FOR_TREEVIEW_RESULT);
+				
+			if(updatedList.size() > 0)
+				updateTreeFromResult(updatedList);
+			}
+
+			break;
 		default: // Do Nothing...
 		}
 	}
 	
-	public void onClickGoButton(View view) {
-		ArrayList<Equipment> checkedList = new ArrayList<Equipment>(simpleAdapter.getSelected());
-		if(checkedList.isEmpty()){
-			Toast.makeText(this, "Kein Eintrag ausgewaehlt! Eintrag anchecken", Toast.LENGTH_LONG).show();
+	private void updateTreeFromResult(List<Equipment> updatedList)
+	{
+		if(updatedList != null)
+		{
+			for(Equipment updEquip : updatedList)
+			{
+				
+			}
 		}
-		else{
+	}
+
+	public void onClickGoButton(View view) {
+		ArrayList<Equipment> checkedList = new ArrayList<Equipment>(
+				simpleAdapter.getSelected());
+		if (checkedList.isEmpty()) {
+			Toast.makeText(this, "Kein Eintrag ausgewaehlt! Eintrag anchecken",
+					Toast.LENGTH_LONG).show();
+		} else {
 			Intent in = new Intent(context, DetailListActivity.class);
 			in.putExtra(KEY_EQUIPMENTLIST, checkedList);
-			startActivity(in);
+			startActivityForResult(in, KEY_REQUEST_DETAILLIST);
 		}
-		
+
 	}
-	
-	public void saveToDB()
-	{
+
+	public void saveToDB() {
 		loadDialog = new ProgressDialog(this);
 		loadDialog.setTitle("Please Wait...");
 		loadDialog.setMessage("Save Data to DB!");
 		loadDialog.setCanceledOnTouchOutside(false);
 		loadDialog.show();
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				
-				for(Equipment saveItem : equipmentList)
-				{
+
+				for (Equipment saveItem : equipmentList) {
 					try {
 						dbHelper.getDbHelperEquip().updateEquipment(saveItem);
 					} catch (SQLException e) {
-						Log.e(EquipmentTreeViewListActivity.class.getName(), e.getMessage());
-						Toast.makeText(context, "Fehler beim speichern: " + e.getMessage(), Toast.LENGTH_LONG).show();
+						Log.e(EquipmentTreeViewListActivity.class.getName(),
+								e.getMessage());
+						Toast.makeText(context,
+								"Fehler beim speichern: " + e.getMessage(),
+								Toast.LENGTH_LONG).show();
 					}
 				}
-				
+
 				loadDialog.dismiss();
 			}
 		}).start();

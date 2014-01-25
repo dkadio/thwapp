@@ -2,14 +2,9 @@ package proj.thw.app.activitys;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import proj.thw.app.R;
 import proj.thw.app.database.OrmDBHelper;
@@ -17,13 +12,10 @@ import proj.thw.app.ie.CSVFile;
 import proj.thw.app.ie.FileIE;
 import proj.thw.app.ie.FilePackage;
 import proj.thw.app.ie.ThwCsvImporter;
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.app.Activity;
-import android.app.TabActivity;
-import android.database.CursorJoiner.Result;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -32,25 +24,16 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 
 public class ImportDataActivity extends Activity {
 
 	private static final String IMAGE_FILE_NAME = "EquipmentImage";
-	private static final String FILE_EXTENTION_CSV = ".csv";
-	private static final String FILE_EXTENTION_XML = ".xml";
-
-	private enum FileType {
-		CSV, XML
-	};
-
 	private OrmDBHelper dbHelper;
 
 	private Spinner spTypeFile;
 	private Spinner spLoadFile;
 	private ArrayAdapter<FilePackage> adpLoadFile;
-	private ArrayAdapter<FileType> adpTypeFile;
+	private ArrayAdapter<FileIE.FileType> adpTypeFile;
 
 	private CheckBox cbCleanDBbeforImport;
 	// private TabHost tabImport; erweiterung fuer DB import/export
@@ -82,9 +65,9 @@ public class ImportDataActivity extends Activity {
 		// tabImport.setup();
 
 		spTypeFile = (Spinner) findViewById(R.id.spformat);
-		adpTypeFile = new ArrayAdapter<FileType>(this,
+		adpTypeFile = new ArrayAdapter<FileIE.FileType>(this,
 				android.R.layout.simple_spinner_dropdown_item,
-				FileType.values());
+				FileIE.FileType.values());
 		spTypeFile.setAdapter(adpTypeFile);
 		spTypeFile.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -93,20 +76,20 @@ public class ImportDataActivity extends Activity {
 					long arg3) {
 
 				try {
-					switch ((FileType) adp.getSelectedItem()) {
+					switch ((FileIE.FileType) adp.getSelectedItem()) {
 					case CSV:
 
 						adpLoadFile.clear();
 						adpLoadFile.addAll(loadFilePackages(new File(ieFolder,
-								FileType.CSV.toString()), FILE_EXTENTION_CSV,
-								FileType.CSV));
+								FileIE.FileType.CSV.toString()), FileIE.FILE_EXTENTION_CSV,
+								FileIE.FileType.CSV));
 						break;
 					case XML:
 
 						adpLoadFile.clear();
 						adpLoadFile.addAll(loadFilePackages(new File(ieFolder,
-								FileType.XML.toString()), FILE_EXTENTION_XML,
-								FileType.XML));
+								FileIE.FileType.XML.toString()), FileIE.FILE_EXTENTION_XML,
+								FileIE.FileType.XML));
 
 						break;
 					default: // Do Nothing...
@@ -152,7 +135,7 @@ public class ImportDataActivity extends Activity {
 	}
 
 	private FilePackage folderToFilePackage(File folder, String extention,
-			FileType ft) throws FileNotFoundException,
+			FileIE.FileType ft) throws FileNotFoundException,
 			UnsupportedEncodingException {
 		FilePackage newFilePackage = new FilePackage();
 		if (folder.listFiles().length > 0) {
@@ -188,7 +171,7 @@ public class ImportDataActivity extends Activity {
 	}
 
 	private ArrayList<FilePackage> loadFilePackages(File parentFolder,
-			String extension, FileType ft) throws FileNotFoundException,
+			String extension, FileIE.FileType ft) throws FileNotFoundException,
 			UnsupportedEncodingException {
 
 		ArrayList<FilePackage> packageList = new ArrayList<FilePackage>();

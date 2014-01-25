@@ -53,6 +53,11 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Equipment> {
 		}
 
 	}
+	
+	public void UpdateNode()
+	{
+		
+	}
 
 	private String getDescription(final Equipment id) {
 		final Integer[] hierarchy = getManager().getHierarchyDescription(id);

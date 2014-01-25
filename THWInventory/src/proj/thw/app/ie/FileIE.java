@@ -7,7 +7,16 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
+//TODO extends file
 public abstract class FileIE {
+
+	private static final long serialVersionUID = 1L;
+	public static final String FILE_EXTENTION_CSV = ".csv";
+	public static final String FILE_EXTENTION_XML = ".csv";
+	
+	public static enum FileType {
+		CSV, XML
+	};
 
 	//Objektattribute
 	protected String			fileName;
@@ -101,6 +110,11 @@ public abstract class FileIE {
 	public String toString()
 	{
 		return fileName;
+	}
+	
+	public void save()
+	{
+		
 	}
 	
 }

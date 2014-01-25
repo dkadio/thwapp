@@ -1,16 +1,48 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context=".ExportDataActivity" >
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tvpath"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:background="@color/ThwBlue"
+        android:text="@string/file_format"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
 
-</RelativeLayout>
+    <Spinner
+        android:id="@+id/spformat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/TextView03"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ThwBlue"
+        android:text="@string/file_source"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/etfilename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/btnimport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickImport"
+        android:text="@string/save_import" />
+
+</LinearLayout>
