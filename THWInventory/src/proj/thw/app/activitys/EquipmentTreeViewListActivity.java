@@ -269,7 +269,14 @@ public class EquipmentTreeViewListActivity extends Activity {
 			break;
 		case KEY_REQUEST_DETAILLIST:
 			if (resultCode == RESULT_OK) {
-				init();
+				if(data.getExtras().containsKey(DetailListActivity.KEY_FOR_TREEVIEW_RESULT))
+				{
+					boolean t = data.getExtras().getBoolean(DetailListActivity.KEY_FOR_TREEVIEW_RESULT);
+					if(t)
+					{
+						init();
+					}
+				}
 			}
 
 			break;
