@@ -50,7 +50,7 @@ public class DetailActivity extends Activity {
 	static final String KEY_RESULT_INTENT_EQUIPMENT = "result.the.equipment.intent.for.detaillistactivity";
 	static final String ARE_YOU_SURE = "Sind Sie sicher das Sie nicht etwas vergessen haben?";
 	static final String ALERT_TITLE = "Fehlende Eingaben";
-	
+
 	static final String MYTAG = "DetailActivity.class";
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 2341;
 	private Uri fileUri;
@@ -179,10 +179,12 @@ public class DetailActivity extends Activity {
 
 		tvdebug.setText(String.valueOf(selectedItem + 1) + "/"
 				+ equipments.size());
-		if(equipments.get(selectedItem).getEquipImg()
-				.getImg() != null)
-		imageequip.setImageBitmap(equipments.get(selectedItem).getEquipImg()
-				.getImg());
+		if (equipments.get(selectedItem).getEquipImg().getImg() != null) {
+			imageequip.setImageBitmap(equipments.get(selectedItem)
+					.getEquipImg().getImg());
+		} else {
+			imageequip.setImageBitmap(null);
+		}
 		temp = equipments.get(selectedItem).getEquipImg();
 
 		etdeviveNo.setText(equipments.get(selectedItem).getDeviceNo());
@@ -219,8 +221,9 @@ public class DetailActivity extends Activity {
 
 	private void init() {
 		Log.d(MYTAG, "init()");
-		
-		builder = new AlertDialog.Builder(this).setTitle(ALERT_TITLE).setMessage(ARE_YOU_SURE);
+
+		builder = new AlertDialog.Builder(this).setTitle(ALERT_TITLE)
+				.setMessage(ARE_YOU_SURE);
 
 		tvdebug = (TextView) findViewById(R.id.debug);
 
@@ -268,17 +271,14 @@ public class DetailActivity extends Activity {
 				|| equipments.get(selectedItem).getActualQuantity() < equipments
 						.get(selectedItem).getTargetQuantity()) {
 			builder.show();
-		}else{
+		} else {
 			if (selectedItem < equipments.size() - 1) {
 				Log.d(MYTAG, "nextitem!");
 				selectedItem++;
 				setValues();
-			}		
+			}
 		}
-		
 
-
-		
 	}
 
 	public void previousItem(View v) {
@@ -344,6 +344,12 @@ public class DetailActivity extends Activity {
 	}
 
 	@Override
+	protected void onPause() {
+		returnResultIntent();
+		super.onPause();
+	}
+	
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d(MYTAG, "onactivityresult");
 
@@ -368,27 +374,35 @@ public class DetailActivity extends Activity {
 		// les ein image aus dem Ordner Temp und loesche es dannach
 		Log.d(MYTAG, "setimage()");
 
-		File imagefile = lastmediafile;
-		Log.d(MYTAG, "lade file: " + imagefile.toString());
+		Log.d(MYTAG, "lade file: " + lastmediafile.toString());
 
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(imagefile);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		// Get the dimensions of the View
+		int targetW = imageequip.getWidth();
+		int targetH = imageequip.getHeight();
 
-		Bitmap bm = BitmapFactory.decodeStream(fis);
+		// Get the dimensions of the bitmap
+		BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+		bmOptions.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(lastmediafile.getPath(), bmOptions);
+		int photoW = bmOptions.outWidth;
+		int photoH = bmOptions.outHeight;
 
-		int h = 100; // height in pixels
-		int w = 100; // width in pixels
-		Bitmap scaled = Bitmap.createScaledBitmap(bm, h, w, true);
-		imageequip.setImageBitmap(scaled);
-		temp = new EquipmentImage(scaled);
+		// Determine how much to scale down the image
+		int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+		// Decode the image file into a Bitmap sized to fill the View
+		bmOptions.inJustDecodeBounds = false;
+		bmOptions.inSampleSize = scaleFactor;
+		bmOptions.inPurgeable = true;
+
+		Bitmap bitmap = BitmapFactory.decodeFile(lastmediafile.getPath(),
+				bmOptions);
+
+		imageequip.setImageBitmap(bitmap);
+		temp = new EquipmentImage(bitmap);
 
 		Log.d(MYTAG, "delete file" + lastmediafile.toString());
 		lastmediafile.delete();
-
 		Log.d(MYTAG, "setimage() -- ende");
 
 	}

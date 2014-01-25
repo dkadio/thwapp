@@ -162,6 +162,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	private void resultintent() {
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(KEY_FOR_TREEVIEW_RESULT, isupdated);
+		Log.d(MYTAG, String.valueOf(isupdated));
 		setResult(RESULT_OK, resultIntent);
 	}
 
