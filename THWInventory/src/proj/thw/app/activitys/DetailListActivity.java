@@ -37,7 +37,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	OrmDBHelper dbHelper;
 	Context context;
 	ProgressDialog loadDialog;
-	
+	boolean isupdated;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +98,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 			equipments = (ArrayList<Equipment>) data
 					.getSerializableExtra(DetailActivity.KEY_RESULT_INTENT_EQUIPMENT);
 			initView();
+			isupdated = true;
 			saveToDB();
 		} else {
 			Toast.makeText(
@@ -136,6 +137,8 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	protected void onPause() {
 		super.onPause();
 		Intent resultIntent = new Intent();
+		isupdated = false;
+		resultIntent.putExtra(KEY_FOR_TREEVIEW_RESULT, isupdated);
 		setResult(RESULT_OK, resultIntent);
 	}
 	
