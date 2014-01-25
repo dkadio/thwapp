@@ -5,14 +5,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 import proj.thw.app.R;
-import proj.thw.app.activitys.EquipmentTreeViewListActivity;
 import proj.thw.app.activitys.ImportDataActivity;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.classes.EquipmentImage;
 import proj.thw.app.database.OrmDBHelper;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
