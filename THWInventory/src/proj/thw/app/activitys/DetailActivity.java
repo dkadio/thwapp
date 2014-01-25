@@ -329,7 +329,6 @@ public class DetailActivity extends Activity {
 		// speicher die daten und gib alles an die detaillistactivity wieder
 		// zurueck
 		returnResultIntent();
-		finish();
 	}
 
 	private void returnResultIntent() {
@@ -338,6 +337,7 @@ public class DetailActivity extends Activity {
 		Intent resultintent = new Intent();
 		resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT, equipments);
 		setResult(RESULT_OK, resultintent);
+		finish();
 		Log.d(MYTAG, "returnintent --- ende");
 
 	}
@@ -404,7 +404,7 @@ public class DetailActivity extends Activity {
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
-			NavUtils.navigateUpFromSameTask(this);
+			returnResultIntent();
 			return true;
 		case R.id.takePicture:
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

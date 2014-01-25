@@ -42,11 +42,6 @@
             android:parentActivityName="proj.thw.app.activitys.EquipmentTreeViewListActivity" >
         </activity>
         <activity
-            android:name="proj.thw.app.activitys._DetailActivity"
-            android:label="@string/setEmptyLabel"
-            android:parentActivityName="proj.thw.app.activitys.DetailListActivity" >
-        </activity>
-        <activity
             android:name="proj.thw.app.activitys.ImportDataActivity"
             android:label="@string/title_activity_import"
             android:screenOrientation="portrait" >
@@ -57,7 +52,7 @@
         </activity>
         <activity
             android:name="proj.thw.app.activitys.DetailActivity"
-            android:label="@string/title_activity_detail"
+            android:label="@string/setEmptyLabel"
             android:parentActivityName="proj.thw.app.activitys.DetailListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

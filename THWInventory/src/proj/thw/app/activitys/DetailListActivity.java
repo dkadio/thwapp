@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,7 +23,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 public class DetailListActivity extends Activity implements OnItemClickListener {
 	public final static String KEY_EQUIP_COLLECTION = "equip_collection_key";
@@ -49,12 +49,12 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 				EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST)) {
 			equipments = (ArrayList<Equipment>) getIntent().getExtras()
 					.getSerializable(
-							EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);	
+							EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
 		}
 		context = this;
-		
+
 		dbHelper = new OrmDBHelper(this);
-		
+
 		intent = new Intent(this, DetailActivity.class);
 
 		initView();
@@ -63,6 +63,24 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 				+ String.valueOf(equipments.size()));
 		Log.d(MYTAG, "onCreate() --- ende");
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			resultintent();
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void initView() {
@@ -99,6 +117,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 					.getSerializableExtra(DetailActivity.KEY_RESULT_INTENT_EQUIPMENT);
 			initView();
 			isupdated = true;
+			Log.d(MYTAG, "start save to db");
 			saveToDB();
 		} else {
 			isupdated = false;
@@ -137,26 +156,31 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		resultintent();
+	}
+
+	private void resultintent() {
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(KEY_FOR_TREEVIEW_RESULT, isupdated);
 		setResult(RESULT_OK, resultIntent);
 	}
-	
-	
+
 	public void saveToDB() {
-		
+
 		loadDialog = new ProgressDialog(this);
 		loadDialog.setTitle("Please Wait...");
 		loadDialog.setMessage("Save Data to DB!");
 		loadDialog.setCanceledOnTouchOutside(false);
 		loadDialog.show();
+		Log.d(MYTAG, "start thread");
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-
+				Log.d(MYTAG, "speicher objekte");
 				for (Equipment saveItem : equipments) {
 					try {
+						Log.d(MYTAG, saveItem.toString());
 						dbHelper.getDbHelperEquip().updateEquipment(saveItem);
 					} catch (SQLException e) {
 						Log.e(EquipmentTreeViewListActivity.class.getName(),
