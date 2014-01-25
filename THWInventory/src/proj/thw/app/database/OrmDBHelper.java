@@ -62,7 +62,7 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 	
 	private void createTables(ConnectionSource src) throws SQLException
 	{
-		TableUtils.createTable(src, EquipmentImage.class);
+		//TableUtils.createTable(src, EquipmentImage.class);
 		TableUtils.createTable(src, Equipment.class);
 	}
 	
@@ -74,7 +74,7 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 	
 	public void clearDB() throws SQLException
 	{
-		TableUtils.clearTable(getConnectionSource(), EquipmentImage.class);
+		//TableUtils.clearTable(getConnectionSource(), EquipmentImage.class);
 		TableUtils.clearTable(getConnectionSource(), Equipment.class);
 	}
 }

@@ -272,7 +272,7 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean>{
 					else
 					{
 						//Wenn nicht, dann nimm default
-						newEquip.setEquipImg(defaultEquipImg);
+						//newEquip.setEquipImg(defaultEquipImg);
 					}
 						
 					

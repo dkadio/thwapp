@@ -59,7 +59,7 @@ public class Equipment implements Serializable {
 	@DatabaseField(dataType = DataType.SERIALIZABLE)
 	private Vector<Status> status;
 
-	@DatabaseField(foreign = true)
+	@DatabaseField(dataType = DataType.SERIALIZABLE)
 	EquipmentImage equipImg;
 
 	public Equipment() {

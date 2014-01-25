@@ -32,8 +32,7 @@
 	<ImageView
 	    android:id="@+id/treeitemimg"
 	    android:layout_width="50dp"
-	    android:layout_height="50dp"
-	    android:src="@drawable/error" />
+	    android:layout_height="50dp" />
 
 	<CheckBox
 	    android:id="@+id/tree_list_checkbox"
