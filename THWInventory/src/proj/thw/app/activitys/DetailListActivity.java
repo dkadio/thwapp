@@ -2,11 +2,15 @@
 //TODO nach verschiedenen kritereien im baum suchen und diese dann in der detail activity anzeigen
 package proj.thw.app.activitys;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import proj.thw.app.R;
 import proj.thw.app.classes.Equipment;
+import proj.thw.app.database.OrmDBHelper;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 public class DetailListActivity extends Activity implements OnItemClickListener {
 	public final static String KEY_EQUIP_COLLECTION = "equip_collection_key";
 	public final static String KEY_SELECTED_EQUIP = "selected_equip_key";
@@ -29,6 +34,10 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	ArrayList<Equipment> equipments;
 	ListView equipmentListView;
 	Intent intent;
+	OrmDBHelper dbHelper;
+	Context context;
+	ProgressDialog loadDialog;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +51,10 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 					.getSerializable(
 							EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);	
 		}
-	
+		context = this;
+		
+		dbHelper = new OrmDBHelper(this);
+		
 		intent = new Intent(this, DetailActivity.class);
 
 		initView();
@@ -86,6 +98,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 			equipments = (ArrayList<Equipment>) data
 					.getSerializableExtra(DetailActivity.KEY_RESULT_INTENT_EQUIPMENT);
 			initView();
+			saveToDB();
 		} else {
 			Toast.makeText(
 					this,
@@ -123,7 +136,36 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	protected void onPause() {
 		super.onPause();
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra(KEY_FOR_TREEVIEW_RESULT, equipments);
 		setResult(RESULT_OK, resultIntent);
+	}
+	
+	
+	public void saveToDB() {
+		
+		loadDialog = new ProgressDialog(this);
+		loadDialog.setTitle("Please Wait...");
+		loadDialog.setMessage("Save Data to DB!");
+		loadDialog.setCanceledOnTouchOutside(false);
+		loadDialog.show();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+
+				for (Equipment saveItem : equipments) {
+					try {
+						dbHelper.getDbHelperEquip().updateEquipment(saveItem);
+					} catch (SQLException e) {
+						Log.e(EquipmentTreeViewListActivity.class.getName(),
+								e.getMessage());
+						Toast.makeText(context,
+								"Fehler beim speichern: " + e.getMessage(),
+								Toast.LENGTH_LONG).show();
+					}
+				}
+
+				loadDialog.dismiss();
+			}
+		}).start();
 	}
 }
