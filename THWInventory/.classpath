@@ -7,5 +7,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="lib" path="libs/ormlite-android-4.47.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/ormlite-core-4.47.jar"/>
+	<classpathentry kind="lib" path="libs/javacsv.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import proj.thw.app.R;
 import proj.thw.app.database.OrmDBHelper;
 import proj.thw.app.ie.CSVFile;
@@ -144,7 +143,7 @@ public class ImportDataActivity extends Activity {
 					switch (ft) {
 					case CSV:
 						newFilePackage.setImageFile(new CSVFile(currentFile,
-								"\";"));
+								";\""));
 						break;
 					case XML:
 						break;
@@ -157,7 +156,7 @@ public class ImportDataActivity extends Activity {
 					switch (ft) {
 					case CSV:
 						newFilePackage
-								.setDataFile(new CSVFile(currentFile, ";"));
+								.setDataFile(new CSVFile(currentFile, ";\""));
 						break;
 					case XML:
 						break;
