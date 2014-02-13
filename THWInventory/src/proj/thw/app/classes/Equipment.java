@@ -1,6 +1,7 @@
 package proj.thw.app.classes;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Vector;
 
 import com.j256.ormlite.field.DataType;
@@ -60,18 +61,45 @@ public class Equipment implements Serializable {
 	private Vector<Status> status;
 
 	@DatabaseField(dataType = DataType.SERIALIZABLE)
-	EquipmentImage equipImg;
+	private EquipmentImage equipImg;
+	
+	/*
+	@ForeignCollectionField
+	private Collection<Equipment> childs;
+	*/
+	
+	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
+	private Equipment parent;
+	
+	public Equipment getParent() {
+		return parent;
+	}
 
+	public void setParent(Equipment parent) {
+		this.parent = parent;
+	}
+
+	/*
+	public Collection<Equipment> getChilds() {
+		return childs;
+	}
+
+	public void setChilds(Collection<Equipment> childs) {
+		this.childs = childs;
+	}
+*/
 	public Equipment() {
-		status = new Vector<Status>();
-		equipImg = new EquipmentImage();
+		this.status = new Vector<Status>();
+		this.equipImg = new EquipmentImage();
 		this.id = -1; //init for Equal-Function
+		//this.childs = new Vector<Equipment>();
+		this.parent = null;
 	}
 
 	public Equipment(int layer, String location, String invNo, String equipNo,
 			String deviceNo, String description, int targetQuantity,
 			int actualQuantity, int stock, boolean foreignPart, Type type,
-			Vector<Status> status) {
+			Vector<Status> status, Collection<Equipment> childs) {
 		this.layer = layer;
 		this.location = location;
 		this.invNo = invNo;
