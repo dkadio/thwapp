@@ -47,12 +47,26 @@ public class DBHelperEquip {
 		return equipDao.queryForAll();
 	}
 	
+	public List<Equipment> selectEquipmentList(String whereClause, Object value) throws SQLException
+	{
+		QueryBuilder<Equipment,Integer> queryBuilder = equipDao.queryBuilder();
+		queryBuilder.where().eq(whereClause,value);
+		return queryBuilder.query();
+	}
+	
 	public Equipment selectEquipment(String whereClause, Object value) throws SQLException
 	{
 		QueryBuilder<Equipment,Integer> queryBuilder = equipDao.queryBuilder();
 		queryBuilder.where().eq(whereClause,value);
-		return queryBuilder.query().get(0);
+		List<Equipment> rslt = queryBuilder.query();
+		
+		if(rslt.size() > 0)
+			return rslt.get(0);
+		
+		return null;
 	}
+	
+	
 	
 	/*
 	public List<Equipment> selectEquipment(String whereClause, int value) throws SQLException

@@ -69,6 +69,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 	private TextView tvTreeSize;
 	private SearchView searchView;
 	private Context context;
+	int maxLayer = 1;
 
 	// private boolean isChange = false; fuer abfrage, ob gespeichert werden
 	// soll vor dem beenden
@@ -184,9 +185,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 						manager = new InMemoryTreeStateManager<Equipment>();
 						treeBuilder = new TreeBuilder<Equipment>(manager);
 						loadDialog.dismiss();
-						int maxLayer = 1;
 						
-						maxLayer = loadTreeFormObjectRecursive(rootItem);
+						if(rootItem != null)
+							loadTreeFormObjectRecursive(rootItem);
 						
 						/*for (Equipment loadedItem : equipmentList) {
 							if (!loadedItem
@@ -205,7 +206,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 						simpleAdapter = new ThwTreeViewAdapter(
 								EquipmentTreeViewListActivity.this, null,
-								manager, 6);
+								manager, maxLayer);
 						tvlEquipment.setAdapter(simpleAdapter);
 						tvlEquipment.setCollapsible(true);
 						manager.expandEverythingBelow(null);
@@ -218,16 +219,19 @@ public class EquipmentTreeViewListActivity extends Activity {
 		}).start();
 	}
 	
-	private int loadTreeFormObjectRecursive(Equipment parent)
+	private void loadTreeFormObjectRecursive(Equipment parent)
 	{	
-		int maxlayer = parent.getLayer();
-		treeBuilder.sequentiallyAddNextNode(parent,parent.getLayer());
+		if(maxLayer < parent.getLayer())
+			maxLayer = parent.getLayer();
+		
+		if(!parent.getType().equals(Equipment.Type.NOTYPE))
+			treeBuilder.sequentiallyAddNextNode(parent,parent.getLayer() -1);
+		
 		Iterator<Equipment> iterator = parent.getChilds().iterator();
 		while (iterator.hasNext()) {
 		 Equipment element = iterator.next();
-		 maxlayer =  loadTreeFormObjectRecursive(element);
+		 loadTreeFormObjectRecursive(element);
 		 }
-		return maxlayer;
 	}
 
 	@Override
