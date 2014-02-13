@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import proj.thw.app.R;
+import proj.thw.app.R.string;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.database.OrmDBHelper;
 import proj.thw.app.tools.Helper;
@@ -55,29 +56,44 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		if (getIntent().hasExtra(
 				EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST)) {
+			// String pathTotempFile =
+			// getIntent().getExtras().getString(EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
+			// equipments = (ArrayList<Equipment>)
+			// Helper.FileStreamToList(pathTotempFile);
 			try {
-				String pathTotempFile = getIntent().getExtras().getString(EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
-				equipments = (ArrayList<Equipment>) Helper.FileStreamToList(pathTotempFile);
-				context = this;
-
+				Log.d("mytag", String.valueOf(getIntent().getExtras().getInt(EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST)));
 				dbHelper = new OrmDBHelper(this);
-
-				intent = new Intent(this, DetailActivity.class);
-
-				initView();
-				TextView many = (TextView) findViewById(R.id.eintraege);
-				many.setText("Eingetragene elemente: "
-						+ String.valueOf(equipments.size()));
-				Log.d(MYTAG, "onCreate() --- ende");
-			} catch (ClassNotFoundException e) {
-				Log.e(this.getClass().getName(), e.getMessage());
-				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-			} catch (IOException e) {
-				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+				Equipment test = dbHelper
+						.getDbHelperEquip()
+						.selectEquipment(
+								"id",
+								getIntent()
+										.getExtras()
+										.getInt(EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST));
+				
+				equipments = (ArrayList<Equipment>) Helper
+						.equipmentToList(test);
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			/*equipments = (ArrayList<Equipment>) getIntent().getExtras()
-					.getSerializable(
-							EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);*/
+			context = this;
+
+			
+
+			intent = new Intent(this, DetailActivity.class);
+
+			initView();
+			TextView many = (TextView) findViewById(R.id.eintraege);
+			many.setText("Eingetragene elemente: "
+					+ String.valueOf(equipments.size()));
+			Log.d(MYTAG, "onCreate() --- ende");
+			/*
+			 * equipments = (ArrayList<Equipment>) getIntent().getExtras()
+			 * .getSerializable(
+			 * EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
+			 */
 			oldlist = equipments;
 		}
 	}
