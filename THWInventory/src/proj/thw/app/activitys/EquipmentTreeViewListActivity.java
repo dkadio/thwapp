@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import proj.thw.app.R;
@@ -27,6 +28,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.TransactionTooLargeException;
+import android.sax.RootElement;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -59,6 +61,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 	private ThwTreeViewAdapter simpleAdapter;
 	private ArrayList<Equipment> equipmentList;
+	Equipment rootItem;
 	private OrmDBHelper dbHelper;
 	private ProgressDialog loadDialog;
 	private ProgressBar pbLoadTreeView;
@@ -91,6 +94,13 @@ public class EquipmentTreeViewListActivity extends Activity {
 						final Equipment equipitem = (Equipment) view.getTag();
 						manager.expandEverythingBelow(equipitem);
 						pbLoadTreeView.setVisibility(View.VISIBLE);
+						
+						Intent in = new Intent(context,
+								DetailListActivity.class);
+						in.putExtra(KEY_EQUIPMENTLIST, equipitem.getId());
+						startActivityForResult(in,
+								KEY_REQUEST_DETAILLIST);
+						/*
 						new Thread(new Runnable() {
 
 							@Override
@@ -109,7 +119,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 									}
 								});
 							}
-						}).start();
+						}).start();*/
 					}
 				});
 		dbHelper = new OrmDBHelper(this);
@@ -161,8 +171,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 					equipmentList = (ArrayList<Equipment>) dbHelper
 							.getDbHelperEquip().selectAllEquipments();*/
 					
-					Equipment rootItem = (Equipment) dbHelper.getDbHelperEquip().selectEquipment("layer",0);
-					
+					rootItem = (Equipment) dbHelper.getDbHelperEquip().selectEquipment("layer",0);
 				} catch (SQLException e) {
 					Log.e(LOG, e.getMessage());
 				}
@@ -176,7 +185,10 @@ public class EquipmentTreeViewListActivity extends Activity {
 						treeBuilder = new TreeBuilder<Equipment>(manager);
 						loadDialog.dismiss();
 						int maxLayer = 1;
-						for (Equipment loadedItem : equipmentList) {
+						
+						maxLayer = loadTreeFormObjectRecursive(rootItem);
+						
+						/*for (Equipment loadedItem : equipmentList) {
 							if (!loadedItem
 									.getType()
 									.toString()
@@ -189,21 +201,33 @@ public class EquipmentTreeViewListActivity extends Activity {
 									maxLayer = loadedItem.getLayer();
 							}
 						}
+						*/
 
 						simpleAdapter = new ThwTreeViewAdapter(
 								EquipmentTreeViewListActivity.this, null,
-								manager, maxLayer);
+								manager, 6);
 						tvlEquipment.setAdapter(simpleAdapter);
 						tvlEquipment.setCollapsible(true);
 						manager.expandEverythingBelow(null);
-						tvTreeSize.setText(getResources().getString(
+					/*	tvTreeSize.setText(getResources().getString(
 								R.string.treesize)
-								+ ": " + equipmentList.size());
+								+ ": " + equipmentList.size());*/
 					}
 				});
 			}
 		}).start();
-
+	}
+	
+	private int loadTreeFormObjectRecursive(Equipment parent)
+	{	
+		int maxlayer = parent.getLayer();
+		treeBuilder.sequentiallyAddNextNode(parent,parent.getLayer());
+		Iterator<Equipment> iterator = parent.getChilds().iterator();
+		while (iterator.hasNext()) {
+		 Equipment element = iterator.next();
+		 maxlayer =  loadTreeFormObjectRecursive(element);
+		 }
+		return maxlayer;
 	}
 
 	@Override
