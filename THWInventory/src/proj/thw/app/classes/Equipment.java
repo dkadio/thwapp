@@ -6,11 +6,13 @@ import java.util.Vector;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "equipment")
 public class Equipment implements Serializable {
 
+	private final static int MAX_LEVEL = 7;
 	public static enum Type {
 		POS, SATZ, GWM, TEIL, NOTYPE
 	};
@@ -63,12 +65,10 @@ public class Equipment implements Serializable {
 	@DatabaseField(dataType = DataType.SERIALIZABLE)
 	private EquipmentImage equipImg;
 	
-	/*
-	@ForeignCollectionField
+	@ForeignCollectionField(eager=true, maxEagerLevel = MAX_LEVEL)
 	private Collection<Equipment> childs;
-	*/
 	
-	@DatabaseField(foreign = true,foreignAutoCreate = true,foreignAutoRefresh = true)
+	@DatabaseField(foreign = true,foreignAutoCreate=true,foreignAutoRefresh = true)
 	private Equipment parent;
 	
 	public Equipment getParent() {
@@ -79,7 +79,7 @@ public class Equipment implements Serializable {
 		this.parent = parent;
 	}
 
-	/*
+
 	public Collection<Equipment> getChilds() {
 		return childs;
 	}
@@ -87,12 +87,12 @@ public class Equipment implements Serializable {
 	public void setChilds(Collection<Equipment> childs) {
 		this.childs = childs;
 	}
-*/
+
 	public Equipment() {
 		this.status = new Vector<Status>();
 		this.equipImg = new EquipmentImage();
 		this.id = -1; //init for Equal-Function
-		//this.childs = new Vector<Equipment>();
+		this.childs = new Vector<Equipment>();
 		this.parent = null;
 	}
 

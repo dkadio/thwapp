@@ -7,6 +7,7 @@ import proj.thw.app.classes.Equipment;
 import proj.thw.app.classes.EquipmentImage;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.TableUtils;
 
 public class DBHelperEquip {
@@ -45,4 +46,26 @@ public class DBHelperEquip {
 	{
 		return equipDao.queryForAll();
 	}
+	
+	public Equipment selectEquipment(String whereClause, Object value) throws SQLException
+	{
+		QueryBuilder<Equipment,Integer> queryBuilder = equipDao.queryBuilder();
+		queryBuilder.where().eq(whereClause,value);
+		return queryBuilder.query().get(0);
+	}
+	
+	/*
+	public List<Equipment> selectEquipment(String whereClause, int value) throws SQLException
+	{
+		QueryBuilder<Equipment,Integer> queryBuilder = equipDao.queryBuilder();
+		queryBuilder.where().eq(whereClause,value);
+		return queryBuilder.query();
+	}*/
+	
+	public void refresh(Equipment refreshEquip) throws SQLException
+	{
+		equipDao.refresh(refreshEquip);
+	}
+	
+	
 }

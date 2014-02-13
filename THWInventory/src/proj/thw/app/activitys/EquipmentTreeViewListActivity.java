@@ -157,9 +157,12 @@ public class EquipmentTreeViewListActivity extends Activity {
 			@Override
 			public void run() {
 				try {
-
+/*
 					equipmentList = (ArrayList<Equipment>) dbHelper
-							.getDbHelperEquip().selectAllEquipments();
+							.getDbHelperEquip().selectAllEquipments();*/
+					
+					Equipment rootItem = (Equipment) dbHelper.getDbHelperEquip().selectEquipment("layer",0);
+					
 				} catch (SQLException e) {
 					Log.e(LOG, e.getMessage());
 				}

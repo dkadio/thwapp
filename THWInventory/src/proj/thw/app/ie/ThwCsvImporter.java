@@ -40,7 +40,20 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 	static final String COLUMN_IMAGE = "Image";
 
 	static int rowCount = 0;
-
+	int headLayer = 0;
+	int headOE = 0;
+	int headType = 0;
+	int headFB = 0;
+	int headQuantity = 0;
+	int headStock = 0;
+	int headActualQuantity = 0;
+	int headDescription = 0;
+	int headEquipNo = 0;
+	int headInvNo = 0;
+	int headDeviceNo = 0;
+	int headColumnStatus = 0;
+	CsvReader reader;
+	Vector<Equipment> CsvAsList;
 	private ProgressDialog asyncDialog;
 
 	private OrmDBHelper dbHelper;
@@ -124,28 +137,31 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 		try {
 			fis = new FileInputStream(fileToImport.getDataFile()
 					.getFileToParse());
-			CsvReader reader = new CsvReader(fis, ';', set);
+			reader = new CsvReader(fis, ';', set);
 			reader.readHeaders();
 
 			boolean skipRecord = false;
 			publishProgress("initialisiere Header...");
-			int headLayer = reader.getIndex(COLUMN_LAYER);
-			int headOE = reader.getIndex(COLUMN_OE);
-			int headType = reader.getIndex(COLUMN_TYPE);
-			int headFB = reader.getIndex(COLUMN_FB);
-			int headQuantity = reader.getIndex(COLUMN_QUANTITY);
-			int headStock = reader.getIndex(COLUMN_STOCK);
-			int headActualQuantity = reader.getIndex(COLUMN_ACTUALQUANTITY);
-			int headDescription = reader.getIndex(COLUMN_DESCRIPTION);
-			int headEquipNo = reader.getIndex(COLUMN_EQUIP_NO);
-			int headInvNo = reader.getIndex(COLUMN_INV_NO);
-			int headDeviceNo = reader.getIndex(COLUMN_DEVICE_NO);
-			int headColumnStatus = reader.getIndex(COLUMN_STATUS);
+			headLayer = reader.getIndex(COLUMN_LAYER);
+			headOE = reader.getIndex(COLUMN_OE);
+			headType = reader.getIndex(COLUMN_TYPE);
+			headFB = reader.getIndex(COLUMN_FB);
+			headQuantity = reader.getIndex(COLUMN_QUANTITY);
+			headStock = reader.getIndex(COLUMN_STOCK);
+			headActualQuantity = reader.getIndex(COLUMN_ACTUALQUANTITY);
+			headDescription = reader.getIndex(COLUMN_DESCRIPTION);
+			headEquipNo = reader.getIndex(COLUMN_EQUIP_NO);
+			headInvNo = reader.getIndex(COLUMN_INV_NO);
+			headDeviceNo = reader.getIndex(COLUMN_DEVICE_NO);
+			headColumnStatus = reader.getIndex(COLUMN_STATUS);
 
+			// Equipment lastItem = loadNextElement(null);
+			// CsvAsList = new Vector<Equipment>();
 			Equipment lastItem = null;
+			Equipment head = null;
 			while (reader.readRecord()) {
 				if (reader.get(headLayer).trim().equals("")) {
-					skipRecord = true;
+					skipRecord = false;
 
 				} else {
 					skipRecord = false;
@@ -181,21 +197,46 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 					currentData.setDeviceNo(strDeviceNo);
 					currentData.setStatus(getStatusFromString(strStatus));
 
-					if (lastItem == null) {
+					// CsvAsList.add(currentData);
+
+					// head wurde gefunden... Initialisiere ihn...
+					if (head == null) {
 						currentData.setLayer(0);
 						currentData.setParent(null);
-						lastItem = currentData;
-					}
+						head = currentData;
+						lastItem = head;
+					} else {
 
-					int currentLayer = currentData.getLayer();
-					dbHelper.getDbHelperEquip().insertEquipment(currentData);
-					if (currentLayer > lastItem.getLayer()) {
-						currentData.setParent(lastItem);
+						if (currentData.getLayer() > lastItem.getLayer()) {
+							currentData.setParent(lastItem);
+							lastItem.getChilds().add(currentData);
+						} else if (currentData.getLayer() == lastItem
+								.getLayer()) {
+							currentData.setParent(lastItem.getParent());
+							lastItem.getParent().getChilds().add(currentData);
+						} else if (currentData.getLayer() < lastItem.getLayer()) {
+							Equipment nextSibling = lastItem;
+							while (currentData.getLayer() != nextSibling
+									.getLayer()) {
+								nextSibling = nextSibling.getParent();
+							}
+							currentData.setParent(nextSibling.getParent());
+							nextSibling.getParent().getChilds()
+									.add(currentData);
+						}
+						
 					}
-
 					lastItem = currentData;
+					dbHelper.getDbHelperEquip().createOrUpdateEquipment(currentData);
 				}
 			}
+			
+			
+			//save head mit alen childs to DB
+			//publishProgress("save Data to DB...");
+			//dbHelper.getDbHelperEquip().createOrUpdateEquipment(head);
+			
+			
 		} catch (Exception ex) {
 			try {
 				fis.close();
@@ -207,6 +248,65 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 		return true;
 	}
 
+	/*
+	 * private void ListToTree() { Equipment head = CsvAsList.get(0); head =
+	 * loadNextElement(head); }
+	 * 
+	 * private int index = 0; private Equipment loadNextElement(Equipment
+	 * parent) { index++; if(index < CsvAsList.size()) { if(parent.getLayer() !=
+	 * 0) { parent.getChilds().add(CsvAsList.get(index)); }
+	 * 
+	 * 
+	 * if(CsvAsList.get(index).getLayer() == parent.getLayer()) {
+	 * loadNextElement(parent); } else { loadNextElement(CsvAsList.get(index));
+	 * } }
+	 * 
+	 * return parent; }
+	 */
+
+	/*
+	 * private Equipment loadNextElement(Equipment parent) throws IOException {
+	 * reader.readRecord();
+	 * 
+	 * publishProgress("load RowNr:  " + rowCount++); String strLayer =
+	 * reader.get(headLayer).trim(); String strOE = reader.get(headOE).trim();
+	 * String strType = reader.get(headType).trim(); String strFB =
+	 * reader.get(headFB).trim(); String strQuantity =
+	 * reader.get(headQuantity).trim(); String strStock =
+	 * reader.get(headStock).trim(); String strActualQuantity =
+	 * reader.get(headActualQuantity) .trim(); String strDescription =
+	 * reader.get(headDescription).trim(); String strEquipNo =
+	 * reader.get(headEquipNo).trim(); String strInvNo =
+	 * reader.get(headInvNo).trim(); String strDeviceNo =
+	 * reader.get(headDeviceNo).trim(); String strStatus =
+	 * reader.get(headColumnStatus).trim();
+	 * 
+	 * Equipment currentData = new Equipment();
+	 * currentData.setLayer(parseInt(strLayer)); currentData.setLocation(strOE);
+	 * currentData.setType(getTypeFromString(strType));
+	 * currentData.setForeignPart(parseBool(strFB));
+	 * currentData.setTargetQuantity(parseInt(strActualQuantity));
+	 * currentData.setStock(parseInt(strStock));
+	 * currentData.setActualQuantity(parseInt(strQuantity));
+	 * currentData.setDescription(strDescription);
+	 * currentData.setEquipNo(strEquipNo); currentData.setInvNo(strInvNo);
+	 * currentData.setDeviceNo(strDeviceNo);
+	 * currentData.setStatus(getStatusFromString(strStatus));
+	 * 
+	 * if(parent == null) { parent = currentData; parent.setLayer(0); }
+	 * 
+	 * 
+	 * int currentLayer = currentData.getLayer();
+	 * 
+	 * if(currentLayer != 0) parent.getChilds().add(currentData);
+	 * 
+	 * if(currentLayer == parent.getLayer()) { loadNextElement(parent); } else {
+	 * loadNextElement(currentData); }
+	 * 
+	 * if(currentLayer == 0) return parent;
+	 * 
+	 * return null; }
+	 */
 	private String getStringValue(String rowValue) {
 		return rowValue.replace('"', ' ').trim();
 	}
