@@ -39,10 +39,10 @@
     </EditText>
 
     <Button
-        android:id="@+id/btnimport"
+        android:id="@+id/btnexport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickImport"
-        android:text="@string/save_import" />
+        android:text="@string/save_import" 
+        android:onClick="onClickExport"/>
 
 </LinearLayout>
