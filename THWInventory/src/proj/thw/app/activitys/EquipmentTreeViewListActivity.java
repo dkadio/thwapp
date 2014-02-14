@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
 import proj.thw.app.R;
 import proj.thw.app.adapters.ThwTreeViewAdapter;
 import proj.thw.app.classes.Equipment;
@@ -27,8 +25,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.TransactionTooLargeException;
-import android.sax.RootElement;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -43,7 +39,6 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//TODO rogessdialog cancel bei backbutton click
 public class EquipmentTreeViewListActivity extends Activity {
 
 	public static final int KEY_REQUEST_IMPORT = 4711;
@@ -55,7 +50,6 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 	private TreeViewList tvlEquipment;
 
-	// private static final int LEVEL_NUMBER = 6;
 	private TreeStateManager<Equipment> manager = new InMemoryTreeStateManager<Equipment>();
 	private TreeBuilder<Equipment> treeBuilder;
 
@@ -70,9 +64,6 @@ public class EquipmentTreeViewListActivity extends Activity {
 	private SearchView searchView;
 	private Context context;
 	int maxLayer = 1;
-
-	// private boolean isChange = false; fuer abfrage, ob gespeichert werden
-	// soll vor dem beenden
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -101,34 +92,15 @@ public class EquipmentTreeViewListActivity extends Activity {
 						in.putExtra(KEY_EQUIPMENTLIST, equipitem.getId());
 						startActivityForResult(in,
 								KEY_REQUEST_DETAILLIST);
-						/*
-						new Thread(new Runnable() {
-
-							@Override
-							public void run() {
-
-								ArrayList<Equipment> selectedList = new ArrayList<Equipment>(
-										manager.getAbsoluteChildren(equipitem));
-									
-								callDetailListActivity(selectedList);
-								runOnUiThread(new Runnable() {
-
-									@Override
-									public void run() {
-										pbLoadTreeView
-												.setVisibility(View.INVISIBLE);
-									}
-								});
-							}
-						}).start();*/
+						
 					}
 				});
 		dbHelper = new OrmDBHelper(this);
-
 		init();
 
 	}
 	
+	@Deprecated	
 	private void callDetailListActivity(List<Equipment> callList)
 	{
 		//uebergabe ueber eine File, da uebergabe auf 1 MB
@@ -168,20 +140,16 @@ public class EquipmentTreeViewListActivity extends Activity {
 			@Override
 			public void run() {
 				try {
-/*
-					equipmentList = (ArrayList<Equipment>) dbHelper
-							.getDbHelperEquip().selectAllEquipments();*/
 					
+					//selekieter komplett aufgeloesstes rootItem...
 					rootItem = (Equipment) dbHelper.getDbHelperEquip().selectEquipment("layer",0);
 				} catch (SQLException e) {
 					Log.e(LOG, e.getMessage());
 				}
 
 				runOnUiThread(new Runnable() {
-
 					@Override
 					public void run() {
-
 						manager = new InMemoryTreeStateManager<Equipment>();
 						treeBuilder = new TreeBuilder<Equipment>(manager);
 						loadDialog.dismiss();
@@ -189,30 +157,14 @@ public class EquipmentTreeViewListActivity extends Activity {
 						if(rootItem != null)
 							loadTreeFormObjectRecursive(rootItem);
 						
-						/*for (Equipment loadedItem : equipmentList) {
-							if (!loadedItem
-									.getType()
-									.toString()
-									.toUpperCase()
-									.equals(Equipment.Type.NOTYPE.toString()
-											.toUpperCase())) {
-								treeBuilder.sequentiallyAddNextNode(loadedItem,
-										loadedItem.getLayer() - 1);
-								if (maxLayer < loadedItem.getLayer())
-									maxLayer = loadedItem.getLayer();
-							}
-						}
-						*/
-
 						simpleAdapter = new ThwTreeViewAdapter(
 								EquipmentTreeViewListActivity.this, null,
 								manager, maxLayer);
 						tvlEquipment.setAdapter(simpleAdapter);
 						tvlEquipment.setCollapsible(true);
 						manager.expandEverythingBelow(null);
-					/*	tvTreeSize.setText(getResources().getString(
-								R.string.treesize)
-								+ ": " + equipmentList.size());*/
+						tvTreeSize.setText(simpleAdapter.getCount());
+
 					}
 				});
 			}
@@ -257,16 +209,16 @@ public class EquipmentTreeViewListActivity extends Activity {
 					manager.expandEverythingBelow(null);
 					getWindow().setSoftInputMode(
 							WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+					
+					
 					tvlEquipment.setSelection(equipmentList.indexOf(searchList
 							.get(0)) - 1);
-					// tvlEquipment.getChildAt(equipmentList.indexOf(searchList.get(0))).setBackgroundColor(Color.GREEN);
 				}
 				return false;
 			}
 
 			@Override
 			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 		});
@@ -355,6 +307,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 	}
 
+	/**
+	 * Urspruengliche Funktion um Eintrgaege in DB zu speichern. Uebernimmt jetzt DetailActivity
+	 */
 	@Deprecated
 	public void saveToDB() {
 		loadDialog = new ProgressDialog(this);
@@ -384,6 +339,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 		}).start();
 	}
 
+	/**
+	 * Funktion, die eine Abfrage zur Verfuegung stellt, beendet wird!
+	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode != KeyEvent.KEYCODE_BACK)

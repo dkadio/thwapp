@@ -15,6 +15,7 @@ import proj.thw.app.database.OrmDBHelper;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -38,6 +39,8 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 	static final String COLUMN_DEVICE_NO = "Gerätenr.";
 	static final String COLUMN_STATUS = "Status";
 	static final String COLUMN_IMAGE = "Image";
+	static final String COLUMN_ID = "Id";
+	static final String COLUMN_STREAM = "Stream";
 
 	static int rowCount = 0;
 	int headLayer = 0;
@@ -52,7 +55,11 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 	int headInvNo = 0;
 	int headDeviceNo = 0;
 	int headColumnStatus = 0;
-	CsvReader reader;
+	int headColumnImage = 0;
+	int headId = 0;
+	int headImageStream = 0;
+	CsvReader reader = null;
+	CsvReader readerImage = null;
 	Vector<Equipment> CsvAsList;
 	private ProgressDialog asyncDialog;
 
@@ -154,20 +161,24 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 			headInvNo = reader.getIndex(COLUMN_INV_NO);
 			headDeviceNo = reader.getIndex(COLUMN_DEVICE_NO);
 			headColumnStatus = reader.getIndex(COLUMN_STATUS);
+			headColumnImage = reader.getIndex(COLUMN_IMAGE);
+			
+			Boolean hasImage = false;
+			if(headColumnImage > -1)
+			{
+				readerImage = new CsvReader(new FileInputStream(fileToImport.getImageFile().getFileToParse()),';', set);
+				readerImage.readHeaders();
+				headId = readerImage.getIndex(COLUMN_ID);
+				headImageStream = readerImage.getIndex(COLUMN_STREAM);
+				hasImage = true;
+			}
 
 			// Equipment lastItem = loadNextElement(null);
 			// CsvAsList = new Vector<Equipment>();
 			Equipment lastItem = null;
 			Equipment head = null;
 			while (reader.readRecord()) {
-				if (reader.get(headLayer).trim().equals("")) {
-					skipRecord = false;
 
-				} else {
-					skipRecord = false;
-				}
-
-				if (!skipRecord) {
 					publishProgress("load RowNr:  " + rowCount++);
 					String strLayer = reader.get(headLayer).trim();
 					String strOE = reader.get(headOE).trim();
@@ -182,6 +193,13 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 					String strInvNo = reader.get(headInvNo).trim();
 					String strDeviceNo = reader.get(headDeviceNo).trim();
 					String strStatus = reader.get(headColumnStatus).trim();
+					
+					String strImageId = "";
+					if(hasImage)
+					{
+						strImageId = reader.get(headColumnImage).trim();
+					}
+					
 
 					Equipment currentData = new Equipment();
 					currentData.setLayer(parseInt(strLayer));
@@ -196,6 +214,22 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 					currentData.setInvNo(strInvNo);
 					currentData.setDeviceNo(strDeviceNo);
 					currentData.setStatus(getStatusFromString(strStatus));
+					
+					if(!strImageId.isEmpty())
+					{
+						while(readerImage.readRecord())
+						{
+							if(readerImage.get(headId).equals(String.valueOf(strImageId)))
+							{
+								String strStream = readerImage.get(headImageStream);
+								EquipmentImage currentImage = new EquipmentImage();
+								byte[] imgBytes = Base64.decode(strStream, 0);
+								currentImage.setImgBytes(imgBytes);
+								currentData.setEquipImg(currentImage);
+								break;
+							}
+						}
+					}
 
 					// CsvAsList.add(currentData);
 
@@ -228,7 +262,6 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 					}
 					lastItem = currentData;
 					dbHelper.getDbHelperEquip().createOrUpdateEquipment(currentData);
-				}
 			}
 			
 			

@@ -1,8 +1,12 @@
 package proj.thw.app.ie;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,12 +15,17 @@ import java.util.List;
 
 import com.csvreader.CsvWriter;
 
+import proj.thw.app.activitys.ExportDataActivity;
+import proj.thw.app.activitys.ImportDataActivity;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.database.OrmDBHelper;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -49,19 +58,21 @@ public class ThwCsvExporter extends AsyncTask<String,String, FileIE>{
 	private CsvWriter csvWriterImage;
 	
 	private static final char SEPERATOR = ';'; 
+	ExportDataActivity callActivity;
 	
-	public ThwCsvExporter(Context context,OrmDBHelper dbHelper, String fileName)
+	public ThwCsvExporter(ExportDataActivity callActivity,OrmDBHelper dbHelper, String fileName)
 	{
-		this.context = context;
 		this.fileName = fileName;
 		this.dbHelper = dbHelper;
+		this.callActivity = callActivity;
 	}
 	
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
 		
-		asyncDialog = new ProgressDialog(context);
+		asyncDialog = new ProgressDialog(callActivity);
+		asyncDialog.setCanceledOnTouchOutside(false);
 		asyncDialog.setTitle("Please Wait...");
 		asyncDialog.show();
 		
@@ -70,13 +81,8 @@ public class ThwCsvExporter extends AsyncTask<String,String, FileIE>{
 	@Override
 	protected void onPostExecute(FileIE result) {
 		super.onPostExecute(result);
-		asyncDialog.dismiss();
-		
-		if(result != null)
-		{
-			
-		}
-		
+		asyncDialog.dismiss();	
+		callActivity.finish();
 	}
 	
 	@Override
@@ -102,24 +108,31 @@ public class ThwCsvExporter extends AsyncTask<String,String, FileIE>{
 			String folderPath = params[0];
 			publishProgress("erstelle Ordner...");
 			File newFolder = new File(folderPath + File.separator + fileName);
-			if(newFolder.exists())
+			String path ="";
+			if(!newFolder.exists())
 			{
-				SimpleDateFormat formatter = new SimpleDateFormat( "yyyyMMddHHmmss "); 
-				fileName += formatter.format(new Date());
-				newFolder = new File(folderPath + File.separator + fileName);
+				newFolder.mkdir();
+				path = newFolder.getAbsolutePath();
 			}
-			newFolder.mkdir();
+			else
+			{
+				SimpleDateFormat formatter = new SimpleDateFormat("HHmmss"); 
+				fileName += formatter.format(new Date());
+				File newFolderSecond = new File(folderPath + File.separator + fileName);
+				newFolderSecond.mkdir();
+				path = newFolderSecond.getAbsolutePath();
+			}
 			
-			csvWriterData = new CsvWriter(newFolder.getAbsolutePath() + File.separator + fileName + FILE_TYPE);
+			
+			csvWriterData = new CsvWriter(path + File.separator + fileName + FILE_TYPE);
 			csvWriterData.setDelimiter(SEPERATOR);
 			
-			csvWriterImage = new CsvWriter(newFolder.getAbsolutePath() + File.separator + COLUMN_IMAGE + FILE_TYPE);
+			csvWriterImage = new CsvWriter(path + File.separator + COLUMN_IMAGE + FILE_TYPE);
 			csvWriterImage.setDelimiter(SEPERATOR);
 			
-			publishProgress("Read Data from DB...");
+			publishProgress("Export Data...");
 			Equipment rootItem = dbHelper.getDbHelperEquip().selectEquipment("layer", 0);
-			
-			publishProgress("Write Data to File....");
+
 			writeHeader();
 			writeNextLine(rootItem);
 			
@@ -156,8 +169,8 @@ public class ThwCsvExporter extends AsyncTask<String,String, FileIE>{
 		publishProgress("write Item: " + saveItem.getEquipNo());
 		String strLayer 			= String.valueOf(saveItem.getLayer());
 		String strLoc 				= saveItem.getLocation();
-		String strType			 	= saveItem.getType().toString();
-		String strFb 				= String.valueOf(saveItem.isForeignPart());
+		String strType			 	= getTypeString(saveItem.getType());
+		String strFb 				= getFBString(saveItem.isForeignPart());
 		String strQuantity 			= String.valueOf(saveItem.getTargetQuantity());
 		String strStock				= String.valueOf(saveItem.getStock());
 		String strActQuantity		= String.valueOf(saveItem.getActualQuantity());
@@ -165,22 +178,24 @@ public class ThwCsvExporter extends AsyncTask<String,String, FileIE>{
 		String strEquipNo			= saveItem.getEquipNo();
 		String strInvNo				= saveItem.getInvNo();
 		String strDeviceNo			= saveItem.getDeviceNo();
-		String strStatus			= saveItem.getStatus().toString();
+		String strStatus			= getStatusString(saveItem.getStatus().toString());
 		
-		
-		String[] lineData = {strLayer, strLoc , strType, strFb, strQuantity,
-				strStock, strActQuantity,strDesc, strEquipNo,
-				strInvNo, strDeviceNo, strStatus}; 
-		csvWriterData.writeRecord(lineData);
-		
+		String strId = "";
 		if(saveItem.getEquipImg().getImg() != null)
 		{
-			String strId 				= String.valueOf(saveItem.getId());
-			String strStream 			= saveItem.getEquipImg().getImgBytes().toString();
+			strId 				= String.valueOf(saveItem.getId());
+			
+			String test = Base64.encodeToString(saveItem.getEquipImg().getImgBytes(), 0);
+			String strStream 	= test;//saveItem.getEquipImg().getImgBytes().toString();
 			
 			String[] lineImage = {strId, strStream}; 
 			csvWriterImage.writeRecord(lineImage);
 		}
+		
+		String[] lineData = {strLayer, strLoc , strType, strFb, strQuantity,
+				strStock, strActQuantity,strDesc, strEquipNo,
+				strInvNo, strDeviceNo, strStatus, strId}; 
+		csvWriterData.writeRecord(lineData);
 		
 	}
 	
@@ -199,12 +214,35 @@ public class ThwCsvExporter extends AsyncTask<String,String, FileIE>{
 	
 	private String getDesciptionString(Equipment equip)
 	{
-		String desc = "";
+		StringBuffer strbuffer = new StringBuffer(equip.getDescription());
 		for(int i = 0; i < equip.getLayer(); i++)
 		{
-			desc += " ";
+			strbuffer.insert(0, ' ');
 		}
 		
-		return desc += equip.getDescription();
+		return strbuffer.toString();
+	}
+	
+	private String getFBString(boolean fe)
+	{
+		if(fe){
+			return COLUMN_FB;
+		}
+		return "";
+	}
+	
+	private String getStatusString(String status)
+	{
+		status = status.replace('[',' ');
+		status = status.replace(']',' ');
+		return status.trim();
+	}
+	
+	private String getTypeString(Equipment.Type type)
+	{
+		if(type.equals(Equipment.Type.NOTYPE))
+			return "";
+		
+		return type.toString();
 	}
 }

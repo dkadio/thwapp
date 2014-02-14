@@ -26,7 +26,7 @@ import android.widget.Spinner;
 
 public class ImportDataActivity extends Activity {
 
-	private static final String IMAGE_FILE_NAME = "EquipmentImage";
+	private static final String IMAGE_FILE_NAME = "Image";
 	private OrmDBHelper dbHelper;
 
 	private Spinner spTypeFile;
