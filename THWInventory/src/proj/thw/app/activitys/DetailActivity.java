@@ -1,4 +1,3 @@
-//TODO den user vor nex oder prev darauf aufmerksam machen das noch was fehlt per Alertdialog
 //TODO bild auf imageview zu schneiden und rotieren funktion implementieren
 package proj.thw.app.activitys;
 
@@ -45,6 +44,12 @@ import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * DetailActivity zum maniplieren der Equipments
+ * 
+ * @author deniz
+ * 
+ */
 public class DetailActivity extends Activity {
 	static final String KEY_SAVE_EQUIPMENTS = "key.to.save.the.equipments";
 	static final String KEY_SAVE_CURRENT_INDEX = "ke.to.save.the.current.index";
@@ -55,7 +60,7 @@ public class DetailActivity extends Activity {
 
 	static final String MYTAG = "DetailActivity.class";
 	protected static final int KEY_RSLT_ERROR = -1;
-	
+
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 2341;
 	private Uri fileUri;
 
@@ -90,7 +95,7 @@ public class DetailActivity extends Activity {
 		if (getIntent().hasExtra(DetailListActivity.KEY_EQUIP_COLLECTION))
 			getintentContent();
 		// setz die values des ersten items
-		if(equipments != null){
+		if (equipments != null) {
 			setValues();
 			// init der listener
 			setListener();
@@ -98,6 +103,9 @@ public class DetailActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Setzt die Listener der versch. Views
+	 */
 	private void setListener() {
 		Log.d(MYTAG, "setlistener");
 		etStatus.setOnClickListener(new OnClickListener() {
@@ -134,6 +142,11 @@ public class DetailActivity extends Activity {
 
 	}
 
+	/**
+	 * Versteckt das Keyboard bei Anwahl des Status Edittext
+	 * 
+	 * @param activity
+	 */
 	public static void hideSoftKeyboard(Activity activity) {
 		InputMethodManager inputMethodManager = (InputMethodManager) activity
 				.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -141,6 +154,9 @@ public class DetailActivity extends Activity {
 				.getWindowToken(), 0);
 	}
 
+	/**
+	 * Setzt die Werte der Popuplist der Statusliste
+	 */
 	private void setPopUpList() {
 		Log.d(MYTAG, "setPopUpList");
 		popuplist = new ListPopupWindow(this);
@@ -180,6 +196,9 @@ public class DetailActivity extends Activity {
 
 	}
 
+	/**
+	 * setzt die geaenderten Werte der Equipments
+	 */
 	private void setValues() {
 		Log.d(MYTAG, "setValues");
 
@@ -214,13 +233,18 @@ public class DetailActivity extends Activity {
 
 	}
 
+	/**
+	 * Holt sich den Content des Intents ab der die App gestartet hat.
+	 */
 	private void getintentContent() {
 		Log.d(MYTAG, "getintentContent");
-		
-		String tempFilePath = getIntent().getExtras().getString(DetailListActivity.KEY_EQUIP_COLLECTION);
-		
+
+		String tempFilePath = getIntent().getExtras().getString(
+				DetailListActivity.KEY_EQUIP_COLLECTION);
+
 		try {
-			equipments = (ArrayList<Equipment>) Helper.FileStreamToList(tempFilePath);
+			equipments = (ArrayList<Equipment>) Helper
+					.FileStreamToList(tempFilePath);
 			Log.d(MYTAG, "Array erhalten: ");
 			selectedItem = getIntent().getExtras().getInt(
 					DetailListActivity.KEY_SELECTED_EQUIP);
@@ -232,10 +256,15 @@ public class DetailActivity extends Activity {
 			Log.e(this.getClass().getName(), e.getMessage());
 			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
-		/*equipments = (ArrayList<Equipment>) getIntent().getExtras()
-				.getSerializable(DetailListActivity.KEY_EQUIP_COLLECTION);*/
+		/*
+		 * equipments = (ArrayList<Equipment>) getIntent().getExtras()
+		 * .getSerializable(DetailListActivity.KEY_EQUIP_COLLECTION);
+		 */
 	}
 
+	/**
+	 * initialisiert die Views
+	 */
 	private void init() {
 		Log.d(MYTAG, "init()");
 
@@ -265,7 +294,7 @@ public class DetailActivity extends Activity {
 	}
 
 	/**
-	 * Set up the {@link android.app.ActionBar}.
+	 * enable die Actionbar
 	 */
 	private void setupActionBar() {
 
@@ -280,6 +309,10 @@ public class DetailActivity extends Activity {
 		return true;
 	}
 
+	/**
+	 * laedt das naechste Item aus der Liste und setzt die Werte entsprechend
+	 * @param v
+	 */
 	public void nextItem(View v) {
 		Log.d(MYTAG, "nextitem");
 		saveValues();
@@ -298,6 +331,10 @@ public class DetailActivity extends Activity {
 
 	}
 
+	/**
+	 * laed den Vorgaenger, wenns deinen einen gibt, aus der liste und setzt seine werte
+	 * @param v
+	 */
 	public void previousItem(View v) {
 		Log.d(MYTAG, "previous item");
 
@@ -309,6 +346,9 @@ public class DetailActivity extends Activity {
 		}
 	}
 
+	/**
+	 * speichert die eingegebenen Werte des Equipments
+	 */
 	private void saveValues() {
 		Log.d(MYTAG, "savevalues()");
 
@@ -326,6 +366,10 @@ public class DetailActivity extends Activity {
 
 	}
 
+	/**
+	 * Inkrementiert den Wert von Ist um 1 
+	 * @param v
+	 */
 	public void plusCount(View v) {
 		// TODO darf das groeser werden als Soll?
 		// if(Integer.valueOf(tvIst.getText().toString()) <
@@ -335,12 +379,20 @@ public class DetailActivity extends Activity {
 
 	}
 
+	/**
+	 * Inkrementiert den Wert von Ist um -1 
+	 * @param v
+	 */
 	public void minusCount(View v) {
 		if (Integer.valueOf(tvIst.getText().toString()) > 0)
 			tvIst.setText(String.valueOf(Integer.valueOf(tvIst.getText()
 					.toString()) - 1));
 	}
 
+	/**
+	 * stopt die Activity und kehrt zurueck zur view die sie gestartet hat. 
+	 * @param v
+	 */
 	public void stop(View v) {
 		Log.d(MYTAG, "stop");
 
@@ -349,30 +401,31 @@ public class DetailActivity extends Activity {
 		returnResultIntent();
 	}
 
+	/**
+	 * schreibt die daten in ein tempfile und beendet die activity
+	 */
 	private void returnResultIntent() {
 		Log.d(MYTAG, "returnresultintent");
 		saveValues();
 		Intent resultintent = new Intent();
-		
-		String tempFolderPath = Environment.getExternalStorageDirectory() 
-				+ File.separator 
-				+ getResources().getString(R.string.app_name) 
-				+ File.separator 
-				+ SplashScreenActivity.FOLDER_TEMP;
-		
+
+		String tempFolderPath = Environment.getExternalStorageDirectory()
+				+ File.separator + getResources().getString(R.string.app_name)
+				+ File.separator + SplashScreenActivity.FOLDER_TEMP;
+
 		File tempFile;
-			try {
-				tempFile = Helper.ListToFileStream(equipments,tempFolderPath);
-				resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT, tempFile.getAbsolutePath());
-				setResult(RESULT_OK, resultintent);
-				finish();
-				Log.d(MYTAG, "returnintent --- ende");
-			} catch (IOException e) {
-				setResult(KEY_RSLT_ERROR, resultintent);
-				finish();
-			}
-		
-		
+		try {
+			tempFile = Helper.ListToFileStream(equipments, tempFolderPath);
+			resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT,
+					tempFile.getAbsolutePath());
+			setResult(RESULT_OK, resultintent);
+			finish();
+			Log.d(MYTAG, "returnintent --- ende");
+		} catch (IOException e) {
+			setResult(KEY_RSLT_ERROR, resultintent);
+			finish();
+		}
+
 	}
 
 	@Override
@@ -383,7 +436,10 @@ public class DetailActivity extends Activity {
 		setResult(RESULT_OK, resultintent);
 		super.onPause();
 	}
-	
+
+	/**
+	 * abfrage wenn kamera app fertig ist. 
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d(MYTAG, "onactivityresult");
@@ -405,6 +461,9 @@ public class DetailActivity extends Activity {
 		}
 	}
 
+	/**
+	 * setzt das bild das gemacht worden ist in die imageview, verkleinert es und speichert es im equipment
+	 */
 	private void setImage() {
 		// les ein image aus dem Ordner Temp und loesche es dannach
 		Log.d(MYTAG, "setimage()");
@@ -470,13 +529,21 @@ public class DetailActivity extends Activity {
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final int MEDIA_TYPE_VIDEO = 2;
 
-	/** Create a file Uri for saving an image or video */
+	/**
+	 * erstellt eine Uri aus dem Mediafile
+	 * @param type
+	 * @return
+	 */
 	private Uri getOutputMediaFileUri(int type) {
 		Log.d(MYTAG, "create mediafileuri()");
 		return Uri.fromFile(getOutputMediaFile(type));
 	}
 
-	/** Create a File for saving an image or video */
+	/**
+	 * Baut ein File mit name usw zusammen fuer die Aufnahme von einem Bild gefunden auf der Developer Seite
+	 * @param type
+	 * @return
+	 */
 	private File getOutputMediaFile(int type) {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
@@ -502,7 +569,7 @@ public class DetailActivity extends Activity {
 			}
 		}
 
-		// Create a media file name
+		
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
 				.format(new Date());
 		File mediaFile;
@@ -524,8 +591,6 @@ public class DetailActivity extends Activity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		Log.d(MYTAG, "onSaveInstanceState()");
-
-		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
 		saveValues();
 

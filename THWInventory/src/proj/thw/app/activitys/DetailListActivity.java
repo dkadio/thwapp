@@ -30,7 +30,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+/**
+ * geplant als Uebersicht der gewaehlten Equipments und als Pruefung dieser
+ * @author deniz
+ *
+ */
 public class DetailListActivity extends Activity implements OnItemClickListener {
 	public final static String KEY_EQUIP_COLLECTION = "equip_collection_key";
 	public final static String KEY_SELECTED_EQUIP = "selected_equip_key";
@@ -100,6 +104,9 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * Initialisiert die versch. Views
+	 */
 	private void initView() {
 		Log.d(MYTAG, "initviews()");
 		equipmentListView = (ListView) findViewById(R.id.equipmentListView);
@@ -212,6 +219,9 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		resultintent();
 	}
 
+	/**
+	 * Gibt das ergebnis an die Treeview zurueck
+	 */
 	private void resultintent() {
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(KEY_FOR_TREEVIEW_RESULT, isupdated);
@@ -219,6 +229,9 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		setResult(RESULT_OK, resultIntent);
 	}
 
+	/**
+	 * Speichert die geaenderten Daten wenn der User das moechte
+	 */
 	public void saveToDB() {
 		loadDialog = new ProgressDialog(this);
 
