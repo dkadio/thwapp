@@ -51,6 +51,7 @@
     <string name="invno">Inventarnummer</string>
     <string name="devno">Geraetenummer</string>
     <string name="treesize">TreeSize</string>
+    <string name="listsize">ListSize</string>
     <string name="path">Path</string>
     <string name="collapsed">Collapsed</string>
     <string name="save">Save</string>

@@ -70,7 +70,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 
 				initView();
 				TextView many = (TextView) findViewById(R.id.eintraege);
-				many.setText("Eingetragene elemente: "
+				many.setText(getResources().getString(R.string.listsize)+ ": "
 						+ String.valueOf(equipments.size()));
 				Log.d(MYTAG, "onCreate() --- ende");
 			} catch (ClassNotFoundException e) {
