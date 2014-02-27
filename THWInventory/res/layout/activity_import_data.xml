@@ -15,7 +15,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:textSize="@dimen/dp_20" />
+        android:textSize="@dimen/dp_20" 
+        android:paddingBottom="@dimen/dp_10"/>
 
    	<LinearLayout
         android:layout_width="match_parent"
@@ -66,7 +67,7 @@
    	    android:layout_height="wrap_content" />
 
    	<Button
-   	    android:id="@+id/btnimport"
+   	    android:id="@+id/btnexport"
    	    android:layout_width="match_parent"
    	    android:layout_height="wrap_content"
    	    android:onClick="onClickImport"

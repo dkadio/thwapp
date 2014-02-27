@@ -41,6 +41,8 @@
     <string name="db_url">Url</string>
     <string name="clear_db">Clean Import</string>
     <string name="save_import">Save + Import</string>
+    <string name="save_export">Save + Export</string>
+    <string name="filename">Filename</string>
     <string name="import_settings">Import Settings</string>
     <string name="export_settings">Export Settings</string>
     <string name="title_activity_import">ImportActivity</string>
@@ -55,8 +57,8 @@
     <string name="sachnummer_kurz">Sachnr:</string>
     <string name="InvNo_kurz">InvNo:</string>
     <string name="deviceNo_kurz">GerNr:</string>
-        <string name="dialog_detail_pos">Weiter</string>
-            <string name="dialog_detail_neg">Bearbeiten</string>
+    <string name="dialog_detail_pos">Weiter</string>
+    <string name="dialog_detail_neg">Bearbeiten</string>
         
     
 

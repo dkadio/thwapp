@@ -15,7 +15,7 @@ public class Equipment implements Serializable {
 	};
 
 	public static enum Status {
-		V, A, F, BA
+		V, A, F, BA, †B
 	};
 
 	private static final long serialVersionUID = 1L;

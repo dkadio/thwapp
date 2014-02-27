@@ -12,7 +12,7 @@ public abstract class FileIE {
 
 	private static final long serialVersionUID = 1L;
 	public static final String FILE_EXTENTION_CSV = ".csv";
-	public static final String FILE_EXTENTION_XML = ".csv";
+	public static final String FILE_EXTENTION_XML = ".xml";
 	
 	public static enum FileType {
 		CSV, XML

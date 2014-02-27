@@ -7,6 +7,18 @@
     tools:context=".ExportDataActivity" >
 
     <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ThwBlue"
+        android:text="@string/export_settings"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_20"
+        android:textStyle="bold" 
+        android:paddingBottom="@dimen/dp_10"/>
+
+    <TextView
         android:id="@+id/tvpath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,12 +37,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/ThwBlue"
-        android:text="@string/file_source"
+        android:text="@string/filename"
         android:textColor="@color/white"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/etfilename"
+        android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" >
@@ -39,10 +52,10 @@
     </EditText>
 
     <Button
-        android:id="@+id/btnimport"
+        android:id="@+id/btnexport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickImport"
-        android:text="@string/save_import" />
+        android:onClick="onClickExport"
+        android:text="@string/save_export" />
 
 </LinearLayout>

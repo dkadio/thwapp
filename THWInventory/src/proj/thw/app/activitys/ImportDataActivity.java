@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import proj.thw.app.R;
 import proj.thw.app.database.OrmDBHelper;
 import proj.thw.app.ie.CSVFile;
@@ -16,17 +17,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class ImportDataActivity extends Activity {
 
-	private static final String IMAGE_FILE_NAME = "EquipmentImage";
+	private static final String IMAGE_FILE_NAME = "Image";
+	private static final char SEPERATOR = ';';
 	private OrmDBHelper dbHelper;
 
 	private Spinner spTypeFile;
@@ -35,10 +37,7 @@ public class ImportDataActivity extends Activity {
 	private ArrayAdapter<FileIE.FileType> adpTypeFile;
 
 	private CheckBox cbCleanDBbeforImport;
-	// private TabHost tabImport; erweiterung fuer DB import/export
-
 	private File ieFolder;
-
 	private Handler returnHandler;
 
 	public Handler getReturnHandler() {
@@ -60,9 +59,6 @@ public class ImportDataActivity extends Activity {
 		ieFolder = new File(Environment.getExternalStorageDirectory(),
 				getResources().getString(R.string.app_name) + File.separator
 						+ "IE");
-		// tabImport = (TabHost) findViewById();
-		// tabImport.setup();
-
 		spTypeFile = (Spinner) findViewById(R.id.spformat);
 		adpTypeFile = new ArrayAdapter<FileIE.FileType>(this,
 				android.R.layout.simple_spinner_dropdown_item,
@@ -79,16 +75,20 @@ public class ImportDataActivity extends Activity {
 					case CSV:
 
 						adpLoadFile.clear();
-						adpLoadFile.addAll(loadFilePackages(new File(ieFolder,
-								FileIE.FileType.CSV.toString()), FileIE.FILE_EXTENTION_CSV,
-								FileIE.FileType.CSV));
+						adpLoadFile
+								.addAll(loadFilePackages(new File(ieFolder,
+										FileIE.FileType.CSV.toString()),
+										FileIE.FILE_EXTENTION_CSV,
+										FileIE.FileType.CSV));
 						break;
 					case XML:
 
 						adpLoadFile.clear();
-						adpLoadFile.addAll(loadFilePackages(new File(ieFolder,
-								FileIE.FileType.XML.toString()), FileIE.FILE_EXTENTION_XML,
-								FileIE.FileType.XML));
+						adpLoadFile
+								.addAll(loadFilePackages(new File(ieFolder,
+										FileIE.FileType.XML.toString()),
+										FileIE.FILE_EXTENTION_XML,
+										FileIE.FileType.XML));
 
 						break;
 					default: // Do Nothing...
@@ -120,17 +120,22 @@ public class ImportDataActivity extends Activity {
 	}
 
 	public void onClickImport(View view) {
-		if (cbCleanDBbeforImport.isChecked()) {
-			try {
-				dbHelper.clearDB();
-			} catch (SQLException e) {
-				Log.e(this.getClass().getName(), e.getMessage());
+		if (((FilePackage) spLoadFile.getSelectedItem()).getDataFile() != null) {
+			if (cbCleanDBbeforImport.isChecked()) {
+				try {
+					dbHelper.clearDB();
+				} catch (SQLException e) {
+					Log.e(this.getClass().getName(), e.getMessage());
+				}
 			}
+
+			ThwCsvImporter thwImporter = new ThwCsvImporter(dbHelper, this);
+			thwImporter.execute((FilePackage) spLoadFile.getSelectedItem());
+		} else {
+			Log.e(this.getClass().getName(), "keine Datei ausgewaehlt!");
+			Toast.makeText(this, "keine Datei ausgewaehlt!", Toast.LENGTH_LONG)
+					.show();
 		}
-
-		ThwCsvImporter thwImporter = new ThwCsvImporter(dbHelper, this);
-		thwImporter.execute((FilePackage) spLoadFile.getSelectedItem());
-
 	}
 
 	private FilePackage folderToFilePackage(File folder, String extention,
@@ -143,9 +148,10 @@ public class ImportDataActivity extends Activity {
 					switch (ft) {
 					case CSV:
 						newFilePackage.setImageFile(new CSVFile(currentFile,
-								";\""));
+								SEPERATOR));
 						break;
 					case XML:
+						// hier kann XML implementiert werden....
 						break;
 					default: // Do Nothing...
 					}
@@ -155,10 +161,11 @@ public class ImportDataActivity extends Activity {
 						.equals((folder.getName() + extention).toUpperCase())) {
 					switch (ft) {
 					case CSV:
-						newFilePackage
-								.setDataFile(new CSVFile(currentFile, ";\""));
+						newFilePackage.setDataFile(new CSVFile(currentFile,
+								SEPERATOR));
 						break;
 					case XML:
+						// hier kann XML implementiert werden....
 						break;
 					default: // Do Nothing...
 					}
@@ -182,12 +189,4 @@ public class ImportDataActivity extends Activity {
 		}
 		return packageList;
 	}
-
-	// --------------------------MENUE-HANDLING---------------------------
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.import_data, menu);
-		return true;
-	}
-
 }
