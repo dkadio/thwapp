@@ -17,6 +17,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * Klasse, die zum Anzeigen von schönen Bildern dient und neben bei noch die Ordnerstruktur prueft ung ggfs. 
+ * neu erstellt
+ * @author max / deniz
+ *
+ */
 public class SplashScreenActivity extends Activity {
 
 	protected static final String LOG = "SplashScreenActivity";
@@ -56,16 +62,16 @@ public class SplashScreenActivity extends Activity {
 
 			@Override
 			public void run() {
-				writeMsg("Init Folders...");
+				writeMsg(getResources().getString(R.string.init_folders));
 				Thread.currentThread();
 				try {
 					Thread.sleep(SPLASH_TIME_OUT);
 				} catch (InterruptedException e) {
 					Log.e(LOG, e.getMessage());
 				}
-				writeMsg("Init Folders...");
+				writeMsg(getResources().getString(R.string.init_folders));
 				createOrCheckSysFolders();
-				writeMsg("successful!");
+				writeMsg(getResources().getString(R.string.suc));
 				Intent i = new Intent(callContext,
 						EquipmentTreeViewListActivity.class);
 				callContext.startActivity(i);
@@ -75,6 +81,10 @@ public class SplashScreenActivity extends Activity {
 		}).start();
 	}
 
+	/**
+	 * Funktion, um eine Nachricht auf den Bildschirm anzuzeigen
+	 * @param msg Nachricht die angezeigt werden soll
+	 */
 	private void writeMsg(final String msg) {
 		tvstatus.post(new Runnable() {
 			@Override
@@ -84,6 +94,9 @@ public class SplashScreenActivity extends Activity {
 		});
 	}
 
+	/**
+	 * Funktion, die die Ordnerhierarchie ueberprueft und ggfs. erstellt
+	 */
 	private void createOrCheckSysFolders() {
 		// pruefe, ob App-Folder existieren fuer die import/exportdateien, sonst
 		// leg ihn an
@@ -117,6 +130,9 @@ public class SplashScreenActivity extends Activity {
 		createDefaultXML();
 	}
 
+	/**
+	 * Funktion, die die Standard-CSV Datei erstellt
+	 */
 	private void createDefaultCSV() {
 
 		defaultFolder = new File(csvFolder, DEFAULT_FOLDER);
@@ -138,6 +154,13 @@ public class SplashScreenActivity extends Activity {
 		createDefaultFiles(defaultFolder, DEFAULT_FILE, FILE_EXTENTION_XML, -1);
 	}
 
+	/**
+	 * Funktion, die Standard Datein zum Importieren erstellt
+	 * @param parentFolder		Uebergeordneter Ordner
+	 * @param fileName			DateiName
+	 * @param fileExtention		Dateityp
+	 * @param resId				
+	 */
 	private void createDefaultFiles(File parentFolder, String fileName,
 			String fileExtention, int resId) {
 
@@ -164,6 +187,12 @@ public class SplashScreenActivity extends Activity {
 		}
 	}
 
+	/**
+	 * Funktion, die alle Dateien mit einer bestimmten Dateityp zurueckgibt
+	 * @param folder		Ordner in dem gesucht werden soll
+	 * @param extention		Dateityp
+	 * @return				Array mit allen Datein
+	 */
 	private File[] getFileList(File folder, String extention) {
 		final String ext = extention;
 		return folder.listFiles(new FilenameFilter() {

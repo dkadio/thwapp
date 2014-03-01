@@ -9,6 +9,12 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+/**
+ * Klasse, die ein EquipmentImage dartsellt. Diese Klasse dient dazu, das an dem Equipment ein Image haengt und nicht nur
+ * das Byte-Array, welches als Blobb gespeichert wird..
+ * @author max / deniz
+ *
+ */
 //@DatabaseTable(tableName = "equipmentimage")
 public class EquipmentImage implements Serializable{
 	
@@ -72,8 +78,6 @@ public class EquipmentImage implements Serializable{
 		return img;
 	}
 
-	
-	//hier muss man das image direkt in bytes umwandeln sonst isses nach dem ser. weg
 	public void setImg(Bitmap img) {
 		this.img = img;
 		this.imgBytes = imgToBytes();

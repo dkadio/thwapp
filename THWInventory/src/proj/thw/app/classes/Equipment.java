@@ -7,6 +7,11 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+/**
+ * Klasse die ein Equipmentobjekt repraesentiert
+ * @author max / deniz
+ *
+ */
 @DatabaseTable(tableName = "equipment")
 public class Equipment implements Serializable {
 

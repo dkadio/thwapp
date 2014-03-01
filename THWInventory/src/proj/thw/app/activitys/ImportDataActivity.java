@@ -25,17 +25,20 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+/**
+ * Klasse, die Funktionen zum Importieren von Daten als CSV-File in die Datenbank zur verfuegung stellt
+ * @author max / deniz
+ *
+ */
 public class ImportDataActivity extends Activity {
 
 	private static final String IMAGE_FILE_NAME = "Image";
 	private static final char SEPERATOR = ';';
 	private OrmDBHelper dbHelper;
-
 	private Spinner spTypeFile;
 	private Spinner spLoadFile;
 	private ArrayAdapter<FilePackage> adpLoadFile;
 	private ArrayAdapter<FileIE.FileType> adpTypeFile;
-
 	private CheckBox cbCleanDBbeforImport;
 	private File ieFolder;
 	private Handler returnHandler;
@@ -70,6 +73,7 @@ public class ImportDataActivity extends Activity {
 			public void onItemSelected(AdapterView<?> adp, View arg1, int arg2,
 					long arg3) {
 
+				//Funktionalitaet die aufgerufen wird, wenn ein eintrag im spinner geaendert wird
 				try {
 					switch ((FileIE.FileType) adp.getSelectedItem()) {
 					case CSV:
@@ -96,7 +100,6 @@ public class ImportDataActivity extends Activity {
 					}
 
 					adpLoadFile.setNotifyOnChange(true);
-
 				} catch (FileNotFoundException e) {
 					Log.e("", e.getMessage());
 				} catch (UnsupportedEncodingException e) {
@@ -119,6 +122,10 @@ public class ImportDataActivity extends Activity {
 		// init();
 	}
 
+	/**
+	 * Funktion, die aufgerufen wird, wenn auf den Import Button geklickt wird
+	 * @param view
+	 */
 	public void onClickImport(View view) {
 		if (((FilePackage) spLoadFile.getSelectedItem()).getDataFile() != null) {
 			if (cbCleanDBbeforImport.isChecked()) {
@@ -132,12 +139,20 @@ public class ImportDataActivity extends Activity {
 			ThwCsvImporter thwImporter = new ThwCsvImporter(dbHelper, this);
 			thwImporter.execute((FilePackage) spLoadFile.getSelectedItem());
 		} else {
-			Log.e(this.getClass().getName(), "keine Datei ausgewaehlt!");
-			Toast.makeText(this, "keine Datei ausgewaehlt!", Toast.LENGTH_LONG)
-					.show();
+			Log.e(this.getClass().getName(), getString(R.string.error_no_File_selected));
+			Toast.makeText(this, getString(R.string.error_no_File_selected), Toast.LENGTH_LONG).show();
 		}
 	}
 
+	/**
+	 * Funktion die einen Ordner, in dem sich bestimmte Dateien befinden, zu einem FilePackage-Objekt initialisiert
+	 * @param folder		Ordner mit bestimmten Dateien
+	 * @param extention		welches Dateiformat
+	 * @param ft			Welche Datei-Typen
+	 * @return				gibt ein geladenes FilePackage zurueck
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
 	private FilePackage folderToFilePackage(File folder, String extention,
 			FileIE.FileType ft) throws FileNotFoundException,
 			UnsupportedEncodingException {
@@ -176,6 +191,15 @@ public class ImportDataActivity extends Activity {
 		return newFilePackage;
 	}
 
+	/**
+	 * Klasse, die FilePackages ( daten.csv und image.csv) laed und zur verfuegung stellt
+	 * @param parentFolder		uebergeordneter Ordner
+	 * @param extension			welches Dateiformat
+	 * @param ft 				filetype
+	 * @return					Liste mit allenm Packages
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
 	private ArrayList<FilePackage> loadFilePackages(File parentFolder,
 			String extension, FileIE.FileType ft) throws FileNotFoundException,
 			UnsupportedEncodingException {

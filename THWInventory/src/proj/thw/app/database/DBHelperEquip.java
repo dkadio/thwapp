@@ -4,11 +4,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 import proj.thw.app.classes.Equipment;
-import proj.thw.app.classes.EquipmentImage;
-
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.table.TableUtils;
 
+/**
+ * Klasse, die Datenbankfunktionalitaeten fuer Ein Equipment zur Verfuegung stellt
+ * @author max / deniz
+ *
+ */
 public class DBHelperEquip {
 
 	private Dao<Equipment, Integer> equipDao;

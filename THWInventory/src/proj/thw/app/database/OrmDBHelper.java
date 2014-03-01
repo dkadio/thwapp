@@ -14,7 +14,11 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-
+/**
+ *	Klasse, die allgemeine ORM Datenbankfunktionalitaeten zur Verfuegung stellt 
+ * @author max / deniz
+ *
+ */
 public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 
 	public static final String LOG 			= OrmDBHelper.class.getName();
@@ -65,8 +69,8 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 		//TableUtils.createTable(src, EquipmentImage.class);
 		TableUtils.createTable(src, Equipment.class);
 	}
-	
-	private void dropTables(ConnectionSource src) throws SQLException
+
+	public void dropTables(ConnectionSource src) throws SQLException
 	{
 		TableUtils.dropTable(src, EquipmentImage.class, true);
 		TableUtils.dropTable(src, Equipment.class, true);

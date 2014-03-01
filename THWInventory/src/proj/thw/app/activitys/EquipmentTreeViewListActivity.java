@@ -38,6 +38,11 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Klasse, die Equipment-Objekte als TreeStruktur darstellt 
+ * @author max / deniz
+ *
+ */
 public class EquipmentTreeViewListActivity extends Activity {
 
 	public static final int KEY_REQUEST_IMPORT = 4711;

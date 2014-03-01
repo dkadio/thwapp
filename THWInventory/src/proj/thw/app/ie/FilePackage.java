@@ -1,6 +1,10 @@
 package proj.thw.app.ie;
 
-
+/**
+ * Klasse die zwei Dateien repraesentieren (daten.csv und Image.csv)
+ * @author max / deniz
+ *
+ */
 public class FilePackage {
 
 	private FileIE dataFile;

@@ -67,11 +67,20 @@
     <string name="please_wait">Please wait</string>
     <string name="save_to_db">Saving Data to DB!</string>
     <string name="load_from_db">Loading Data from DB!</string>
-    
+    <string name="init_folders">Init Folders</string>
+    <string name="suc">successful</string>
+    <string name="export">exporting Item</string>
+    <string name="importing">importing Data</string>
+    <string name="loading_row_import">loading RowNr</string>
+
     <!-- ERROR -->
     <string name="error_save">Fehler beim speichern:</string>
     <string name="error_no_item_checked">"Kein Eintrag ausgewaehlt! Eintrag anchecken"</string>
-    
+    <string name="error_not_available">Funktion nicht verfuegbar</string>
+    <string name="error_no_File_selected">keine Datei ausgewaehlt!</string>
+    <string name="error_import">Import fehlgeschlagen</string>
+   
+   
     
         
     

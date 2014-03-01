@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import proj.thw.app.R;
 import proj.thw.app.activitys.ExportDataActivity;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.database.OrmDBHelper;
@@ -17,7 +18,11 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.csvreader.CsvWriter;
-
+/**
+ * Exportroutinen als AsyncTask
+ * @author max / deniz
+ *
+ */
 public class ThwCsvExporter extends AsyncTask<String, String, FileIE> {
 
 	private static final Charset set = Charset.forName("ISO-8859-1");
@@ -84,8 +89,6 @@ public class ThwCsvExporter extends AsyncTask<String, String, FileIE> {
 
 	}
 
-	// TODO alle this.getclass.gename raus....
-
 	@Override
 	protected FileIE doInBackground(String... params) {
 
@@ -139,7 +142,7 @@ public class ThwCsvExporter extends AsyncTask<String, String, FileIE> {
 	}
 
 	private void writeLine(Equipment saveItem) throws IOException {
-		publishProgress("write Item: " + saveItem.getEquipNo());
+		publishProgress(callActivity.getResources().getString(R.string.export) + saveItem.getEquipNo());
 		String strLayer = String.valueOf(saveItem.getLayer());
 		String strLoc = saveItem.getLocation();
 		String strType = getTypeString(saveItem.getType());

@@ -12,6 +12,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Klasse, die ein Equipment in einer Liste anzeigt...
+ * @author max / deniz
+ *
+ */
 public class EquipmentListAdapter extends BaseAdapter{
 	private Context context;
 	private ArrayList<Equipment> equipments;

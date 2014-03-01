@@ -4,7 +4,6 @@ package proj.thw.app.activitys;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -32,7 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 /**
  * geplant als Uebersicht der gewaehlten Equipments und als Pruefung dieser
- * @author deniz
+ * @author max / deniz
  *
  */
 public class DetailListActivity extends Activity implements OnItemClickListener {

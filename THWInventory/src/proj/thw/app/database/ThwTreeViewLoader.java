@@ -3,8 +3,6 @@ package proj.thw.app.database;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import proj.thw.app.activitys.EquipmentTreeViewListActivity;
-import proj.thw.app.activitys.ImportDataActivity;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.treeview.TreeBuilder;
 import proj.thw.app.treeview.TreeViewList;
@@ -12,8 +10,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.SimpleAdapter;
 
+/**
+ * Klasse, die den Tree Laed...
+ * @author max / deniz
+ *
+ */
 public class ThwTreeViewLoader extends AsyncTask<OrmDBHelper, Equipment, Integer> {
 
 	private TreeBuilder<Equipment> treeBuilder;

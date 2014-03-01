@@ -21,6 +21,11 @@ import android.widget.Toast;
 
 import com.csvreader.CsvReader;
 
+/**
+ * Importroutinen als AsyncTask
+ * @author max / deniz
+ *
+ */
 public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 
 	private static final Charset set = Charset.forName("ISO-8859-1");
@@ -72,8 +77,8 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 		} else {
 			asyncDialog = new ProgressDialog(callContext);
 			asyncDialog.setCanceledOnTouchOutside(false);
-			asyncDialog.setTitle("Please Wait...");
-			asyncDialog.setMessage("importiere Daten...");
+			asyncDialog.setTitle(callContext.getString(R.string.please_wait));
+			asyncDialog.setMessage(callContext.getString(R.string.importing));
 			asyncDialog.setIcon(callContext.getResources().getDrawable(
 					R.drawable.db_icon));
 			asyncDialog.show();
@@ -85,7 +90,7 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 		super.onPostExecute(result);
 
 		if (!result) {
-			Toast.makeText(callContext, "Import fehlgeschlagen...",
+			Toast.makeText(callContext,callContext.getString(R.string.error_import),
 					Toast.LENGTH_LONG).show();
 		}
 		if (tvStatus != null) {
@@ -126,7 +131,6 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 					((CSVFile) fileToImport.getDataFile()).getSeparator(), set);
 			reader.readHeaders();
 
-			publishProgress("initialisiere Header...");
 			int headLayer = reader.getIndex(COLUMN_LAYER);
 			int headOE = reader.getIndex(COLUMN_OE);
 			int headType = reader.getIndex(COLUMN_TYPE);
@@ -159,7 +163,7 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 			boolean emptyLayer = false;
 			while (reader.readRecord()) {
 
-				publishProgress("load RowNr:  " + rowCount++);
+				publishProgress(callContext.getString(R.string.loading_row_import)+ ": " + rowCount++);
 				if (reader.get(headLayer).trim().isEmpty()) {
 					emptyLayer = true;
 				} else {

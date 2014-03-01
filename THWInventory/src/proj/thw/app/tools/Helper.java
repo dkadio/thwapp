@@ -13,8 +13,8 @@ import java.util.List;
 import proj.thw.app.classes.Equipment;
 
 /**
- * Klasse nur zum uebergeben von EquipmentListen an ein anderes Activity, da ubergabe nur 1MB zulaesst
- * @author max
+ * Klasse, die hilfsfunktionalitaeten zur Verfuegung stellt
+ * @author max / deniz
  *
  */
 public class Helper {

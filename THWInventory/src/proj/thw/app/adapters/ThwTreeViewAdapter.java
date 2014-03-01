@@ -3,17 +3,12 @@ package proj.thw.app.adapters;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.net.ssl.ManagerFactoryParameters;
-
 import proj.thw.app.R;
 import proj.thw.app.activitys.EquipmentTreeViewListActivity;
 import proj.thw.app.classes.Equipment;
 import proj.thw.app.treeview.AbstractTreeViewAdapter;
 import proj.thw.app.treeview.TreeNodeInfo;
 import proj.thw.app.treeview.TreeStateManager;
-import proj.thw.app.treeview.TreeViewList;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -23,6 +18,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * Klasse, die einen Adapter fuer die TreeListView darstellt, um Equipmentojekte in einer Baumstruktur 
+ * darzustellen
+ * @author max / deniz
+ *
+ */
 public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Equipment> {
 
 	private Set<Equipment> selected;
@@ -122,7 +123,6 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Equipment> {
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	

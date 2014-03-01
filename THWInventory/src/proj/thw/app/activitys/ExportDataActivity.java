@@ -15,6 +15,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+/**
+ * Klasse, die Exportfunktionen zur Verfuegung stellt.
+ * @author max / deniz
+ *
+ */
 public class ExportDataActivity extends Activity {
 
 	private EditText etFileName;
@@ -34,6 +39,10 @@ public class ExportDataActivity extends Activity {
 		adpFormatAdapter.setNotifyOnChange(true);
 	}
 
+	/**
+	 * Funktion, die aufgerufen wird wenn auf den Wxportbutton geklickt wird
+	 * @param view
+	 */
 	public void onClickExport(View view)
 	{
 		switch ((FileIE.FileType) spExportFormat.getSelectedItem()) {
@@ -41,13 +50,16 @@ public class ExportDataActivity extends Activity {
 			callCSVExporter();
 			break;
 		case XML:
-				Toast.makeText(this, "funktion nicht verfuegbar", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.error_not_available), Toast.LENGTH_LONG).show();
 		break;
 		default:
 			break;
 		}
 	}
 
+	/**
+	 * Funktion, um Export als CSV zu starten
+	 */
 	private void callCSVExporter() {
 		String folderPath = Environment.getExternalStorageDirectory()
 				+ File.separator + getResources().getString(R.string.app_name)

@@ -7,7 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
-//TODO extends file
+/**
+ *  Klasse, die eine allgemeine File repraesentiert
+ * @author max / deniz 
+ *
+ */
 public abstract class FileIE {
 
 	private static final long serialVersionUID = 1L;

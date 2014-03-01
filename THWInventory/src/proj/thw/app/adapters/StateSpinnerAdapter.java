@@ -12,6 +12,11 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+/**
+ * Klasse die ein Equipment in einem Spinner anzeigt
+ * @author max / deniz
+ *
+ */
 public class StateSpinnerAdapter extends BaseAdapter {
 
 	private LayoutInflater inflator;

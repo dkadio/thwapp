@@ -4,9 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * Klasse, die eine CSV repraesentiert
+ * @author max / deniz
+ *
+ */
 public class CSVFile extends FileIE{
 
-	//evtl ein TableObject um CSVFile als Table im Speicher zu halten... JAVA besitzt kein TableObjekt!! ToDo
 	private char separator; 
 
 	public CSVFile(String filePath, char separator) throws FileNotFoundException, UnsupportedEncodingException {
