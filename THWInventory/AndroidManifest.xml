@@ -10,8 +10,13 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -21,10 +26,8 @@
         <activity
             android:name="proj.thw.app.activitys.SplashScreenActivity"
             android:label="@string/setEmptyLabel"
-            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen"
-
-            android:screenOrientation="portrait" >
-
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,11 +47,14 @@
         <activity
             android:name="proj.thw.app.activitys.ImportDataActivity"
             android:label="@string/title_activity_import"
+            android:parentActivityName="proj.thw.app.activitys.EquipmentTreeViewListActivity" >
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="proj.thw.app.activitys.ExportDataActivity"
-            android:label="@string/title_activity_export_data" >
+            android:label="@string/title_activity_export_data"
+            android:parentActivityName="proj.thw.app.activitys.EquipmentTreeViewListActivity" >
+            >
         </activity>
         <activity
             android:name="proj.thw.app.activitys.DetailActivity"

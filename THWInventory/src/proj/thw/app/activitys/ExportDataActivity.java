@@ -25,7 +25,7 @@ public class ExportDataActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_export_data);
-
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		etFileName = (EditText) findViewById(R.id.etfilename);
 		spExportFormat = (Spinner) findViewById(R.id.spformat);
 		adpFormatAdapter = new ArrayAdapter<FileIE.FileType>(this,
