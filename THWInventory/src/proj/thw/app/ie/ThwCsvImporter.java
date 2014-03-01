@@ -167,6 +167,7 @@ public class ThwCsvImporter extends AsyncTask<FilePackage, String, Boolean> {
 			if(headColumnImage > -1)
 			{
 				readerImage = new CsvReader(new FileInputStream(fileToImport.getImageFile().getFileToParse()),';', set);
+				readerImage.setSafetySwitch(false);
 				readerImage.readHeaders();
 				headId = readerImage.getIndex(COLUMN_ID);
 				headImageStream = readerImage.getIndex(COLUMN_STREAM);

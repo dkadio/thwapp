@@ -78,13 +78,21 @@ public class ThwTreeViewAdapter extends AbstractTreeViewAdapter<Equipment> {
 				.findViewById(R.id.tree_list_item_description);
 		final TextView levelView = (TextView) viewLayout
 				.findViewById(R.id.tree_list_item_level);
-		final ImageView itemImage = (ImageView) viewLayout
+		ImageView itemImage = (ImageView) viewLayout
 				.findViewById(R.id.treeitemimg);
+				itemImage.setImageBitmap(null);
 		descriptionView.setText(getDescription(treeNodeInfo.getId()));
 		levelView.setText(Integer.toString(treeNodeInfo.getLevel()));
 		if (treeNodeInfo.getId().getEquipImg().getImg() != null)
+		{
 			itemImage.setImageBitmap(treeNodeInfo.getId().getEquipImg()
 					.getImg());
+		}
+		else
+		{
+			itemImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.error));
+		}
+			
 		final CheckBox box = (CheckBox) viewLayout
 				.findViewById(R.id.tree_list_checkbox);
 		box.setTag(treeNodeInfo.getId());

@@ -47,7 +47,8 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	ProgressDialog loadDialog;
 	boolean isupdated = false;
 	ArrayList<Equipment> oldlist;
-
+	int incomingId = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(MYTAG, "onCreate()");
@@ -63,13 +64,13 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 			try {
 				Log.d("mytag", String.valueOf(getIntent().getExtras().getInt(EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST)));
 				dbHelper = new OrmDBHelper(this);
+				
+				incomingId = getIntent().getExtras().getInt(EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST);
 				Equipment test = dbHelper
 						.getDbHelperEquip()
 						.selectEquipment(
-								"id",
-								getIntent()
-										.getExtras()
-										.getInt(EquipmentTreeViewListActivity.KEY_EQUIPMENTLIST));
+								"id",incomingId
+								);
 				
 				equipments = (ArrayList<Equipment>) Helper
 						.equipmentToList(test);
@@ -232,6 +233,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(KEY_FOR_TREEVIEW_RESULT, isupdated);
 		Log.d(MYTAG, String.valueOf(isupdated));
+		resultIntent.putExtra("test",incomingId);
 		setResult(RESULT_OK, resultIntent);
 	}
 

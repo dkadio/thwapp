@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
 import proj.thw.app.R;
 import proj.thw.app.adapters.ThwTreeViewAdapter;
 import proj.thw.app.classes.Equipment;
@@ -14,6 +16,7 @@ import proj.thw.app.tools.Helper;
 import proj.thw.app.treeview.InMemoryTreeStateManager;
 import proj.thw.app.treeview.OnTreeViewListItemClickListener;
 import proj.thw.app.treeview.TreeBuilder;
+import proj.thw.app.treeview.TreeNodeInfo;
 import proj.thw.app.treeview.TreeStateManager;
 import proj.thw.app.treeview.TreeViewList;
 import android.app.Activity;
@@ -25,6 +28,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -46,6 +51,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 	public static final int KEY_REQUEST_DETAILLIST = 4713;
 	protected static final String LOG = "EquipmentTreeViewListActivity";
 	protected static final String KEY_EQUIPMENTLIST = "equip.list";
+	protected static final String KEY_EQUIPMENTCHECKETLIST = "equip.list";
 	protected static final String KEY_EQUIPMENT = "equip";
 
 	private TreeViewList tvlEquipment;
@@ -85,13 +91,11 @@ public class EquipmentTreeViewListActivity extends Activity {
 						// getClickedItem
 						final Equipment equipitem = (Equipment) view.getTag();
 						manager.expandEverythingBelow(equipitem);
-						pbLoadTreeView.setVisibility(View.VISIBLE);
-						
-						Intent in = new Intent(context,
-								DetailListActivity.class);
-						in.putExtra(KEY_EQUIPMENTLIST, equipitem.getId());
-						startActivityForResult(in,
-								KEY_REQUEST_DETAILLIST);
+						//pbLoadTreeView.setVisibility(View.VISIBLE);
+
+						Intent i = new Intent(context, DetailListActivity.class);
+						i.putExtra(KEY_EQUIPMENTLIST, equipitem.getId());
+						startActivityForResult(i, KEY_REQUEST_DETAILLIST);
 						
 					}
 				});
@@ -99,30 +103,27 @@ public class EquipmentTreeViewListActivity extends Activity {
 		init();
 
 	}
-	
-	@Deprecated	
-	private void callDetailListActivity(List<Equipment> callList)
-	{
-		//uebergabe ueber eine File, da uebergabe auf 1 MB
-		//beschraenkt ist und keine Exception zum abfangen
-		//geworfen wird
-		String tempFolderPath = Environment.getExternalStorageDirectory() 
-								+ File.separator 
-								+ getResources().getString(R.string.app_name) 
-								+ File.separator 
-								+ SplashScreenActivity.FOLDER_TEMP;
+
+	private void callDetailListActivity(Set<Equipment> checkList) {
+		// uebergabe ueber eine File, da uebergabe auf 1 MB
+		// beschraenkt ist und keine Exception zum abfangen
+		// geworfen wird
 		
+		/*
+		String tempFolderPath = Environment.getExternalStorageDirectory()
+				+ File.separator + getResources().getString(R.string.app_name)
+				+ File.separator + SplashScreenActivity.FOLDER_TEMP;
 		try {
-			File tempFile = Helper.ListToFileStream(callList,tempFolderPath);
-			Intent in = new Intent(context,
-					DetailListActivity.class);
+			File tempFile = Helper.ListToFileStream(callList, tempFolderPath);
+			Intent in = new Intent(context, DetailListActivity.class);
 			in.putExtra(KEY_EQUIPMENTLIST, tempFile.getAbsolutePath());
-			startActivityForResult(in,
-					KEY_REQUEST_DETAILLIST);
+			startActivityForResult(in, KEY_REQUEST_DETAILLIST);
 		} catch (IOException e) {
 			Log.e(this.getClass().getName(), e.getMessage());
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();	
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
+		*/
+		
 		
 	}
 
@@ -134,15 +135,28 @@ public class EquipmentTreeViewListActivity extends Activity {
 		loadDialog.setIcon(getResources().getDrawable(R.drawable.db_icon));
 		loadDialog.setCanceledOnTouchOutside(false);
 		loadDialog.show();
+		manager = new InMemoryTreeStateManager<Equipment>();
+		treeBuilder = new TreeBuilder<Equipment>(manager);
+
+		simpleAdapter = new ThwTreeViewAdapter(
+				EquipmentTreeViewListActivity.this, null, manager, maxLayer);
+		tvlEquipment.setAdapter(simpleAdapter);
+		tvlEquipment.setCollapsible(true);
+		manager.expandEverythingBelow(null);
 
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
+
+					// selekieter komplett aufgeloesstes rootItem...
+					rootItem = (Equipment) dbHelper.getDbHelperEquip().selectEquipment("layer", 0);
 					
-					//selekieter komplett aufgeloesstes rootItem...
-					rootItem = (Equipment) dbHelper.getDbHelperEquip().selectEquipment("layer",0);
+					if(rootItem != null)
+						dbHelper.getDbHelperEquip().refreshAll(rootItem);
+					
+					loadDialog.dismiss();
 				} catch (SQLException e) {
 					Log.e(LOG, e.getMessage());
 				}
@@ -152,38 +166,38 @@ public class EquipmentTreeViewListActivity extends Activity {
 					public void run() {
 						manager = new InMemoryTreeStateManager<Equipment>();
 						treeBuilder = new TreeBuilder<Equipment>(manager);
-						loadDialog.dismiss();
 						
-						if(rootItem != null)
+						
+						if (rootItem != null)
 							loadTreeFormObjectRecursive(rootItem);
-						
+
 						simpleAdapter = new ThwTreeViewAdapter(
 								EquipmentTreeViewListActivity.this, null,
 								manager, maxLayer);
 						tvlEquipment.setAdapter(simpleAdapter);
 						tvlEquipment.setCollapsible(true);
 						manager.expandEverythingBelow(null);
-						tvTreeSize.setText(simpleAdapter.getCount());
-
+						tvTreeSize.setText(getResources().getString(
+								R.string.treesize)
+								+ ": " + simpleAdapter.getCount());
 					}
 				});
 			}
 		}).start();
 	}
-	
-	private void loadTreeFormObjectRecursive(Equipment parent)
-	{	
-		if(maxLayer < parent.getLayer())
+
+	private void loadTreeFormObjectRecursive(final Equipment parent) {
+		if (maxLayer < parent.getLayer())
 			maxLayer = parent.getLayer();
-		
-		if(!parent.getType().equals(Equipment.Type.NOTYPE))
-			treeBuilder.sequentiallyAddNextNode(parent,parent.getLayer() -1);
-		
+
+		if (!parent.getType().equals(Equipment.Type.NOTYPE))
+			treeBuilder.sequentiallyAddNextNode(parent, parent.getLayer() - 1);
+
 		Iterator<Equipment> iterator = parent.getChilds().iterator();
 		while (iterator.hasNext()) {
-		 Equipment element = iterator.next();
-		 loadTreeFormObjectRecursive(element);
-		 }
+			Equipment element = iterator.next();
+			loadTreeFormObjectRecursive(element);
+		}
 	}
 
 	@Override
@@ -209,8 +223,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 					manager.expandEverythingBelow(null);
 					getWindow().setSoftInputMode(
 							WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-					
-					
+
 					tvlEquipment.setSelection(equipmentList.indexOf(searchList
 							.get(0)) - 1);
 				}
@@ -231,11 +244,35 @@ public class EquipmentTreeViewListActivity extends Activity {
 		// gibt hier eine Liste mit allen gefunden items zurueck
 		// derzeit wird aber nur das erste beruecksichtigt
 		// kann erweitert werden...
-		for (Equipment searchItem : equipmentList) {
-			if (searchItem.getEquipNo().equals(query)) {
-				searchList.add(searchItem);
+		/*
+		 * for (Equipment searchItem : equipmentList) { if
+		 * (searchItem.getEquipNo().equals(query)) { searchList.add(searchItem);
+		 * } }
+		 */
+
+		Equipment searchItem = new Equipment();
+		searchItem.setEquipNo(query);
+
+		try {
+			Equipment firstFind = dbHelper.getDbHelperEquip().selectEquipment(
+					"equipNo", query);
+			if (firstFind != null) {
+				// muss drin sein, da es auch in db ist...
+				if (manager.isInTree(firstFind)) {
+					TreeNodeInfo<Equipment> findNode = manager
+							.getNodeInfo(firstFind);
+				int test5 = findNode.getLevel();
+				int test6 = test5;
+				
+				
+				TreeNodeInfo<Equipment> findNode1 = findNode;
+				}
 			}
+
+		} catch (SQLException e) {
+			Log.e(this.getClass().getName(), e.getMessage());
 		}
+
 		return searchList;
 	}
 
@@ -281,13 +318,27 @@ public class EquipmentTreeViewListActivity extends Activity {
 			break;
 		case KEY_REQUEST_DETAILLIST:
 			if (resultCode == RESULT_OK) {
-				if(data.getExtras().containsKey(DetailListActivity.KEY_FOR_TREEVIEW_RESULT))
-				{
-					boolean t = data.getExtras().getBoolean(DetailListActivity.KEY_FOR_TREEVIEW_RESULT);
-					if(t)
-					{
+				if (data.getExtras().containsKey(
+						DetailListActivity.KEY_FOR_TREEVIEW_RESULT)) {
+					boolean t = data.getExtras().getBoolean(
+							DetailListActivity.KEY_FOR_TREEVIEW_RESULT);
+					/*if (t) {
 						init();
+						
+					}*/
+					
+					int id = data.getExtras().getInt("test");
+					
+					Equipment udpEquip = null;
+					try {
+						udpEquip = dbHelper.getDbHelperEquip().selectEquipment("id",id);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
+					
+					if(udpEquip != null)
+					simpleAdapter.updateItem(tvlEquipment,udpEquip);
 				}
 			}
 
@@ -295,6 +346,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 		default: // Do Nothing...
 		}
 	}
+
 	public void onClickGoButton(View view) {
 		ArrayList<Equipment> checkedList = new ArrayList<Equipment>(
 				simpleAdapter.getSelected());
@@ -302,13 +354,16 @@ public class EquipmentTreeViewListActivity extends Activity {
 			Toast.makeText(this, "Kein Eintrag ausgewaehlt! Eintrag anchecken",
 					Toast.LENGTH_LONG).show();
 		} else {
-			callDetailListActivity(checkedList);
+			
+			Intent i = new Intent(this, DetailListActivity.class);
+			i.putExtra(KEY_EQUIPMENTCHECKETLIST, checkedList);
 		}
 
 	}
 
 	/**
-	 * Urspruengliche Funktion um Eintrgaege in DB zu speichern. Uebernimmt jetzt DetailActivity
+	 * Urspruengliche Funktion um Eintrgaege in DB zu speichern. Uebernimmt
+	 * jetzt DetailActivity
 	 */
 	@Deprecated
 	public void saveToDB() {

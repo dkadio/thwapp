@@ -65,10 +65,10 @@ public class Equipment implements Serializable {
 	@DatabaseField(dataType = DataType.SERIALIZABLE)
 	private EquipmentImage equipImg;
 	
-	@ForeignCollectionField(eager=true, maxEagerLevel = MAX_LEVEL)
+	@ForeignCollectionField(eager=true)
 	private Collection<Equipment> childs;
 	
-	@DatabaseField(foreign = true,foreignAutoCreate=true,foreignAutoRefresh = true)
+	@DatabaseField(foreign = true,foreignAutoCreate=true)
 	private Equipment parent;
 	
 	public Equipment getParent() {
@@ -226,8 +226,8 @@ public class Equipment implements Serializable {
 		this.equipImg = equipImg;
 	}
 
-	@Override
-	public boolean equals(Object o) {
+	
+	public boolean test(Object o) {
 		Equipment eqEquip = (Equipment) o;
 		if (eqEquip.getId() == -1) {
 			if (equipNo.equals(((Equipment) o).getEquipNo())) {
@@ -243,6 +243,35 @@ public class Equipment implements Serializable {
 
 	public String toString() {
 		return type.toString() + "\r\n" + equipNo;
+	}
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((equipNo == null) ? 0 : equipNo.hashCode());
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Equipment other = (Equipment) obj;
+		if (equipNo == null) {
+			if (other.equipNo != null)
+				return false;
+		} else if (!equipNo.equals(other.equipNo))
+			return false;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 
 }

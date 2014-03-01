@@ -1,6 +1,7 @@
 package proj.thw.app.database;
 
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
 import proj.thw.app.classes.Equipment;
@@ -80,6 +81,22 @@ public class DBHelperEquip {
 	{
 		equipDao.refresh(refreshEquip);
 	}
+	
+	public void refreshAll(Equipment refreshEquip) throws SQLException
+	{
+		refreshNext(refreshEquip);
+	}
+	
+	private void refreshNext(Equipment parent) throws SQLException
+	{
+		refresh(parent);
+		Iterator<Equipment> iterator = parent.getChilds().iterator();
+		while (iterator.hasNext()) {
+			refreshNext(iterator.next());
+		}
+	}
+	
+	
 	
 	
 }
