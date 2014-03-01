@@ -9,10 +9,7 @@
         <menu>
             <item
                 android:id="@+id/takePicture"
-                android:title="Bild aufnehmen"/>
-            <item
-                android:id="@+id/item2"
-                android:title="item2"/>
+                android:title="@string/take_picture"/>
         </menu>
     </item>
 

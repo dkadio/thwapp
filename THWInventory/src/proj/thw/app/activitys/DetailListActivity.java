@@ -184,7 +184,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 			Toast.makeText(
 					this,
 					"Da is wohl was beim ueberreichen der Dataen was schief gelaufen! musche nommo zaehlen",
-					Toast.LENGTH_SHORT); // TODO Was sollte man in diesem fall
+					Toast.LENGTH_SHORT).show(); // TODO Was sollte man in diesem fall
 											// tun? is ja eh alles zu spaet
 		}
 		Log.d(MYTAG, "onActivityResult() --- Ende");
@@ -238,7 +238,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		new AlertDialog.Builder(this)
 				.setTitle("Achtung")
 				.setMessage(
-						"Moechten Sie die Aenderungen in der DB beibehalten?")
+						"Moechten Sie die Aenderungen speichern?")
 				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 
 					@Override

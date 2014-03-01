@@ -60,6 +60,19 @@
     <string name="deviceNo_kurz">GerNr:</string>
     <string name="dialog_detail_pos">Weiter</string>
     <string name="dialog_detail_neg">Bearbeiten</string>
+    <string name="take_picture">Bild aufnehmen</string>
+    <string name="sure">Are you sure to exit?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="please_wait">Please wait</string>
+    <string name="save_to_db">Saving Data to DB!</string>
+    <string name="load_from_db">Loading Data from DB!</string>
+    
+    <!-- ERROR -->
+    <string name="error_save">Fehler beim speichern:</string>
+    <string name="error_no_item_checked">"Kein Eintrag ausgewaehlt! Eintrag anchecken"</string>
+    
+    
         
     
 

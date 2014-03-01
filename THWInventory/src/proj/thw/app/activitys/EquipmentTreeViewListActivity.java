@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 import proj.thw.app.R;
 import proj.thw.app.adapters.ThwTreeViewAdapter;
 import proj.thw.app.classes.Equipment;
@@ -26,7 +24,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.TransactionTooLargeException;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -41,7 +38,6 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//TODO rogessdialog cancel bei backbutton click
 public class EquipmentTreeViewListActivity extends Activity {
 
 	public static final int KEY_REQUEST_IMPORT = 4711;
@@ -67,9 +63,6 @@ public class EquipmentTreeViewListActivity extends Activity {
 	private SearchView searchView;
 	private Context context;
 
-	// private boolean isChange = false; fuer abfrage, ob gespeichert werden
-	// soll vor dem beenden
-
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,8 +73,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 		tvTreeSize = (TextView) findViewById(R.id.tvtreesize);
 		pbLoadTreeView = (ProgressBar) findViewById(R.id.pbloadtreeview);
 		tvlEquipment = (TreeViewList) findViewById(R.id.tvlequip);
-		tvlEquipment
-				.setTreeViewListItemClickListener(new OnTreeViewListItemClickListener() {
+		tvlEquipment.setTreeViewListItemClickListener(new OnTreeViewListItemClickListener() {
 
 					@Override
 					public void onTreeViewListItemClick(AdapterView<?> parent,
@@ -113,11 +105,13 @@ public class EquipmentTreeViewListActivity extends Activity {
 					}
 				});
 		dbHelper = new OrmDBHelper(this);
-
 		init();
-
 	}
 	
+	/**
+	 * Funktion, um DateiListActivity aufzurufen
+	 * @param callList Liste mit den Equipments die uebergeben werden soll
+	 */
 	private void callDetailListActivity(List<Equipment> callList)
 	{
 		//uebergabe ueber eine File, da uebergabe auf 1 MB
@@ -143,21 +137,25 @@ public class EquipmentTreeViewListActivity extends Activity {
 		
 	}
 
-	// TODO collabsed enable falls tree leer ist
+	/**
+	 * Funktion die den Tree initialisiert und anzeigt
+	 */
 	private void init() {
 		loadDialog = new ProgressDialog(this);
-		loadDialog.setTitle("Please Wait...");
-		loadDialog.setMessage("Loading Data from DB...");
+		loadDialog.setTitle(getResources().getString(R.string.please_wait));
+		loadDialog.setMessage(getResources().getString(R.string.load_from_db));
 		loadDialog.setIcon(getResources().getDrawable(R.drawable.db_icon));
 		loadDialog.setCanceledOnTouchOutside(false);
 		loadDialog.show();
 
+		//Thread zum laden der Daten aus der DB und zum erstellen des Tree's
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
 
+					// Alle Equipments aus der DB laden, um dem Tree hinzuzufuegen
 					equipmentList = (ArrayList<Equipment>) dbHelper
 							.getDbHelperEquip().selectAllEquipments();
 				} catch (SQLException e) {
@@ -200,9 +198,11 @@ public class EquipmentTreeViewListActivity extends Activity {
 				});
 			}
 		}).start();
-
 	}
 
+	/**
+	 * Funktion, die das Menue erstellt
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		final MenuInflater inflater = getMenuInflater();
@@ -235,7 +235,6 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 			@Override
 			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 		});
@@ -243,6 +242,11 @@ public class EquipmentTreeViewListActivity extends Activity {
 		return true;
 	}
 
+	/**
+	 * Suchfunktion, um ein Item im Tree zu suchen
+	 * @param query Equip-No 
+	 * @return eine Liste mit gefundenen eintraegen
+	 */
 	private List<Equipment> searchItems(String query) {
 		ArrayList<Equipment> searchList = new ArrayList<Equipment>();
 		// gibt hier eine Liste mit allen gefunden items zurueck
@@ -256,6 +260,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 		return searchList;
 	}
 
+	/**
+	 * Auswertung, welcher Button im Menue gedrueckt wurde
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
@@ -287,6 +294,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * Funktion, die die Rueckgaben der aufgerufenen Activitys auswertet
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -312,11 +322,16 @@ public class EquipmentTreeViewListActivity extends Activity {
 		default: // Do Nothing...
 		}
 	}
+	
+	/**
+	 * Funktion, die aufgerufen wird, wenn der "Go" button gedrueckt wird
+	 * @param view
+	 */
 	public void onClickGoButton(View view) {
 		ArrayList<Equipment> checkedList = new ArrayList<Equipment>(
 				simpleAdapter.getSelected());
 		if (checkedList.isEmpty()) {
-			Toast.makeText(this, "Kein Eintrag ausgewaehlt! Eintrag anchecken",
+			Toast.makeText(this, getResources().getString(R.string.error_no_item_checked),
 					Toast.LENGTH_LONG).show();
 		} else {
 			callDetailListActivity(checkedList);
@@ -324,11 +339,15 @@ public class EquipmentTreeViewListActivity extends Activity {
 
 	}
 
+	/**
+	 * Funktion, die aenderungen an der Tree in die DB uebernimmt
+	 * wurde in die DetailListActivity uebernommen
+	 */
 	@Deprecated
 	public void saveToDB() {
 		loadDialog = new ProgressDialog(this);
-		loadDialog.setTitle("Please Wait...");
-		loadDialog.setMessage("Save Data to DB!");
+		loadDialog.setTitle(getResources().getString(R.string.please_wait));
+		loadDialog.setMessage(getResources().getString(R.string.save_to_db));
 		loadDialog.setCanceledOnTouchOutside(false);
 		loadDialog.show();
 		new Thread(new Runnable() {
@@ -343,7 +362,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 						Log.e(EquipmentTreeViewListActivity.class.getName(),
 								e.getMessage());
 						Toast.makeText(context,
-								"Fehler beim speichern: " + e.getMessage(),
+								getResources().getString(R.string.error_save) + e.getMessage(),
 								Toast.LENGTH_LONG).show();
 					}
 				}
@@ -353,6 +372,10 @@ public class EquipmentTreeViewListActivity extends Activity {
 		}).start();
 	}
 
+	
+	/**
+	 * Funktion, die vor dem Beenden der App eine Abfrage stellt, ob Beendet werden soll
+	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode != KeyEvent.KEYCODE_BACK)
@@ -373,9 +396,9 @@ public class EquipmentTreeViewListActivity extends Activity {
 		};
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Are you sure to exit?")
-				.setPositiveButton("Yes", dialogClickListener)
-				.setNegativeButton("No", dialogClickListener).show();
+		builder.setMessage(getResources().getString(R.string.sure))
+				.setPositiveButton(getResources().getString(R.string.yes), dialogClickListener)
+				.setNegativeButton(getResources().getString(R.string.no), dialogClickListener).show();
 
 		return super.onKeyDown(keyCode, event);
 	}

@@ -112,19 +112,23 @@ public class InMemoryTreeStateManager<T> implements TreeStateManager<T> {
 		
 		if(id != null)
 		{
-			idAsoluteList.add(id);
-			if(getChildren(id).size() > 0)
+
+				idAsoluteList.add(id);
+				if(getChildren(id).size() > 0)
 				SetAbsolteChildList(getChildren(id).get(0));
-			T s = getNextSibling(id);
-			while (s != null) {
-				if(getChildren(s).size() > 0){
-					SetAbsolteChildList(s);
+				T s = getNextSibling(id);
+				while (s != null) {
+					if(!idAsoluteList.contains(s))
+					{
+					if(getChildren(s).size() > 0){
+						SetAbsolteChildList(s);
+					}
+					else{
+						idAsoluteList.add(s);
+					}
+					}
+					s = getNextSibling(s);
 				}
-				else{
-					idAsoluteList.add(s);
-				}
-				s = getNextSibling(s);
-			}
 		}
 	}
 
