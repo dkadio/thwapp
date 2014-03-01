@@ -98,9 +98,10 @@ public class DetailActivity extends Activity {
 		if (equipments != null) {
 			setValues();
 			// init der listener
-			setListener();
 			Log.d(MYTAG, "onCreate() ---------Ende");
 		}
+		setListener();
+
 	}
 
 	/**
@@ -251,10 +252,10 @@ public class DetailActivity extends Activity {
 			Log.d(MYTAG, "SelectedItem erhalten: " + selectedItem);
 		} catch (ClassNotFoundException e) {
 			Log.e(this.getClass().getName(), e.getMessage());
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		} catch (IOException e) {
 			Log.e(this.getClass().getName(), e.getMessage());
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 		/*
 		 * equipments = (ArrayList<Equipment>) getIntent().getExtras()
@@ -311,6 +312,7 @@ public class DetailActivity extends Activity {
 
 	/**
 	 * laedt das naechste Item aus der Liste und setzt die Werte entsprechend
+	 * 
 	 * @param v
 	 */
 	public void nextItem(View v) {
@@ -332,7 +334,9 @@ public class DetailActivity extends Activity {
 	}
 
 	/**
-	 * laed den Vorgaenger, wenns deinen einen gibt, aus der liste und setzt seine werte
+	 * laed den Vorgaenger, wenns deinen einen gibt, aus der liste und setzt
+	 * seine werte
+	 * 
 	 * @param v
 	 */
 	public void previousItem(View v) {
@@ -367,7 +371,8 @@ public class DetailActivity extends Activity {
 	}
 
 	/**
-	 * Inkrementiert den Wert von Ist um 1 
+	 * Inkrementiert den Wert von Ist um 1
+	 * 
 	 * @param v
 	 */
 	public void plusCount(View v) {
@@ -380,7 +385,8 @@ public class DetailActivity extends Activity {
 	}
 
 	/**
-	 * Inkrementiert den Wert von Ist um -1 
+	 * Inkrementiert den Wert von Ist um -1
+	 * 
 	 * @param v
 	 */
 	public void minusCount(View v) {
@@ -390,7 +396,8 @@ public class DetailActivity extends Activity {
 	}
 
 	/**
-	 * stopt die Activity und kehrt zurueck zur view die sie gestartet hat. 
+	 * stopt die Activity und kehrt zurueck zur view die sie gestartet hat.
+	 * 
 	 * @param v
 	 */
 	public void stop(View v) {
@@ -438,7 +445,7 @@ public class DetailActivity extends Activity {
 	}
 
 	/**
-	 * abfrage wenn kamera app fertig ist. 
+	 * abfrage wenn kamera app fertig ist.
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -462,7 +469,8 @@ public class DetailActivity extends Activity {
 	}
 
 	/**
-	 * setzt das bild das gemacht worden ist in die imageview, verkleinert es und speichert es im equipment
+	 * setzt das bild das gemacht worden ist in die imageview, verkleinert es
+	 * und speichert es im equipment
 	 */
 	private void setImage() {
 		// les ein image aus dem Ordner Temp und loesche es dannach
@@ -531,6 +539,7 @@ public class DetailActivity extends Activity {
 
 	/**
 	 * erstellt eine Uri aus dem Mediafile
+	 * 
 	 * @param type
 	 * @return
 	 */
@@ -540,7 +549,9 @@ public class DetailActivity extends Activity {
 	}
 
 	/**
-	 * Baut ein File mit name usw zusammen fuer die Aufnahme von einem Bild gefunden auf der Developer Seite
+	 * Baut ein File mit name usw zusammen fuer die Aufnahme von einem Bild
+	 * gefunden auf der Developer Seite
+	 * 
 	 * @param type
 	 * @return
 	 */
@@ -569,7 +580,6 @@ public class DetailActivity extends Activity {
 			}
 		}
 
-		
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
 				.format(new Date());
 		File mediaFile;
@@ -587,7 +597,7 @@ public class DetailActivity extends Activity {
 
 		return mediaFile;
 	}
-
+	//muesste die arrayliste wohl besser dann als file speichern. 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		Log.d(MYTAG, "onSaveInstanceState()");
@@ -601,15 +611,17 @@ public class DetailActivity extends Activity {
 		Log.d(MYTAG, "onSaveInstanceState() -- ende");
 	}
 
+	//und hier wieder auslsesen
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		Log.d(MYTAG, "onRestoreInstanceState()");
 
 		// TODO Auto-generated method stub
 		super.onRestoreInstanceState(savedInstanceState);
+		Log.d(MYTAG, "vor lade mediafile");
 		lastmediafile = (File) savedInstanceState
 				.getSerializable(KEY_MEDIA_FILE);
-		savedInstanceState.getSerializable(KEY_SAVE_EQUIPMENTS);
+		equipments = (ArrayList<Equipment>) savedInstanceState.getSerializable(KEY_SAVE_EQUIPMENTS);
 		selectedItem = savedInstanceState.getInt(KEY_SAVE_CURRENT_INDEX);
 		setValues();
 	}

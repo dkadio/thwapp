@@ -73,7 +73,7 @@ public class EquipmentTreeViewListActivity extends Activity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(false);
 		setContentView(R.layout.activity_tree_view_list);
 		context = this;
 
