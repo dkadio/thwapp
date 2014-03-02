@@ -21,7 +21,7 @@ public class Helper {
 	
 	public static File ListToFileStream(List<Equipment> list, String tempFolderPath) throws IOException
 	{
-		File tempFile = new File(tempFolderPath + File.separator + "FileStream_" +new Date().getTime());
+		File tempFile = new File(tempFolderPath + File.separator + "FS_" +new Date().getTime());
 		if(!tempFile.exists())
 			tempFile.createNewFile();
 		

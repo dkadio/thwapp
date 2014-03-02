@@ -72,6 +72,8 @@
     <string name="export">exporting Item</string>
     <string name="importing">importing Data</string>
     <string name="loading_row_import">loading RowNr</string>
+    <string name="caution">Achtung</string>
+     <string name="save_question">Moechten Sie die Aenderungen speichern?</string>
 
     <!-- ERROR -->
     <string name="error_save">Fehler beim speichern:</string>

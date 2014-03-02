@@ -154,8 +154,12 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 			{
 				String pathTempFile = data.getExtras().getString(DetailActivity.KEY_RESULT_INTENT_EQUIPMENT);
 				try {
-					equipments = (ArrayList<Equipment>)  Helper.FileStreamToList(pathTempFile);
-					Log.d(MYTAG, "updated equipmentlist");
+					if(pathTempFile != null){
+						if(!pathTempFile.isEmpty()){
+							equipments = (ArrayList<Equipment>)  Helper.FileStreamToList(pathTempFile);
+							Log.d(MYTAG, "updated equipmentlist");
+						}
+					}
 				} catch (ClassNotFoundException e) {
 					Log.e(this.getClass().getName(), e.getMessage());
 					Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -235,17 +239,17 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 		loadDialog = new ProgressDialog(this);
 
 		new AlertDialog.Builder(this)
-				.setTitle("Achtung")
-				.setMessage(
-						"Moechten Sie die Aenderungen speichern?")
-				.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+				.setTitle(getString(R.string.caution))
+				.setMessage(getString(R.string.save_question)
+						)
+				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						Log.d(MYTAG, "ja clicked");
 
-						loadDialog.setTitle("Please Wait...");
-						loadDialog.setMessage("Saving Data to DB...");
+						loadDialog.setTitle(getString(R.string.please_wait));
+						loadDialog.setMessage(getString(R.string.save_to_db));
 						loadDialog.setIcon(getResources().getDrawable(R.drawable.db_icon));
 						loadDialog.setCanceledOnTouchOutside(false);
 						loadDialog.show();
@@ -268,7 +272,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 										Log.e(EquipmentTreeViewListActivity.class.getName(),
 												e.getMessage());
 										Toast.makeText(context,
-												"Fehler beim speichern: " + e.getMessage(),
+												getString(R.string.error_save) + e.getMessage(),
 												Toast.LENGTH_LONG).show();
 									}
 								}

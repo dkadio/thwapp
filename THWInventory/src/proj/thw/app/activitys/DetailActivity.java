@@ -429,6 +429,12 @@ public class DetailActivity extends Activity {
 		}
 
 	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		returnResultIntent();
+	}
 
 	@Override
 	protected void onPause() {
