@@ -430,12 +430,15 @@ public class DetailActivity extends Activity {
 
 	}
 
+	/**
+	 * der zurueckbutton funktioniert leider nicht seit dem die daten erst in ein file laufen.
+	 */
 	@Override
 	protected void onPause() {
-		saveValues();
-		Intent resultintent = new Intent();
-		resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT, equipments);
-		setResult(RESULT_OK, resultintent);
+//		saveValues();
+//		Intent resultintent = new Intent();
+//		resultintent.putExtra(KEY_RESULT_INTENT_EQUIPMENT, equipments);
+//		setResult(RESULT_OK, resultintent);
 		super.onPause();
 	}
 

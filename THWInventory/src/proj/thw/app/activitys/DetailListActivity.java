@@ -39,6 +39,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 	public final static String KEY_SELECTED_EQUIP = "selected_equip_key";
 	public static final String KEY_FOR_TREEVIEW_RESULT = "the.equipment.returns.to.the.treeview";
 	public static final String KEY_SAVE_THE_EQUIPMENT = "save.the.equipment.for.death";
+	public static final String EXCEPTION_UEBERGABE = "Bei der Rueckgabe der Werte ist ein Fehler passiert.";
 	public final static int REQUEST_CODE = 98613123;
 	private final static String MYTAG = "DetailListActivity";
 	ArrayList<Equipment> equipments;
@@ -182,7 +183,7 @@ public class DetailListActivity extends Activity implements OnItemClickListener 
 			isupdated = false;
 			Toast.makeText(
 					this,
-					"Da is wohl was beim ueberreichen der Dataen was schief gelaufen! musche nommo zaehlen",
+					EXCEPTION_UEBERGABE,
 					Toast.LENGTH_SHORT).show(); // TODO Was sollte man in diesem fall
 											// tun? is ja eh alles zu spaet
 		}
